@@ -1,49 +1,77 @@
 <template>
-  <div class="form">
-    <input id="eingabeId" type="number" v-model="number">
+
+  <div> Pokemon Nummer eingeben: 
+    <input id="eingabeId" type="number" v-model="PokeNumber"> </div>
+
+  <div class="buttons">
+    <button @click="setNrPlus" > Hoch ↑ </button>
+    <button @click="setNrMinus"> Runter ↓ </button> 
+    &nbsp;
+    <button @click="loadApiNumber"> Eingabe </button>
   </div>
-  <div class="form">
-    {{ myPokemonName }} 
+
+<searchBar/>
+
+  <div class="pokeStats">
+    {{myPokemonName}}
     <span v-if="weight">{{weight}}kg </span>
-    <p v-for="(pokemonStat, index) in pokemonStats" :key="index">Stat {{index}} = {{pokemonStat.base_stat}}</p>
-    <ApiZugriff @click="loadApi"/>
-    <img class="pokepic" :src="pokepic.front_shiny" v-if="pokeloaded"/>
+    <p v-for="(pokemonStat, index) in pokemonStats" :key="index">{{pokemonStat.name}} = {{pokemonStat.base_stat}}</p>
   </div>
+
+  <img class="imagePokeFront" v-on:mouseover="active = !active" :src="pokePicture.front_default" v-if="pokeLoaded" />
+  <img class="imagePokeBack" v-on:mouseover="active = !active" :src="pokePicture.back_default
+  " v-if="pokeLoaded" />
+
+  <div v-if="active">
+     {{myPokemonName}} <span v-if="weight">{{weight}}kg </span>
+ </div>
+
 </template>
 
 <script>
-import ApiZugriff from './components/ApiZugriff.vue'
 import axios from 'axios'
+import searchBar from './components/searchBar.vue'
 
 export default {
   name: 'App',
   components: {
-    ApiZugriff
+    searchBar
   }, 
   data(){ 
     return {
-      number: 0,
+      active: false,
+      PokeName: null,
+      PokeNumber: 1,
       myPokemonName: "",
       pokemonStats: [],
-      weight: 0,
-      pokepic: {},
-      pokeloaded: null,
+      weight: null,
+      pokeLoaded: null,
+      pokePicture: {}
     }
   },
   methods: {
-    async loadApi(){
-      console.log("button wurde geklickt");
-      await axios.get('https://pokeapi.co/api/v2/pokemon/'+ this.number).then((response) => {
+
+    async loadApiNumber(){
+      await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
         console.log(response);
         const data = response.data;
-
-        this.myPokemonName = data.name
-        this.pokemonStats =  data.stats
-        this.weight = data.weight
-        this.pokepic = data.sprites
-        this.pokeloaded = true
+        this.pokeLoaded = true;
+        this.myPokemonName = data.name;
+        this.pokemonStats =  data.stats;
+        this.weight = data.weight;
+        this.pokePicture = data.sprites; //Bilder
       })
-    }
+    },
+    
+    async setNrPlus(){
+      this.PokeNumber = (this.PokeNumber + 1);
+      this.loadApiNumber();
+ 
+    },
+    async setNrMinus(){
+      this.PokeNumber = (this.PokeNumber - 1);
+      this.loadApiNumber();
+    },
   }
 }
 </script>
@@ -56,16 +84,39 @@ export default {
   text-align: left;
   color: #2c3e50;
   margin-top: 60px;
+  font-family: sans-serif;
 }
 
-.pokepic {
-  height: 200px;
-  width: 200px;
+.scrollBar {
+  background-color:lightgray;
+  list-style: none;
+  height: 100px;
+  width: 800px;
+  overflow: scroll;
+  padding: 12px 20px;
+
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+  0 8px 10px -6px rgb( 0 0 0 / 0.1);
 }
 
-.form {
-  padding-top: 5%;
-  padding-left: 20%;
+.pokeStats {
+  padding-top: 16px;
+  color: rgb(77, 76, 76);
+  font-family: sans-serif;
+}
+
+.imagePokeFront {
+  height: 150px;
+  width: 150px;
+  font-family: sans-serif;
+  background-color: rgba(26, 97, 204, 0.075);
+}
+
+.imagePokeBack {
+  height: 150px;
+  width: 150px;
+  background-color: rgba(211, 80, 57, 0.075);
 }
 
 </style>
+
