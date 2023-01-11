@@ -1,4 +1,6 @@
 <template>
+ 
+  <searchBar/>
 
   <div> Pokemon Nummer eingeben: 
     <input id="eingabeId" type="number" v-model="PokeNumber"> </div>
