@@ -1,7 +1,7 @@
 <template>
-
-    <div v-if="pokemonLoaded"> {{ this.Pokemon.PokemonName }}  </div>
-
+    
+ <getPokeData/> 
+    
 </template>
 
 <script>
@@ -9,8 +9,8 @@
     export default {
         name: "displayData",
 
-    //Components: {   
-   // },
+    Components: {   
+    },
 
     data(){
         return{
@@ -20,18 +20,12 @@
         }
     },
     methods: {
-        /*async setNrPlus() {
-            this.PokeNumber = (this.PokeNumber + 1);
-            this.loadApiNumber();
-        },
-        async setNrMinus() {
-            this.PokeNumber = (this.PokeNumber - 1);
-            this.loadApiNumber();
-        },*/
         getData(){
             const Pokemon = getPokeData.loadApiNumber();
             this.pokemon = Pokemon;
+            this.pokemonLoaded = true;
             return Pokemon;
+
         }
     },
     }   

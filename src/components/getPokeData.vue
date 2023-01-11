@@ -2,36 +2,41 @@
 
     <div> Pokemon Nummer eingeben: 
         <input type="number" v-model="PokeNumber"> 
-        <button @click="loadApiNumber">Click..</button>
+        <button @click="loadApiNumber"> Button </button>
     </div>
 
     <div>  
         <button @click="setNrPlus">hoch </button>
-        <button @click="setNrPlus">runter</button>
+        <button @click="setNrMinus">runter</button>
     </div>
 
+    <displayData v-if="pokemonloaded"/>
 
 </template>
 
 <script>
 import axios from 'axios'
 
+
 export default {
     name: 'getPokeData',
-    components: {
-
-    },
+    props: {pokeData: returnData},
+    // components: {
+    //},
     data(){ 
     return {
+      returnData: null,
       PokeNumber: 1,
+      pokemonLoaded: false,
+      height: 0,
     }
     },
     methods: {
         async loadApiNumber(){
             await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
                 console.log(response);
-                const returnData = response.data;
-                return returnData;
+                this. height = response.data.;
+                return;
     })
     },
     async setNrPlus() {
