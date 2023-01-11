@@ -1,30 +1,22 @@
 <template>
-    <div> Pokemon Nummer eingeben: 
-        <input id="eingabeId" type="number" v-model="PokeNumber"> </div>
-    
-      <div class="buttons">
-        <button @click="getData"> Eingabe </button>
-      </div>
-    
-    <SearchBar/>
-    <div v-if="pokemonLoaded"> {{ PokemonName }}  </div>
+
+    <div v-if="pokemonLoaded"> {{ this.Pokemon.PokemonName }}  </div>
 
 </template>
 
 <script>
     import getPokeData from './getPokeData.vue';
-    import searchBar from './searchBar.vue';
-
     export default {
         name: "displayData",
 
-    Components: {
-        searchBar
-    },
+    //Components: {   
+   // },
+
     data(){
         return{
             PokeNumber: 1,
             pokemonLoaded: false,
+            pokemon: {}
         }
     },
     methods: {
@@ -37,7 +29,8 @@
             this.loadApiNumber();
         },*/
         getData(){
-            const Pokemon = getPokeData.loadApiNumber(5);
+            const Pokemon = getPokeData.loadApiNumber();
+            this.pokemon = Pokemon;
             return Pokemon;
         }
     },
