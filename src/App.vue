@@ -1,78 +1,20 @@
 <template>
 
-  <div> Pokemon Nummer eingeben: 
-    <input id="eingabeId" type="number" v-model="PokeNumber"> </div>
-
-  <div class="buttons">
-    <button @click="setNrPlus" > Hoch ↑ </button>
-    <button @click="setNrMinus"> Runter ↓ </button> 
-    &nbsp;
-    <button @click="loadApiNumber"> Eingabe </button>
-  </div>
-
-<searchBar/>
-
-  <div class="pokeStats">
-    {{myPokemonName}}
-    <span v-if="weight">{{weight}}kg </span>
-    <p v-for="(pokemonStat, index) in pokemonStats" :key="index">{{pokemonStat.name}} = {{pokemonStat.base_stat}}</p>
-  </div>
-
-  <img class="imagePokeFront" v-on:mouseover="active = !active" :src="pokePicture.front_default" v-if="pokeLoaded" />
-  <img class="imagePokeBack" v-on:mouseover="active = !active" :src="pokePicture.back_default
-  " v-if="pokeLoaded" />
-
-  <div v-if="active">
-     {{myPokemonName}} <span v-if="weight">{{weight}}kg </span>
- </div>
+  <DisplayData/>
+  <getPokeData/>
 
 </template>
 
 <script>
-import axios from 'axios'
-import searchBar from './components/searchBar.vue'
+import DisplayData from './components/displayData.vue';
+import getPokeData from './components/getPokeData.vue';
 
 export default {
   name: 'App',
   components: {
-    searchBar
+    DisplayData,
+    getPokeData
   }, 
-  data(){ 
-    return {
-      active: false,
-      PokeName: null,
-      PokeNumber: 1,
-      myPokemonName: "",
-      pokemonStats: [],
-      weight: null,
-      pokeLoaded: null,
-      pokePicture: {}
-    }
-  },
-  methods: {
-
-    async loadApiNumber(){
-      await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
-        console.log(response);
-        const data = response.data;
-        this.pokeLoaded = true;
-        this.myPokemonName = data.name;
-        this.pokemonStats =  data.stats;
-        this.weight = data.weight;
-        this.pokePicture = data.sprites; //Bilder
-      })
-    },
-    
-    async setNrPlus(){
-      this.PokeNumber = (this.PokeNumber + 1);
-      this.loadApiNumber();
- 
-    },
-    async setNrMinus(){
-      this.PokeNumber = (this.PokeNumber - 1);
-      this.loadApiNumber();
-    },
-  }
 }
 </script>
 
