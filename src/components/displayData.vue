@@ -1,22 +1,28 @@
 <template>
+
+    <button @click="setVisible"> </button>
     
- <getPokeData/> 
-    
+<div v-if="visible"> 
+   
+{{ this.myPokemonName }}
+</div>  
+
 </template>
 
 <script>
     import getPokeData from './getPokeData.vue';
     export default {
         name: "displayData",
-
+        props: {myPokemonName: String}, //unbegrenzt viele möglich
     Components: {   
     },
 
     data(){
         return{
             PokeNumber: 1,
-            pokemonLoaded: false,
+            visible: true,
             pokemon: {}
+
         }
     },
     methods: {
@@ -26,6 +32,9 @@
             this.pokemonLoaded = true;
             return Pokemon;
 
+        },
+        setVisible(){
+            this.visible=true;
         }
     },
     }   
