@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ul class="menu"> </ul>
+        <ul class="menu">  </ul>
     </div>
 
 </template>

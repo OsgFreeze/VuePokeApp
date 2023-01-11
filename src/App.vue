@@ -10,7 +10,6 @@
     <button @click="loadApiNumber"> Eingabe </button>
   </div>
 
-
 <searchBar/>
 
   <div class="pokeStats">
