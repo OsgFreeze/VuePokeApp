@@ -10,13 +10,6 @@
     <button @click="loadApiNumber"> Eingabe </button>
   </div>
 
-  <div class="buttons1">
-    <button @click="setNrPlus" > Hoch ↑ </button>
-    <button @click="setNrMinus"> Runter ↓ </button> 
-    &nbsp;
-    <button @click="loadApiNumber"> Eingabe </button>
-  </div>
-
 <searchBar/>
 
   <div class="pokeStats">
