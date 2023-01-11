@@ -1,6 +1,5 @@
 <template>
 
-  <searchBar/>
   <DisplayData/>
   <getPokeData/>
 
@@ -8,21 +7,14 @@
 
 <script>
 import DisplayData from './components/displayData.vue';
-import searchBar from './components/searchBar.vue'
 import getPokeData from './components/getPokeData.vue';
 
 export default {
   name: 'App',
   components: {
-    searchBar,
     DisplayData,
     getPokeData
-
   }, 
-  
-  methods: {
-
-  }
 }
 </script>
 

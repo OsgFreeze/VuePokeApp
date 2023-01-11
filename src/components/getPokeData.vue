@@ -33,6 +33,7 @@ export default {
 <style>
     .getPokeData{
         list-style: none;
+        width: 500px;
     }
 </style>
   

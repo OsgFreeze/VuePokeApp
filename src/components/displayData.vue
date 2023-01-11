@@ -3,14 +3,11 @@
         <input id="eingabeId" type="number" v-model="PokeNumber"> </div>
     
       <div class="buttons">
-        <button @click="setNrPlus" > Hoch ↑ </button>
-        <button @click="setNrMinus"> Runter ↓ </button> 
-        &nbsp;
         <button @click="getData"> Eingabe </button>
       </div>
     
     <SearchBar/>
-    {{ PokemonName }}
+    <div v-if="pokemonLoaded"> {{ PokemonName }}  </div>
 
 </template>
 
@@ -27,6 +24,7 @@
     data(){
         return{
             PokeNumber: 1,
+            pokemonLoaded: false,
         }
     },
     methods: {
