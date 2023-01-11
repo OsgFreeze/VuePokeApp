@@ -20,7 +20,7 @@ import axios from 'axios'
 
 export default {
     name: 'getPokeData',
-    props: {pokeData: returnData},
+    props: {pokeData: Object},
     // components: {
     //},
     data(){ 
@@ -35,7 +35,7 @@ export default {
         async loadApiNumber(){
             await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
                 console.log(response);
-                this. height = response.data.;
+                this.height = response.data;
                 return;
     })
     },
