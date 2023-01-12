@@ -1,19 +1,21 @@
 <template>   
-
-  <propsCallTest/>
-
+  <myComp/>
 </template>
 
 <script> 
 
-import propsCallTest from './components/propsCallTest.vue';
+import myComp from './components/myComp.vue';
 
 export default {
   name: 'App',
   components: { //Komponenten deklarieren
-    propsCallTest
+    myComp
   }, 
-
+  methods: {
+    printMethod: function () {
+      console.log("Hallo");
+    },
+} 
 }
 </script>
 

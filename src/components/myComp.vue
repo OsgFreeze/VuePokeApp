@@ -1,16 +1,16 @@
 <template>  <!-- ref="divRef"  -->
     <div> 
-        <input type="text" ref="myRef" /> 
+        <button ref="myRef"> Press me </button>
     </div>
     
   </template>
   
   <script>
       export default {
-      name: 'propsCallTest', //Component Name
+      name: 'myComp', //Component Name
 
      mounted() {   
-          console.log(this.$refs.postListRef)   
+          console.log(this.$refs.myRef.printMethod())   
     }    
   }   
   
