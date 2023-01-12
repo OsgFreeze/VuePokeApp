@@ -2,12 +2,11 @@
 
     <div id="eingabeFenster">   <!-- [Container]  alle User Eingaben -->
         <input type="number" v-model="NumberInput"> 
-        <button @click="getApiData"> Absenden </button>
+        <button @click="getApiData" > Absenden </button>
         &nbsp;
         <button @click="setNrPlus"> Hoch ↑ </button>
         <button @click="setNrMinus"> Runter ↓ </button>
     </div>
-
 
     <div v-if="visible"> <!-- [Container]  Pokemon Name Ausgeben/Rendern -->
         {{myPokemonName}} 
@@ -31,9 +30,11 @@ export default {
     },
 
     methods: {
+
         async getApiData(){ //Api Aufruf -> wichtig: API Objekt kann nur hier variablen zugewiesen werden
             await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.NumberInput}`).then((response) => {
                 console.log(response); 
+
                 const data = response.data; 
                 this.myPokemonName = data.name; 
                 this.visible=true; 

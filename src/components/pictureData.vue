@@ -1,6 +1,6 @@
 <template>
   <div> 
-    <h1> Hallo Welt </h1>
+    <h1> Hallo Welt -> Provide/Inject </h1>
     <h1> {{this.variable}} </h1>
   </div>
 </template>
