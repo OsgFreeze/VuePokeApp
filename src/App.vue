@@ -1,20 +1,22 @@
 <template> 
 
-  <searchPokemon/> 
-  <!-- <myComp :übergebeneVariable="Variable" @messageChanged="Variable = $event" /> -->
-
+  <selectPokemon/> 
+  <displayPokemon/>
+  
 </template>
 <script> 
 
-import searchPokemon from './components/fightFenster/searchPokemon.vue';
+import selectPokemon from './components/mainWindow/selectPokemon.vue';
+import displayPokemon from './components/sideBarPokedex/displayPokemon.vue';
 
 export default {
   name: 'App',
-  components: { //Komponenten deklarieren
-    searchPokemon
+  components: { 
+    selectPokemon,
+    displayPokemon
   }, 
 
-  data(){  //Variablen [Daten] lokal deklarieren
+  data(){  
     return {
     }
   },
