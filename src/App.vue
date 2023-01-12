@@ -11,11 +11,9 @@ export default {
   components: { //Komponenten deklarieren
     myComp
   }, 
-  methods: {
-    printMethod: function () {
-      console.log("Hallo");
-    },
-} 
+  
+  methods: { 
+    }, 
 }
 </script>
 

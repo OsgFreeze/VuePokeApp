@@ -1,6 +1,6 @@
 <template>  <!-- ref="divRef"  -->
     <div> 
-        <button ref="myRef"> Press me </button>
+        <input type="text" ref="myRef"/>
     </div>
     
   </template>
@@ -10,7 +10,7 @@
       name: 'myComp', //Component Name
 
      mounted() {   
-          console.log(this.$refs.myRef.printMethod())   
+          console.log(this.$refs.myRef.focus()); 
     }    
   }   
   
