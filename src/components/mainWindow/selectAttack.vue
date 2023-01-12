@@ -1,12 +1,8 @@
 <template>
-
-    <div> 
-        
-        suche Attacke aus
-
-    </div>
-  
     
+    <div>   
+        suche Attacke aus
+    </div>
   
   </template>
   

@@ -1,6 +1,6 @@
 <template>
 
-  <div class="MainWindow"> 
+  <div class="MainDiv"> 
   <div> Pokemon Nummer eingeben: 
     <input id="eingabeId" type="number" v-model="PokeNumber"> </div>
 
@@ -70,28 +70,11 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: left;
-  color: #2c3e50;
-  margin-top: 60px;
-  font-family: sans-serif;
-}
-.MainWindow {
+
+.MainDiv {
   background-color: aquamarine;
 }
-.scrollBar {
-  background-color:lightgray;
-  list-style: none;
-  height: 100px;
-  width: 800px;
-  overflow: scroll;
-  padding: 12px 20px;
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
-  0 8px 10px -6px rgb( 0 0 0 / 0.1);
-}
+
 .pokeStats {
   padding-top: 16px;
   color: rgb(77, 76, 76);
