@@ -1,6 +1,7 @@
 <template class="selectPokemonTemplate">
 
   <div class="eingabeFeld"> Pokemon Nummer eingeben: 
+
     <input type="number" v-model="PokeNumber"> 
     <button @click="setNrPlus" > Hoch ↑ </button>
     <button @click="setNrMinus"> Runter ↓ </button> 
@@ -20,7 +21,7 @@
 
 <script>
 import axios from 'axios'
-import selectAtack from './components/mainWindow/selectAtack.vue';
+import selectAttack from './selectAttack.vue';
 
 export default {
   name: 'selectPokemon',
@@ -78,9 +79,7 @@ export default {
   height: 150px;
   width: 150px;
 }
-.eingabeFeld {
-  background-color: brown;
-}
+
 
 .dataAusgabeFeld {
   background-color:rgba(138, 130, 84, 0.192)

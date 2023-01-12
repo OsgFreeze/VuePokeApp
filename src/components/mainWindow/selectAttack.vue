@@ -1,7 +1,8 @@
 <template>
-    
+
     <div>   
-        suche Attacke aus
+        DivFenster um Attacken anzuzeigen
+
     </div>
   
   </template>

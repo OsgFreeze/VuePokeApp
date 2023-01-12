@@ -1,8 +1,9 @@
 <template> 
-  <div>   
+  <div class="hauptDiv">  
+
     <div class="mainWindow"> <selectPokemon/> </div> 
     <div class="sideBar"> <displayPokemonSideBar/> </div>
-    
+
   </div>
 </template>
 <script> 
@@ -25,14 +26,26 @@ export default {
 </script>
 
 <style>
-  .mainWindow{
-    background-color:rgba(42, 85, 58, 0.349);
-    float: left;
+  .hauptDiv{
+    display: inline-flex;
   }
 
-  .sideBar{
+  .mainWindow{
+    background-color:rgba(42, 85, 58, 0.349);
+    flex:1;
+    width: 130vw;
+    height: 100vh;
+    border-left: 50px; 
+    border: #800000;
+
+
+  }
+
+  .sideBar{ 
     background-color:rgba(142, 119, 206, 0.329);
-    float: right;
+    flex:1;
+    position: fixed;
+
   }
 
 </style>
