@@ -1,8 +1,9 @@
 <template>
 
     <div>   
-        DivFenster um Attacken anzuzeigen
 
+       SelectAttack Komponente Text
+       
     </div>
   
   </template>

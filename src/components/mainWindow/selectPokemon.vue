@@ -6,7 +6,7 @@
     <button @click="setNrPlus" > Hoch ↑ </button>
     <button @click="setNrMinus"> Runter ↓ </button> 
     &nbsp;
-    <button @click="loadApiNumber"> Eingabe </button>
+    <button @click="loadApiNumber"> Zahl Übermitteln </button>
   </div>
 
   <div class="dataAusgabeFeld">
@@ -16,7 +16,8 @@
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
   </div>
 
-  <selectAttack/>
+  <selectAttack class="selecAttack" />
+
 </template>
 
 <script>
@@ -80,8 +81,7 @@ export default {
   width: 150px;
 }
 
-
-.dataAusgabeFeld {
-  background-color:rgba(138, 130, 84, 0.192)
+.selecAttack {
+  background-color:red;
 }
 </style>
