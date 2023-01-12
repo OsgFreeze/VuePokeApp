@@ -12,10 +12,9 @@
     <p v-for="(pokemonStat, index) in pokemonStats" :key="index">{{pokemonStat.name}} = {{pokemonStat.base_stat}}</p>
     <img class="imagePokeFront" :src="pokePicture.front_default" v-if="pokeLoaded" />
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
-    <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> Attackenname = {{pokeLearnedAttacks[index].name}}</p>
   </div>
 
-  <selectAttack class="selecAttack" :übergebeneVariable="this.PokeNumber"  /> <!-- Springe zu Attackenauswahl Komponente -->
+  <selectAttack class="selecAttack" :übergebeneVariable="this.testArray"  /> <!-- Springe zu Attackenauswahl Komponente -->
 </template>
 
 <script>
@@ -39,6 +38,7 @@ export default {
       pokeLoaded: null,
       pokePicture: {},
       pokeLearnedAttacks: [],
+      testArray: [1,3,5,7,9],
     }
   },
 
