@@ -8,7 +8,7 @@
   
   <script>
   export default {
-    name: 'displayPokemon',
+    name: 'displayPokemonSideBar',
     components: {  
     }, 
     data(){ 

@@ -1,26 +1,21 @@
-<template>
+<template class="selectPokemonTemplate">
 
-  <div class="MainDiv"> 
-  <div> Pokemon Nummer eingeben: 
-    <input id="eingabeId" type="number" v-model="PokeNumber"> </div>
-
-  <div class="buttons">
+  <div class="eingabeFeld"> Pokemon Nummer eingeben: 
+    <input type="number" v-model="PokeNumber"> 
     <button @click="setNrPlus" > Hoch ↑ </button>
     <button @click="setNrMinus"> Runter ↓ </button> 
     &nbsp;
     <button @click="loadApiNumber"> Eingabe </button>
   </div>
 
-  <div class="pokeStats">
-    {{myPokemonName}}
-    <span v-if="weight">{{weight}}kg </span>
+  <div class="dataAusgabeFeld">
+    <span v-if="weight">Aktuell ausgewähltes Pokemon: {{myPokemonName}}  , er wiegt: {{weight}}kg </span>
     <p v-for="(pokemonStat, index) in pokemonStats" :key="index">{{pokemonStat.name}} = {{pokemonStat.base_stat}}</p>
     <img class="imagePokeFront" :src="pokePicture.front_default" v-if="pokeLoaded" />
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
   </div>
 
-</div>
-
+  <h1> Platzhalter </h1>
 </template>
 
 <script>
@@ -71,24 +66,22 @@ export default {
 
 <style>
 
-.MainDiv {
-  background-color: aquamarine;
-}
-
-.pokeStats {
-  padding-top: 16px;
-  color: rgb(77, 76, 76);
-  font-family: sans-serif;
+#selectPokemon {
+  font-family: Arial;
 }
 .imagePokeFront {
   height: 150px;
   width: 150px;
-  font-family: sans-serif;
-  background-color: rgba(26, 97, 204, 0.075);
 }
 .imagePokeBack {
   height: 150px;
   width: 150px;
-  background-color: rgba(211, 80, 57, 0.075);
+}
+.eingabeFeld {
+  background-color: brown;
+}
+
+.dataAusgabeFeld {
+  background-color:rgba(138, 130, 84, 0.192)
 }
 </style>
