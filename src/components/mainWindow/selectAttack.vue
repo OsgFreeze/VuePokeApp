@@ -1,14 +1,14 @@
 <template>
 
     <div>   
-       unterklasse:  {{ übergebeneVariable }} <!-- sollte Pokedex Nummer von Pokemon sein-->
-       <button @click="getAttackData"> pokemon Attack Data Print in consol</button>
+       diese Information kommt von der Child Component:  {{ übergebeneVariable }}  und das hier wurde local übernommen  {{ this.localArray }} <!-- sollte Pokedex Nummer von Parent übertragen sein-->
+       <button @click="getAttackData"> Attacken Daten von API aufrufen </button>    <!-- Button um Attack API Call zu machen-->
+       <p> name: {{this.attackName}} , damage: {{ this.baseDamage }} </p>           <!-- Display API Data -->
     </div>
-  
+
   </template>
   
   <script>
-
   import axios from 'axios'
 
   export default {
@@ -18,18 +18,27 @@
     props: ['übergebeneVariable'],
     data(){ 
       return {
-       // AttackNumber: 1,
+       baseDamage: 0,
+       attackName: "",
+       localArray: [],
       }
     },
 
     methods: {
-      async getAttackData(){
-      await axios.get(`https://pokeapi.co/api/v2/move/${this.übergebeneVariable}`).then((response) => { //movename oder Nummer
-        console.log(response);
-      })
-    },
-    }
+      async getAttackData(){ //gibt Informationen zu den übergebenen lernbaren Attacken aus [Attacken aus Array] *funktioniert noch nicht -> aktuell wird nur pokemonNumber genommen*
+        //for(let i=0; i<this.localArray.length; i++) {
+          this.localArray = this.übergebeneVariable
+          await axios.get(`https://pokeapi.co/api/v2/move/${this.localArray[3]}`).then((response) => { 
+          console.log(response);
+          const data = response.data;
+          this.baseDamage = data.power;
+          this.attackName = data.name;
+          })
+        }
+      }
+    //}
   } 
+   
   
   </script>
   
