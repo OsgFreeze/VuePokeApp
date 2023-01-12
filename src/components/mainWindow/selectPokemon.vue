@@ -15,16 +15,17 @@
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
   </div>
 
-  <h1> Platzhalter </h1>
+  <selectAttack/>
 </template>
 
 <script>
 import axios from 'axios'
+import selectAtack from './components/mainWindow/selectAtack.vue';
 
 export default {
   name: 'selectPokemon',
   components: {
-    
+    selectAttack  
   }, 
   data(){ 
     return {

@@ -2,6 +2,7 @@
   <div>   
     <div class="mainWindow"> <selectPokemon/> </div> 
     <div class="sideBar"> <displayPokemonSideBar/> </div>
+    
   </div>
 </template>
 <script> 
@@ -13,7 +14,7 @@ export default {
   name: 'App',
   components: { 
     selectPokemon,
-    displayPokemonSideBar
+    displayPokemonSideBar,
   }, 
 
   data(){  
