@@ -1,10 +1,9 @@
 <template>  <!-- ref="divRef"  -->
     <div> 
+      {{ übergebeneVariable }} <!-- gib Parent Variable aus -->  <!-- :value="übergebeneVariable" @input="changeVariable -->
 
-      {{ übergebeneVariable }}
-      <input type="text" @input="changeVariable" /> <!-- :value="übergebeneVariable" -->
+      <button  :value="übergebeneVariable" @click="changeVariable" > Scheiß </button>
       {{ this.eigeneVariable }}
-
     </div>
     
   </template>
