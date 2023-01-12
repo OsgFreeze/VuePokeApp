@@ -15,11 +15,7 @@
     <img class="imagePokeFront" :src="pokePicture.front_default" v-if="pokeLoaded" />
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
 
-
-    <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> Attackenname = {{pokeLearnedAttacks.name}}</p>
-
-
-
+    <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> Attackenname = {{pokeLearnedAttacks[index].name}}</p>
   </div>
 
   <selectAttack class="selecAttack" :übergebeneVariable="this.PokeNumber"  /> <!--  @messageChanged="Variable = $event" -->
@@ -59,6 +55,8 @@ export default {
         this.weight = data.weight;
         this.pokePicture = data.sprites; //Bilder
         this.pokeLearnedAttacks = data.moves;
+        console.log(data.moves);
+
 
       })
     },
