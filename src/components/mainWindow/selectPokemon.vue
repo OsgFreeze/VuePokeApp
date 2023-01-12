@@ -10,13 +10,19 @@
   </div>
 
   <div class="dataAusgabeFeld">
-    <span v-if="weight">Aktuell ausgewähltes Pokemon: {{myPokemonName}}  , er wiegt: {{weight}}kg </span>
+    <span v-if="weight">Aktuell ausgewähltes Pokemon: {{myPokemonName}}  , er wiegt: {{weight}}kg   {{this.movePower}} </span>
     <p v-for="(pokemonStat, index) in pokemonStats" :key="index">{{pokemonStat.name}} = {{pokemonStat.base_stat}}</p>
     <img class="imagePokeFront" :src="pokePicture.front_default" v-if="pokeLoaded" />
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
+
+
+    <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> Attackenname = {{pokeLearnedAttacks.name}}</p>
+
+
+
   </div>
 
-  <selectAttack class="selecAttack" />
+  <selectAttack class="selecAttack" :übergebeneVariable="this.PokeNumber"  /> <!--  @messageChanged="Variable = $event" -->
 
 </template>
 
@@ -38,7 +44,8 @@ export default {
       pokemonStats: [],
       weight: null,
       pokeLoaded: null,
-      pokePicture: {}
+      pokePicture: {},
+      pokeLearnedAttacks: [],
     }
   },
   methods: {
@@ -51,6 +58,8 @@ export default {
         this.pokemonStats =  data.stats;
         this.weight = data.weight;
         this.pokePicture = data.sprites; //Bilder
+        this.pokeLearnedAttacks = data.moves;
+
       })
     },
     
