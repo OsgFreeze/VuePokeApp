@@ -1,25 +1,21 @@
 <template class="selectPokemonTemplate">
 
-  <div class="eingabeFeld"> Pokemon Nummer eingeben: 
-
+  <div class="eingabeFeld"> Pokemon Nummer eingeben:  <!-- Pokemon Nummer von Pokedex eingeben & API-Methodenaufruf -->
     <input type="number" v-model="PokeNumber"> 
     <button @click="setNrPlus" > Hoch ↑ </button>
-    <button @click="setNrMinus"> Runter ↓ </button> 
-    &nbsp;
+    <button @click="setNrMinus"> Runter ↓ </button>  &nbsp;
     <button @click="loadApiNumber"> Zahl Übermitteln </button>
   </div>
 
-  <div class="dataAusgabeFeld">
+  <div class="dataAusgabeFeld"> <!-- gibt alle Informationen über das Pokemon aus -->
     <span v-if="weight">Aktuell ausgewähltes Pokemon: {{myPokemonName}}  , er wiegt: {{weight}}kg   {{this.movePower}} </span>
     <p v-for="(pokemonStat, index) in pokemonStats" :key="index">{{pokemonStat.name}} = {{pokemonStat.base_stat}}</p>
     <img class="imagePokeFront" :src="pokePicture.front_default" v-if="pokeLoaded" />
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
-
     <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> Attackenname = {{pokeLearnedAttacks[index].name}}</p>
   </div>
 
-  <selectAttack class="selecAttack" :übergebeneVariable="this.PokeNumber"  /> <!--  @messageChanged="Variable = $event" -->
-
+  <selectAttack class="selecAttack" :übergebeneVariable="this.PokeNumber"  /> <!-- Springe zu Attackenauswahl Komponente -->
 </template>
 
 <script>
@@ -31,7 +27,8 @@ export default {
   components: {
     selectAttack  
   }, 
-  data(){ 
+
+  data(){  //notwendige lokale Variablen Erstellen
     return {
       active: false,
       PokeName: null,
@@ -44,8 +41,9 @@ export default {
       pokeLearnedAttacks: [],
     }
   },
-  methods: {
-    async loadApiNumber(){
+
+  methods: { 
+    async loadApiNumber(){ //API Call für Pokemon Daten
       await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
         console.log(response);
         const data = response.data;
@@ -53,20 +51,18 @@ export default {
         this.myPokemonName = data.name;
         this.pokemonStats =  data.stats;
         this.weight = data.weight;
-        this.pokePicture = data.sprites; //Bilder
+        this.pokePicture = data.sprites; 
         this.pokeLearnedAttacks = data.moves;
         console.log(data.moves);
-
-
       })
     },
     
-    async setNrPlus(){
+    async setNrPlus(){ //ausgewähltes Pokemon +1 -> danach API CALL
       this.PokeNumber = (this.PokeNumber + 1);
       this.loadApiNumber();
  
     },
-    async setNrMinus(){
+    async setNrMinus(){ //ausgewähltes Pokemon -1 -> danach API CALL
       this.PokeNumber = (this.PokeNumber - 1);
       this.loadApiNumber();
     },
