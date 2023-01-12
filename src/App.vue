@@ -1,5 +1,7 @@
-<template>   
-  <myComp/>
+<template> 
+
+  <myComp :msg="Variable" />
+
 </template>
 
 <script> 
@@ -11,9 +13,11 @@ export default {
   components: { //Komponenten deklarieren
     myComp
   }, 
-  
-  methods: { 
-    }, 
+  data(){  //Variablen [Daten] lokal deklarieren
+    return {
+      Variable: 'Hurensohn'
+    }
+  },
 }
 </script>
 
