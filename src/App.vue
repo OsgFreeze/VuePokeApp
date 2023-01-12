@@ -1,6 +1,6 @@
 <template> 
 
-  <myComp :msg="Variable" />
+  <myComp :übergebeneVariable="Variable" @messageChanged="Variable = $event" />
 
 </template>
 
@@ -15,7 +15,7 @@ export default {
   }, 
   data(){  //Variablen [Daten] lokal deklarieren
     return {
-      Variable: 'Hurensohn'
+      Variable: "parent"
     }
   },
 }
