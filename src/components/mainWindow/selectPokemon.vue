@@ -14,7 +14,7 @@
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
   </div>
 
-  <selectAttack class="selecAttack" :übergebeneVariable="this.attackNameArray"  /> <!-- Springe zu Attackenauswahl Komponente -->
+  <selectAttack class="selecAttack" :übergebeneVariable="this.pokemon"  /> <!-- Springe zu Attackenauswahl Komponente -->
 </template>
 
 <script>
@@ -38,7 +38,9 @@ export default {
       pokeLoaded: null,
       pokePicture: {},
       testArray: [2,3,54,63,53,23,76,1,2,4,7,8,34],
-      attackNameArray: [],
+      learnableAttackNameArray: [],
+
+      pokemon: {}
       
     }
   },
@@ -48,7 +50,11 @@ export default {
     async loadApiNumber(){ //API Call für Pokemon Daten
       await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
         console.log(response);
+
         const data = response.data;
+
+        this.pokemon = data;
+
         this.pokeLoaded = true;
         this.myPokemonName = data.name;
         this.pokemonStats =  data.stats;
@@ -56,13 +62,11 @@ export default {
         this.pokePicture = data.sprites; 
         this.anzahlLernbareAttacken = data.moves.length;
        
-
         console.log("anzahl lernbarer Attacken: " +  this.anzahlLernbareAttacken);
-        for (let i=0; i < data.moves.length; i++) {
-          //Attackennamen Ausgeben
-          this.attackNameArray[i] = data.moves[i].move.name;    //Alle Namen in ein neuen Array speichern
-        }  
-
+       for (let i=0; i < data.moves.length; i++) {
+       
+         this.learnableAttackNameArray[i] = data.moves[i].move.name;    //Alle Namen in ein neuen Array speichern
+       }  
       })
     },
     

@@ -5,8 +5,10 @@
        <p> </p> <!-- Zeilenumbruch-->
        und das hier wurde in eine local Variable überschrieben:  {{ this.localArray }} 
        <p> </p> <!-- Zeilenumbruch-->
+
        <button @click="getAttackData"> neuer API Call [API/Moves] </button>         <!-- Button um Attack API Call zu machen-->
-       <p> name: {{this.attackName}} , damage: {{ this.baseDamage }} </p>           <!-- API Data anzeigen -->
+       {{this.attackName}}
+               
     </div>
 
   </template>
@@ -24,18 +26,22 @@
        baseDamage: 0,
        attackName: "[none]",
        localArray: [],
+       learnableAttackbyNameArray: [],
       }
     },
 
     methods: {
-      async getAttackData(){ //gibt Informationen zu den übergebenen lernbaren Attacken aus [Attacken aus übergeben Array]
-        this.localArray = this.übergebeneVariable //übergebener Array Local Speichern
-        for(let i=0; i<5; i++) {                                                                         
+      async getAttackData(){ //gibt Informationen zu den übergebenen lernbaren Attacken aus 
+        const Pokedata = this.übergebeneVariable.data;
+        this.anzahlLernbareAttacken = Pokedata.moves.length;
+        for (let i=0; i < Pokedata.moves.length; i++) {
+          this.learnableAttackbyNameArray[i] = this.übergebeneVariable.data.moves[i].move.name;    //Alle Namen in ein neuen Array speichern
+                                                               
           await axios.get(`https://pokeapi.co/api/v2/move/${this.localArray[i]}`).then((response) => {  
           const data = response.data;
           console.log(data);
           
-          this.baseDamage = data.power;
+          this.baseDamage = data.power; //gibt jetzt nur Attacke nr 5 aus ? 
           this.attackName = data.name;
           })
         }
