@@ -5,9 +5,9 @@
 
        <p> </p> <!-- Zeilenumbruch-->
 
-       <button @click="getAttackData"> child Methode ausführen </button>   <!-- Button um Attack API Call zu machen-->
+       <button @click="getAttackData"> Pokemon Attacken anzeigen </button>   <!-- Button um Attack API Call zu machen-->
 
-       <p> {{ chosenAttacks }} </p>
+       <p> Ausgewählte Attacken: {{ chosenAttacks }} </p>
 
        <p v-for="(Attackobjekt, index) in AttackobjektArray" :key="index"> 
         {{index}} 
@@ -40,33 +40,31 @@
        visible: false,
        anzahlLernbareAttacken: 0,
        AttackobjektArray: [],
-       chosenAttacks: [],
+       chosenAttacks: [null],
        arrayindex: 0
       }
     },
 
     methods: {
-      async getAttackData(){ //gibt Informationen zu den übergebenen lernbaren Attacken aus 
+      async getAttackData(){                                               //gibt Informationen zu den übergebenen lernbaren Attacken aus 
       
-        const Pokedata = this.übergebenesObject;                                      //objekt.daten in Pokedata speichern                                    funktioniert ✓
-        this.anzahlLernbareAttacken = Pokedata.moves.length;                          //local variable für Anzahl lernbare Attacken                           funktioniert ✓
+        const Pokedata = this.übergebenesObject;                           //objekt.daten in Pokedata speichern                                    funktioniert ✓
+        this.anzahlLernbareAttacken = Pokedata.moves.length;               //local variable für Anzahl lernbare Attacken                           funktioniert ✓
 
-        for (let i=0; i < this.anzahlLernbareAttacken; i++) {                         //durchläuft so oft wie viele Attacken ein Pokemon lernen kann.         funktioniert ✓
+        for (let i=0; i < this.anzahlLernbareAttacken; i++) {              //durchläuft so oft wie viele Attacken ein Pokemon lernen kann.         funktioniert ✓
 
-          let attackURL = Pokedata.moves[i].move.url
-          //await axios.get(this.attackURL).then((response) => {                      //gibt API Daten über übergebenesObjekt.Attack.url[i] aus
-          await axios.get(attackURL).then((response) => {    //gibt API Daten über Attacke 5 aus
+          let attackURL = Pokedata.moves[i].move.url                     
+          await axios.get(attackURL).then((response) => {    
           const attackData = response.data; 
           this.AttackobjektArray[i] = attackData;
           })
-          //this.baseDamage = attackData.power; //gibt jetzt nur Attacke nr 5 aus ? 
-          //this.attackName = Attackdata.name;
+
           } 
           this.visible=true;
        },
 
        selectAttack(number){
-          //console.log(number)
+          
           
           this.chosenAttacks[this.arrayindex]= number;
           this.arrayindex++;

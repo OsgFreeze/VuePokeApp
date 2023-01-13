@@ -34,6 +34,6 @@
   
   <style>
 .myFightWindow{
-  background-color: cornflowerblue;
+  background-color: rgb(231, 221, 83);
 }
   </style>
