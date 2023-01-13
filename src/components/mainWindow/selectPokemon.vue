@@ -10,8 +10,7 @@
   <div class="dataAusgabeFeld"> <!-- gibt alle Informationen über das Pokemon aus -->
     <span v-if="weight">Aktuell ausgewähltes Pokemon: {{myPokemonName}}  , er wiegt: {{weight}}kg </span>
     <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> {{pokemonObject.stats[index].stat.name}} = {{pokemonStat.base_stat}}</p>
-    <img class="imagePokeFront" :src="pokePicture.front_default" v-if="pokeLoaded" />
-    <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
+    <img class="PokemonPictureHD" :src="pokePicture.other.home.front_default"  v-if="pokeLoaded"/> 
   </div>
 
   <selectAttack class="selecAttack" :übergebenesObject="this.pokemonObject"  /> <!-- Springe zu Attackenauswahl-Komponente & übergebe Objekt -> {pokemonObject} -->
@@ -82,13 +81,9 @@ export default {
 #selectPokemon {
   font-family: Arial;
 }
-.imagePokeFront {
-  height: 150px;
-  width: 150px;
-}
-.imagePokeBack {
-  height: 150px;
-  width: 150px;
+.PokemonPictureHD {
+  height: 400px;
+  width: 400px;
 }
 
 .selecAttack {

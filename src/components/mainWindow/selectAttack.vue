@@ -86,7 +86,7 @@
   }
 
   .generateRandomPokemon {
-   visibility: hidden;
+   visibility: visible;
   }
   </style>
   
