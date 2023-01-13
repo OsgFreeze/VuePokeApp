@@ -1,26 +1,27 @@
 <template>
 
     <div>   
-        sidebar: [Empty]
+      <p> fight Window  </p>  
     </div>
-  
-</template>
+
+  </template>
   
   <script>
+
   export default {
-    name: 'displayPokemonSideBar',
+    name: 'fightWindow',
     components: {  
     }, 
+    //props: ['übergebeneVariable'],
     data(){ 
       return {
       }
     },
-
     methods: {
-    }
+    } 
   }
+
   </script>
   
   <style>
   </style>
-  

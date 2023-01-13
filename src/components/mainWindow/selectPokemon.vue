@@ -8,13 +8,13 @@
   </div>
 
   <div class="dataAusgabeFeld"> <!-- gibt alle Informationen über das Pokemon aus -->
-    <span v-if="weight">Aktuell ausgewähltes Pokemon: {{myPokemonName}}  , er wiegt: {{weight}}kg   {{this.movePower}} </span>
-    <p v-for="(pokemonStat, index) in pokemonStats" :key="index">{{pokemonStat.name}} = {{pokemonStat.base_stat}}</p>
+    <span v-if="weight">Aktuell ausgewähltes Pokemon: {{myPokemonName}}  , er wiegt: {{weight}}kg </span>
+    <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> Basevalue {{index}} = {{pokemonStat.base_stat}}</p>
     <img class="imagePokeFront" :src="pokePicture.front_default" v-if="pokeLoaded" />
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
   </div>
 
-  <selectAttack class="selecAttack" :übergebeneVariable="this.testArray"  /> <!-- Springe zu Attackenauswahl Komponente -->
+  <selectAttack class="selecAttack" :übergebenesObject="this.pokemonObject"  /> <!-- Springe zu Attackenauswahl-Komponente & übergebe Objekt -> {pokemonObject} -->
 </template>
 
 <script>
@@ -37,8 +37,9 @@ export default {
       weight: null,
       pokeLoaded: null,
       pokePicture: {},
-      testArray: [2,3,54,63,53,23,76,1,2,4,7,8,34],
-      attackNameArray: [],
+      learnableAttackNameArray: [],
+
+      pokemonObject: {}
       
     }
   },
@@ -48,22 +49,15 @@ export default {
     async loadApiNumber(){ //API Call für Pokemon Daten
       await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
         console.log(response);
+
         const data = response.data;
+        this.pokemonObject = data; //Pokemon Objekt in variable "pokemonObject" Speichern
         this.pokeLoaded = true;
+
         this.myPokemonName = data.name;
         this.pokemonStats =  data.stats;
         this.weight = data.weight;
         this.pokePicture = data.sprites; 
-        this.anzahlLernbareAttacken = data.moves.length;
-       
-
-        console.log("anzahl lernbarer Attacken: " +  this.anzahlLernbareAttacken);
-        for (let i=0; i < data.moves.length; i++) {
-          console.log(data.moves[i].move.name);              //Attackennamen Ausgeben
-          this.attackNameArray = data.moves[i].move.name;    //Alle Namen in ein neuen Array speichern
-          console.log(this.attackNameArray);
-        }  
-
       })
     },
     
