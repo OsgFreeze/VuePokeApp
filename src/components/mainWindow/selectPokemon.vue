@@ -14,7 +14,7 @@
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
   </div>
 
-  <selectAttack class="selecAttack" :übergebeneVariable="this.pokemon"  /> <!-- Springe zu Attackenauswahl Komponente -->
+  <selectAttack class="selecAttack" :übergebeneVariable="this.pokemonObject"  /> <!-- Springe zu Attackenauswahl-Komponente & übergebe Objekt -> {pokemonObject} -->
 </template>
 
 <script>
@@ -40,7 +40,7 @@ export default {
       testArray: [2,3,54,63,53,23,76,1,2,4,7,8,34],
       learnableAttackNameArray: [],
 
-      pokemon: {}
+      pokemonObject: {}
       
     }
   },
@@ -52,21 +52,13 @@ export default {
         console.log(response);
 
         const data = response.data;
-
-        this.pokemon = data;
-
+        this.pokemonObject = data; //Pokemon Objekt in variable "pokemonObject" Speichern
         this.pokeLoaded = true;
+
         this.myPokemonName = data.name;
         this.pokemonStats =  data.stats;
         this.weight = data.weight;
         this.pokePicture = data.sprites; 
-        this.anzahlLernbareAttacken = data.moves.length;
-       
-        console.log("anzahl lernbarer Attacken: " +  this.anzahlLernbareAttacken);
-       for (let i=0; i < data.moves.length; i++) {
-       
-         this.learnableAttackNameArray[i] = data.moves[i].move.name;    //Alle Namen in ein neuen Array speichern
-       }  
       })
     },
     
