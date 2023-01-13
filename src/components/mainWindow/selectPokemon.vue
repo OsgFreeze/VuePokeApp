@@ -14,7 +14,7 @@
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
   </div>
 
-  <selectAttack class="selecAttack" :übergebeneVariable="this.pokemonObject"  /> <!-- Springe zu Attackenauswahl-Komponente & übergebe Objekt -> {pokemonObject} -->
+  <selectAttack class="selecAttack" :übergebenesObject="this.pokemonObject"  /> <!-- Springe zu Attackenauswahl-Komponente & übergebe Objekt -> {pokemonObject} -->
 </template>
 
 <script>
