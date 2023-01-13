@@ -7,11 +7,13 @@
 
        <button @click="getAttackData"> child Methode ausführen </button>   <!-- Button um Attack API Call zu machen-->
 
+       <p> {{ chosenAttacks }} </p>
+       
        <p v-for="(Attackobjekt, index) in AttackobjektArray" :key="index"> 
         {{index}} 
-        <button> {{Attackobjekt.name}} {{Attackobjekt.accuracy}} </button> 
+        <button @click="selectAttack(index)"> {{Attackobjekt.name}} {{Attackobjekt.accuracy}} </button> 
       </p>
-       <!--<p v-for="(pokemonStat, index) in pokemonStats" :key="index"> Basevalue {{index}} = {{pokemonStat.base_stat}}</p>-->
+       
     </div>
 
   </template>
@@ -31,7 +33,8 @@
        visible: false,
        anzahlLernbareAttacken: 0,
        AttackobjektArray: [],
-       chosenAttacks: []
+       chosenAttacks: [],
+       arrayindex: 0
       }
     },
 
@@ -55,7 +58,12 @@
           this.visible=true;
        },
 
-       
+       selectAttack(number){
+          //console.log(number)
+          
+          this.chosenAttacks[this.arrayindex]= number;
+          this.arrayindex++;
+       }
 
       }
     }
