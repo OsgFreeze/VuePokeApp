@@ -9,7 +9,7 @@
 
   <div class="dataAusgabeFeld"> <!-- gibt alle Informationen über das Pokemon aus -->
     <span v-if="weight">Aktuell ausgewähltes Pokemon: {{myPokemonName}}  , er wiegt: {{weight}}kg </span>
-    <p v-for="(pokemonStat, index) in pokemonStats" :key="index">{{pokemonStat.name}} = {{pokemonStat.base_stat}}</p>
+    <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> Basevalue {{index}} = {{pokemonStat.base_stat}}</p>
     <img class="imagePokeFront" :src="pokePicture.front_default" v-if="pokeLoaded" />
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
   </div>
@@ -59,9 +59,8 @@ export default {
 
         console.log("anzahl lernbarer Attacken: " +  this.anzahlLernbareAttacken);
         for (let i=0; i < data.moves.length; i++) {
-          console.log(data.moves[i].move.name);              //Attackennamen Ausgeben
-          this.attackNameArray = data.moves[i].move.name;    //Alle Namen in ein neuen Array speichern
-          console.log(this.attackNameArray);
+          //Attackennamen Ausgeben
+          this.attackNameArray[i] = data.moves[i].move.name;    //Alle Namen in ein neuen Array speichern
         }  
 
       })

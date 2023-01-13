@@ -3,7 +3,7 @@
     <div>   
        diese Information kommt von der Child Component:  {{ this.übergebeneVariable }} 
        <p> </p> <!-- Zeilenumbruch-->
-       und das hier wurde in eine local  {{ this.localArray }} 
+       und das hier wurde in eine local Variable überschrieben:  {{ this.localArray }} 
        <p> </p> <!-- Zeilenumbruch-->
        <button @click="getAttackData"> neuer API Call [API/Moves] </button>         <!-- Button um Attack API Call zu machen-->
        <p> name: {{this.attackName}} , damage: {{ this.baseDamage }} </p>           <!-- API Data anzeigen -->
@@ -28,10 +28,10 @@
     },
 
     methods: {
-      async getAttackData(){ //gibt Informationen zu den übergebenen lernbaren Attacken aus [Attacken aus übergeben Array] 
-        for(let i=0; i<5; i++) {                                                                                  //durchläuft so oft wie der Array.length von allen lernbaren Attacks
-          this.localArray = this.übergebeneVariable                                                               //übergebener Array Local Speichern
-          await axios.get(`https://pokeapi.co/api/v2/move/${this.localArray[i]}`).then((response) => {    //Api Call
+      async getAttackData(){ //gibt Informationen zu den übergebenen lernbaren Attacken aus [Attacken aus übergeben Array]
+        this.localArray = this.übergebeneVariable //übergebener Array Local Speichern
+        for(let i=0; i<5; i++) {                                                                         
+          await axios.get(`https://pokeapi.co/api/v2/move/${this.localArray[i]}`).then((response) => {  
           const data = response.data;
           console.log(data);
           
