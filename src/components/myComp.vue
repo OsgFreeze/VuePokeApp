@@ -2,8 +2,6 @@
     <div> 
 
       {{ übergebeneVariable }}
-
-      
       <input type="text" @input="changeVariable" /> <!-- :value="übergebeneVariable" -->
       {{ this.eigeneVariable }}
 

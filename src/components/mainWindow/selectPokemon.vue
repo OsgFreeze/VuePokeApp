@@ -37,10 +37,12 @@ export default {
       weight: null,
       pokeLoaded: null,
       pokePicture: {},
-      pokeLearnedAttacks: [],
-      testArray: [1,3,5,7,9],
+      testArray: [2,3,54,63,53,23,76,1,2,4,7,8,34],
+      attackNameArray: [],
+      
     }
   },
+
 
   methods: { 
     async loadApiNumber(){ //API Call für Pokemon Daten
@@ -52,11 +54,20 @@ export default {
         this.pokemonStats =  data.stats;
         this.weight = data.weight;
         this.pokePicture = data.sprites; 
-        this.pokeLearnedAttacks = data.moves;
-        console.log(data.moves);
+        this.anzahlLernbareAttacken = data.moves.length;
+       
+
+        console.log("anzahl lernbarer Attacken: " +  this.anzahlLernbareAttacken);
+        for (let i=0; i < data.moves.length; i++) {
+          console.log(data.moves[i].move.name);              //Attackennamen Ausgeben
+          this.attackNameArray = data.moves[i].move.name;    //Alle Namen in ein neuen Array speichern
+          console.log(this.attackNameArray);
+        }  
+
       })
     },
     
+
     async setNrPlus(){ //ausgewähltes Pokemon +1 -> danach API CALL
       this.PokeNumber = (this.PokeNumber + 1);
       this.loadApiNumber();
