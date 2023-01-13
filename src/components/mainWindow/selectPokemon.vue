@@ -37,7 +37,6 @@ export default {
       weight: null,
       pokeLoaded: null,
       pokePicture: {},
-      testArray: [2,3,54,63,53,23,76,1,2,4,7,8,34],
       learnableAttackNameArray: [],
 
       pokemonObject: {}

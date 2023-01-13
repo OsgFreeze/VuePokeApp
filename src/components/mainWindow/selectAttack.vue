@@ -1,24 +1,19 @@
 <template>
 
     <div>   
-       diese Information kommt von der Child Component: {{übergebenesObject}} <!--{{ this.übergebenesObject }} -->
+       diese Information kommt von der Parent Component: {{this.übergebenesObject.name}} <!--{{ this.übergebenesObject }} -->
+
        <p> </p> <!-- Zeilenumbruch-->
-       und das hier wurde in eine local Variable überschrieben:  {{ this.localArray }} 
-       <p> </p> <!-- Zeilenumbruch-->
 
-       <button @click="getAttackData"> neuer API Call [API/Moves] </button>   <!-- Button um Attack API Call zu machen-->
+       <button @click="getAttackData"> child Methode ausführen </button>   <!-- Button um Attack API Call zu machen-->
 
-       <p> 
-        {{this.attackName}} <!--  Attackenname Ausgeben (eigentlich in Schleife mit allen anderen Werten)-->
-        {{this.anzahlLernbareAttacken}}
-      </p> 
-
+       <p v-if="visible"> {{this.objektArray}} </p>
     </div>
 
   </template>
   
   <script>
-  //port axios from 'axios'
+  import axios from 'axios'
 
   export default {
     name: 'selectAttack',
@@ -29,26 +24,32 @@
       return {
        baseDamage: 0,
        attackName: "[none]",
-       learnableAttackbyNameArray: [],
+       visible: false,
        anzahlLernbareAttacken: 0,
+       attackURL: "",
+       objektArray: [],
       }
     },
 
     methods: {
       async getAttackData(){ //gibt Informationen zu den übergebenen lernbaren Attacken aus 
-        const Pokedata = this.übergebenesObject.data; //objekt.daten in Pokedata speichern
-        this.anzahlLernbareAttacken = Pokedata.moves.length;
+      
+        const Pokedata = this.übergebenesObject;                                      //objekt.daten in Pokedata speichern                                    funktioniert ✓
+        this.anzahlLernbareAttacken = Pokedata.moves.length;                          //local variable für Anzahl lernbare Attacken                           funktioniert ✓
 
-         for (let i=0; i < anzahlLernbareAttacken; i++) {
-         // this.learnableAttackbyNameArray[i] = this.übergebenesObject.data.moves[i].move.name;    //Alle Namen in ein neuen Array speichern
-          
-         // await axios.get('${this.Pokedata.moves.url}`).then((response) => {  
-          //// console.log(Attackdata);
-          
-          //this.baseDamage = Attackdata.power; //gibt jetzt nur Attacke nr 5 aus ? 
+        for (let i=0; i < this.anzahlLernbareAttacken; i++) {                         //durchläuft so oft wie viele Attacken ein Pokemon lernen kann.         funktioniert ✓
+
+          this.attackURL = this.Pokedata.moves[i]
+          console.log(this.attackURL);
+         // await axios.get(this.attackURL).then((response) => {                      //gibt API Daten über übergebenesObjekt.Attack.url[i] aus
+          await axios.get('https://pokeapi.co/api/v2/move/5').then((response) => {    //gibt API Daten über Attacke 5 aus
+          const attackData = response.data; 
+          console.log(attackData);
+
+          //this.baseDamage = attackData.power; //gibt jetzt nur Attacke nr 5 aus ? 
           //this.attackName = Attackdata.name;
-         // })
-        }
+          }) 
+       }
       }
     }
   
