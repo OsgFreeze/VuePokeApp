@@ -7,7 +7,11 @@
 
        <button @click="getAttackData"> child Methode ausführen </button>   <!-- Button um Attack API Call zu machen-->
 
-       <p v-if="visible"> {{this.objektArray}} </p>
+       <p v-for="(Attackobjekt, index) in AttackobjektArray" :key="index"> 
+        {{index}} 
+        <button> {{Attackobjekt.name}} {{Attackobjekt.accuracy}} </button> 
+      </p>
+       <!--<p v-for="(pokemonStat, index) in pokemonStats" :key="index"> Basevalue {{index}} = {{pokemonStat.base_stat}}</p>-->
     </div>
 
   </template>
@@ -26,8 +30,8 @@
        attackName: "[none]",
        visible: false,
        anzahlLernbareAttacken: 0,
-       attackURL: "",
-       objektArray: [],
+       AttackobjektArray: [],
+       chosenAttacks: []
       }
     },
 
@@ -39,21 +43,24 @@
 
         for (let i=0; i < this.anzahlLernbareAttacken; i++) {                         //durchläuft so oft wie viele Attacken ein Pokemon lernen kann.         funktioniert ✓
 
-          this.attackURL = this.Pokedata.moves[i]
-          console.log(this.attackURL);
-         // await axios.get(this.attackURL).then((response) => {                      //gibt API Daten über übergebenesObjekt.Attack.url[i] aus
-          await axios.get('https://pokeapi.co/api/v2/move/5').then((response) => {    //gibt API Daten über Attacke 5 aus
+          let attackURL = Pokedata.moves[i].move.url
+          //await axios.get(this.attackURL).then((response) => {                      //gibt API Daten über übergebenesObjekt.Attack.url[i] aus
+          await axios.get(attackURL).then((response) => {    //gibt API Daten über Attacke 5 aus
           const attackData = response.data; 
-          console.log(attackData);
-
+          this.AttackobjektArray[i] = attackData;
+          })
           //this.baseDamage = attackData.power; //gibt jetzt nur Attacke nr 5 aus ? 
           //this.attackName = Attackdata.name;
-          }) 
-       }
+          } 
+          this.visible=true;
+       },
+
+       
+
       }
     }
   
-  } 
+   
   
   </script>
   
