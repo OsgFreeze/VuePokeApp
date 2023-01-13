@@ -1,12 +1,12 @@
 <template>
 
     <div>   
-       diese Information kommt von der Child Component:  {{ übergebeneVariable }} 
+       diese Information kommt von der Child Component:  {{ this.übergebeneVariable }} 
        <p> </p> <!-- Zeilenumbruch-->
-       und das hier wurde local übernommen  {{ this.localArray }} 
+       und das hier wurde in eine local  {{ this.localArray }} 
        <p> </p> <!-- Zeilenumbruch-->
-       <button @click="getAttackData"> Attacken Daten von API aufrufen </button>    <!-- Button um Attack API Call zu machen-->
-       <p> name: {{this.attackName}} , damage: {{ this.baseDamage }} </p>           <!-- Display API Data -->
+       <button @click="getAttackData"> neuer API Call [API/Moves] </button>         <!-- Button um Attack API Call zu machen-->
+       <p> name: {{this.attackName}} , damage: {{ this.baseDamage }} </p>           <!-- API Data anzeigen -->
     </div>
 
   </template>
@@ -22,25 +22,25 @@
     data(){ 
       return {
        baseDamage: 0,
-       attackName: "",
+       attackName: "[none]",
        localArray: [],
       }
     },
 
     methods: {
-      async getAttackData(){ //gibt Informationen zu den übergebenen lernbaren Attacken aus [Attacken aus Array] *funktioniert noch nicht -> aktuell wird nur pokemonNumber genommen*
-        //for(let i=0; i<this.localArray.length; i++) {
-          this.localArray = this.übergebeneVariable
-          await axios.get(`https://pokeapi.co/api/v2/move/${this.localArray[3]}`).then((response) => { 
-          console.log("diese Info kommt von dem Child Component: ");
-          console.log(response);
+      async getAttackData(){ //gibt Informationen zu den übergebenen lernbaren Attacken aus [Attacken aus übergeben Array] 
+        for(let i=0; i<5; i++) {                                                                                  //durchläuft so oft wie der Array.length von allen lernbaren Attacks
+          this.localArray = this.übergebeneVariable                                                               //übergebener Array Local Speichern
+          await axios.get(`https://pokeapi.co/api/v2/move/${this.localArray[i]}`).then((response) => {    //Api Call
           const data = response.data;
+          console.log(data);
+          
           this.baseDamage = data.power;
           this.attackName = data.name;
           })
         }
       }
-    //}
+    }
   } 
    
   
