@@ -8,22 +8,26 @@
        <button @click="getAttackData"> child Methode ausführen </button>   <!-- Button um Attack API Call zu machen-->
 
        <p> {{ chosenAttacks }} </p>
-       
+
        <p v-for="(Attackobjekt, index) in AttackobjektArray" :key="index"> 
         {{index}} 
         <button @click="selectAttack(index)"> {{Attackobjekt.name}} {{Attackobjekt.accuracy}} </button> 
       </p>
        
+      <fightWindow v-if="visible" class="fightwindow" :übergebenesObject2="this.chosenAttacks" />
+
     </div>
 
   </template>
   
   <script>
   import axios from 'axios'
+  import fightWindow from './fightWindow.vue';
 
   export default {
     name: 'selectAttack',
     components: {  
+      fightWindow
     }, 
     props: ['übergebenesObject'], //übergebenes pokemonObjekt von parent
     data(){ 
@@ -73,5 +77,9 @@
   </script>
   
   <style>
+
+  .fightwindow{
+    background-color: rgba(13, 184, 236, 0.479);
+  }
   </style>
   
