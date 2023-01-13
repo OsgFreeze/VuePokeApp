@@ -15,16 +15,20 @@
   </div>
 
   <selectAttack class="selecAttack" :übergebenesObject="this.pokemonObject"  /> <!-- Springe zu Attackenauswahl-Komponente & übergebe Objekt -> {pokemonObject} -->
+  <fightWindow :ubergebenesObject1="this.pokemonObject" />
+
 </template>
 
 <script>
 import axios from 'axios'
 import selectAttack from './selectAttack.vue';
+import fightWindow from './fightWindow.vue';
 
 export default {
   name: 'selectPokemon',
   components: {
-    selectAttack  
+    selectAttack,
+    fightWindow  
   }, 
 
   data(){  //notwendige lokale Variablen Erstellen
@@ -57,7 +61,8 @@ export default {
         this.myPokemonName = data.name;
         this.pokemonStats =  data.stats;
         this.weight = data.weight;
-        this.pokePicture = data.sprites; 
+        this.pokePicture = data.sprites;
+        
       })
     },
     
