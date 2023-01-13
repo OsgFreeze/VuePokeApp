@@ -14,7 +14,8 @@
         <button @click="selectAttack(index)"> {{Attackobjekt.name}} {{Attackobjekt.accuracy}} </button> 
       </p>
        
-      <fightWindow v-if="visible" class="fightwindow" :übergebenesObject2="this.chosenAttacks" />
+      <generateRandomPokemon class="generateRandomPokemon"/>
+      <fightWindow class="fightwindow" :uebergebenesPokemon="this.anzahlLernbareAttacken" />
 
     </div>
 
@@ -23,11 +24,13 @@
   <script>
   import axios from 'axios'
   import fightWindow from './fightWindow.vue';
+  import generateRandomPokemon from './generateRandomPokemon.vue';
 
   export default {
     name: 'selectAttack',
     components: {  
-      fightWindow
+      fightWindow,
+      generateRandomPokemon
     }, 
     props: ['übergebenesObject'], //übergebenes pokemonObjekt von parent
     data(){ 
@@ -80,6 +83,10 @@
 
   .fightwindow{
     background-color: rgba(13, 184, 236, 0.479);
+  }
+
+  .generateRandomPokemon {
+   visibility: hidden;
   }
   </style>
   

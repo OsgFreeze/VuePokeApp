@@ -1,7 +1,6 @@
 <template>
-    <div>   
-      <p> fight Window </p>  <!--{{ übergebenesObject2 }}-->
-      <button @click="getPokeData"> Arschfick </button>
+    <div class="myFightWindow">   
+      <p> fight Window {{uebergebenesPokemon}} </p>  
     </div>
 
   </template>
@@ -12,7 +11,7 @@
     name: 'fightWindow',
     components: {  
     }, 
-    props: ['ubergebenesObject1'], //'übergebenesObject2'],
+    props: ['uebergebenesPokemon'], 
     
     data(){ 
       return {
@@ -34,4 +33,7 @@
   </script>
   
   <style>
+.myFightWindow{
+  background-color: cornflowerblue;
+}
   </style>

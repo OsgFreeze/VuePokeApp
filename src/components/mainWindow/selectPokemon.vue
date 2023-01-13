@@ -9,26 +9,23 @@
 
   <div class="dataAusgabeFeld"> <!-- gibt alle Informationen über das Pokemon aus -->
     <span v-if="weight">Aktuell ausgewähltes Pokemon: {{myPokemonName}}  , er wiegt: {{weight}}kg </span>
-    <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> Basevalue {{index}} = {{pokemonStat.base_stat}}</p>
+    <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> {{pokemonObject.stats[index].stat.name}} = {{pokemonStat.base_stat}}</p>
     <img class="imagePokeFront" :src="pokePicture.front_default" v-if="pokeLoaded" />
     <img class="imagePokeBack" :src="pokePicture.back_default" v-if="pokeLoaded" />
   </div>
 
   <selectAttack class="selecAttack" :übergebenesObject="this.pokemonObject"  /> <!-- Springe zu Attackenauswahl-Komponente & übergebe Objekt -> {pokemonObject} -->
-  <fightWindow :ubergebenesObject1="this.pokemonObject" />
 
 </template>
 
 <script>
 import axios from 'axios'
 import selectAttack from './selectAttack.vue';
-import fightWindow from './fightWindow.vue';
 
 export default {
   name: 'selectPokemon',
   components: {
-    selectAttack,
-    fightWindow  
+    selectAttack, 
   }, 
 
   data(){  //notwendige lokale Variablen Erstellen
