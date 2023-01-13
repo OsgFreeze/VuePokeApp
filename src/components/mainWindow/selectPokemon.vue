@@ -56,11 +56,12 @@ export default {
         this.pokePicture = data.sprites; 
         this.anzahlLernbareAttacken = data.moves.length;
        
-        
+
         console.log("anzahl lernbarer Attacken: " +  this.anzahlLernbareAttacken);
         for (let i=0; i < data.moves.length; i++) {
           console.log(data.moves[i].move.name);              //Attackennamen Ausgeben
           this.attackNameArray = data.moves[i].move.name;    //Alle Namen in ein neuen Array speichern
+          console.log(this.attackNameArray);
         }  
 
       })
