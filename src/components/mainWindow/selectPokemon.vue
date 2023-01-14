@@ -13,6 +13,7 @@
       <div v-if="pokeLoaded"> 
       <img class="PokemonPictureHD" :src="pokePicture.other.home.front_default"/> 
       <img class="PokemonPictureHD" :src="pokePicture.other.home.front_shiny"/>
+
     </div>
   </div>
 

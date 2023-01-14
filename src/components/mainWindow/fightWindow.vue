@@ -1,6 +1,7 @@
 <template>
     <div class="myFightWindow">   
       <p> fight Window {{uebergebenesPokemon}} </p>  
+      <img class="fightWindowPicture" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/132.gif">
     </div>
 
   </template>
@@ -34,6 +35,12 @@
   
   <style>
 .myFightWindow{
-  background-color: rgb(231, 221, 83);
+  width: 900px;
+  height: 550px;
+}
+
+.fightWindowPicture{
+  width: 200px;
+  height: 200px;
 }
   </style>
