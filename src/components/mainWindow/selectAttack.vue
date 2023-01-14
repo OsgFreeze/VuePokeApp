@@ -1,19 +1,21 @@
 <template>
     <div>   
-       diese Information kommt von der Parent Component: {{this.pokemonObjectÜbergeben.name}} <!--{{ this.übergebenesObject }} -->
+        diese Information kommt von der Parent Component: {{this.pokemonObjectÜbergeben.name}}
+        <p> <!-- Zeilenumbruch--> </p> 
+        <button @click="getAttackData"> Pokemon Attacken anzeigen </button> 
 
-       <p> </p> <!-- Zeilenumbruch-->
 
-       <button @click="getAttackData"> Pokemon Attacken anzeigen </button>   <!-- Button um Attack API Call zu machen-->
+        <p> Ausgewählte Attacken: {{ chosenAttacks }} </p> <!-- zeigt Array[ausgewählte Attacken] -->
 
-       <p> Ausgewählte Attacken: {{ chosenAttacks }} </p>
 
-       <p v-for="(Attackobjekt, index) in AttackobjektArray" :key="index"> 
-        {{index}} 
-        <button @click="selectAttack(index)"> {{Attackobjekt.name}} {{Attackobjekt.accuracy}} </button> 
-      </p>
-       
-      <generateRandomPokemon class="generateRandomPokemon"/>
+        <div> 
+          <p v-for="(Attackobjekt, index) in AttackobjektArray" :key="index"> 
+            {{index}} 
+            <button @click="selectAttack(index)"> {{Attackobjekt.name}} {{Attackobjekt.accuracy}} </button> 
+          </p> 
+        </div> 
+      
+      <generateRandomPokemon class="generateRandomPokemon" :übergebenesfinalPokemonWithAttackArray="this.finalPokemonWithAttackArray"        />
 
     </div>
   </template>
@@ -31,38 +33,55 @@
     props: ['pokemonObjectÜbergeben'], //übergebenes pokemonObjekt von parent
     data(){ 
       return {
-       baseDamage: 0,
-       attackName: "[none]",
-       visible: false,
-       anzahlLernbareAttacken: 0,
-       AttackobjektArray: [],
-       chosenAttacks: [null],
-       arrayindex: 0
+        baseDamage: 0,
+        arrayindex: 0,
+        anzahlLernbareAttacken: 0,
+
+        attackName: "[none]",
+        visible: false,
+
+        AttackobjektArray: [],
+        newAttackArray: [],
+        chosenAttacks: [null],
+        finalPokemonWithAttackArray: [], //hier werden die Pokemon Daten + Informationen zu den 4 Ausgewählten Attacken gespeichert
+
       }
     },
 
     methods: {
       async getAttackData(){                                               //gibt Informationen zu den übergebenen lernbaren Attacken aus 
       
-        const Pokedata = this.pokemonObjectÜbergeben;                           //objekt.daten in Pokedata speichern                                    funktioniert ✓
+        const Pokedata = this.pokemonObjectÜbergeben;                      //objekt.daten in Pokedata speichern                                    funktioniert ✓
         this.anzahlLernbareAttacken = Pokedata.moves.length;               //local variable für Anzahl lernbare Attacken                           funktioniert ✓
 
         for (let i=0; i < this.anzahlLernbareAttacken; i++) {              //durchläuft so oft wie viele Attacken ein Pokemon lernen kann.         funktioniert ✓
           let attackURL = Pokedata.moves[i].move.url                     
           await axios.get(attackURL).then((response) => {    
-          const attackData = response.data; 
-          this.AttackobjektArray[i] = attackData;
+            const attackData = response.data; 
+            this.AttackobjektArray[i] = attackData;
           })
+        } 
+        this.visible=true;
+        this.filterAttacksByDamage();
+      },
 
+      async filterAttacksByDamage(){        
+          let b = 0;
+          for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
+            if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
+              this.newAttackArray[b] = this.AttackobjektArray[i]; 
+              b++;
+              console.log(this.newAttackArray[b]);
+            }     
           } 
-          this.visible=true;
-       },
+          this.finalPokemonWithAttackArray[0]=this.pokemonObjectÜbergeben;
+        },
 
-       selectAttack(number){
-          
-          
-          this.chosenAttacks[this.arrayindex]= number;
+      selectAttack(attackNumber){ 
+          this.chosenAttacks[this.arrayindex]= attackNumber;
           this.arrayindex++;
+          //if(this.arrayindex==4){ 
+        // }
        }
 
       }

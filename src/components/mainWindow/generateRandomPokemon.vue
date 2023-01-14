@@ -20,7 +20,7 @@
     components: {  
       fightWindow,
     }, 
-    //props: ['uebergebenesPokemon'], 
+    props: ['übergebenesfinalPokemonWithAttackArray'], 
     
     data(){ 
       return {
@@ -68,7 +68,7 @@
         async filterAttacksFromByDamage(){        
           let b = 0;
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
-            if(this.AttackobjektArray[i].power > 0 ){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
+            if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
               this.newAttackArray[b] = this.AttackobjektArray[i]; 
               b++;
             }     
@@ -94,6 +94,8 @@
           this.finalRandomPokemonWithAttackArray[0] = this.randomPokemonObject;  //Pokemon Daten in Array[0] speichern -> Array[ {pokemon Data} ]
           this.finalRandomPokemonWithAttackArray[1] = this.fourAttackArray;      //Attacken Daten in Array[1] speichern -> Array[ {pokemon Data}, [Attacken] 
           console.log(this.finalRandomPokemonWithAttackArray);                   //Funktioniert ✓
+
+          console.log(this.übergebenesfinalPokemonWithAttackArray); //aktuell noch leeres Objekt
            
         }
       }
