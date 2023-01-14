@@ -4,6 +4,7 @@
         
         <div v-if="visible" class="randomPokemon"> 
              <img class="randomPokemonPicture" :src="this.randomPokemonObject.sprites.other.home.front_default" />
+
              <fightWindow class="fightwindow">  </fightWindow>
         </div>
     </div>
@@ -28,6 +29,10 @@
         newAttackArray: [],
         fourAttackArray: [],
         visible: false,
+        newAttackArrayLength: 0,
+
+        finalRandomPokemonWithAttackArray: [],
+
       }
     },
 
@@ -54,7 +59,6 @@
             await axios.get(attackUrlFromIndex).then((response) => {    
               const attackData = response.data; 
               this.AttackobjektArray[i] = attackData; 
-              //console.log(this.AttackobjektArray[i]);
             })
           }     
           this.filterAttacksFromByDamage(); //andere Methode aufrufen
@@ -62,31 +66,35 @@
      
 
         async filterAttacksFromByDamage(){        
-          let b= 0;
+          let b = 0;
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
             if(this.AttackobjektArray[i].power > 0 ){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
               this.newAttackArray[b] = this.AttackobjektArray[i]; 
               b++;
             }     
           } 
-          console.log(this.newAttackArray); 
           this.SelectFourRandomAttacks(); //andere Methode aufrufen
         },
 
 
         async SelectFourRandomAttacks(){   
+          console.log("anzahl Schadensattacken: " + this.newAttackArray.length);
           let untergrenze=0;
-          let anzahlSchadensAttacken = 30; //funktioniert so ned: this.newAttackArray.length
+          let anzahlSchadensAttacken = this.newAttackArray.length; 
           for (let i=0; i < 4; i++) {
             let randomNumber  = Math.floor(Math.random() * (anzahlSchadensAttacken - untergrenze + 1)) + 1;  
-            this.fourAttackArray[i] = this.newAttackArray[randomNumber];
-            //console.log("   random_Number: " + randomNumber);
-            console.log("     Attack Name: " + this.fourAttackArray[i].name + "    Damage: " + this.fourAttackArray[i].power);
-            "->%d<-\n", i
-          }
-           // if(this.AttackobjektArray[i].power > 0 ){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
-           //   this.newAttackArray = this.AttackobjektArray[i]; 
-           // }      
+            this.fourAttackArray[i] = this.newAttackArray[randomNumber];                           //fourAttackArray = finaler attacken-Array mit allen Infos!                                               
+            console.log("     Attack Name: " + this.fourAttackArray[i].name                        //                  [aktuell noch mit doppelten Attacken] 
+                      + "   Damage: " + this.fourAttackArray[i].power
+                      + "   Genauigkeit: " + this.fourAttackArray[i].accuracy
+                      + "   PP: " + this.fourAttackArray[i].pp
+                      );
+          } 
+
+          this.finalRandomPokemonWithAttackArray[0] = this.randomPokemonObject;  //Pokemon Daten in Array[0] speichern -> Array[ {pokemon Data} ]
+          this.finalRandomPokemonWithAttackArray[1] = this.fourAttackArray;      //Attacken Daten in Array[1] speichern -> Array[ {pokemon Data}, [Attacken] 
+          console.log(this.finalRandomPokemonWithAttackArray);                   //Funktioniert ✓
+           
         }
       }
     }
@@ -100,7 +108,7 @@
     .randomPokemonPicture{
         height: 250px;
         width: 250px;
-        background-color: rgba(46, 167, 204, 0.726)
+        background-color: rgba(46, 204, 72, 0.726)
     }
    
   </style>

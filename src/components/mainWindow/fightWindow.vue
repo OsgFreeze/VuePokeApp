@@ -27,7 +27,8 @@
   <style>
 .myFightWindow{
   width: 100;
-  background-color: rgba(255, 127, 80, 0.473);
+  height: 50;
+  background-color: rgb(255, 127, 80);
 
 }
 
