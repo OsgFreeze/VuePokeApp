@@ -1,7 +1,7 @@
 <template>
-    <div>   
-      <p> fight Window </p>  <!--{{ übergebenesObject2 }}-->
-      <button @click="getPokeData"> Arschfick </button>
+    <div class="myFightWindow">   
+      <p> fight Window {{uebergebenesPokemon}} </p>  
+      <img class="fightWindowPicture" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/132.gif">
     </div>
 
   </template>
@@ -12,7 +12,7 @@
     name: 'fightWindow',
     components: {  
     }, 
-    props: ['ubergebenesObject1'], //'übergebenesObject2'],
+    props: ['uebergebenesPokemon'], 
     
     data(){ 
       return {
@@ -34,4 +34,13 @@
   </script>
   
   <style>
+.myFightWindow{
+  width: 900px;
+  height: 550px;
+}
+
+.fightWindowPicture{
+  width: 200px;
+  height: 200px;
+}
   </style>
