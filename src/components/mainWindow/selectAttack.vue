@@ -1,20 +1,25 @@
 <template>
     <div>   
-        diese Information kommt von der Parent Component: {{this.pokemonObjectÜbergeben.name}}
+        diese Information kommt von der Parent Component: {{"objekt übergeben: " + pokemonObjectÜbergeben.name}}
         <p> <!-- Zeilenumbruch--> </p> 
         <button @click="getAttackData"> Pokemon Attacken anzeigen </button> 
 
 
-        <p> Ausgewählte Attacken: {{ chosenAttacks }} </p> <!-- zeigt Array[ausgewählte Attacken] -->
+        <p v-if="allAttacksChosen"> Ausgewählte Attacken:  <!-- zeigt ausgewählte Attacken an -->
+            {{this.chosenAttacks[0].name}}  
+            {{this.chosenAttacks[1].name}}, 
+            {{this.chosenAttacks[2].name}},
+            {{this.chosenAttacks[3].name}}, 
+        </p> 
 
 
-        <div> 
+        <div v-if="attackVisible">  <!-- attacken Auuswahlfenster -->
           <p v-for="(Attackobjekt, index) in AttackobjektArray" :key="index"> 
             {{index}} 
-            <button @click="selectAttack(index)"> {{Attackobjekt.name}} {{Attackobjekt.accuracy}} </button> 
+            <button @click="selectAttack(index)"> Name: {{Attackobjekt.name}} Power: {{Attackobjekt.power}} genauigkeit: {{Attackobjekt.accuracy}} </button> 
           </p> 
         </div> 
-      
+
       <generateRandomPokemon class="generateRandomPokemon" :übergebenesfinalPokemonWithAttackArray="this.finalPokemonWithAttackArray"        />
 
     </div>
@@ -39,6 +44,8 @@
 
         attackName: "[none]",
         visible: false,
+        attackVisible: true,
+        allAttacksChosen: false,
 
         AttackobjektArray: [],
         newAttackArray: [],
@@ -64,7 +71,7 @@
         this.visible=true;
         this.filterAttacksByDamage();
       },
-
+    
       async filterAttacksByDamage(){        
           let b = 0;
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
@@ -78,21 +85,20 @@
         },
 
       selectAttack(attackNumber){ 
-          this.chosenAttacks[this.arrayindex]= attackNumber;
+          this.chosenAttacks[this.arrayindex]= this.AttackobjektArray[attackNumber];
           this.arrayindex++;
-          //if(this.arrayindex==4){ 
-        // }
-       }
-
+          if(this.arrayindex==4){ 
+            this.attackVisible = false;
+            this.finalPokemonWithAttackArray[1]=this.chosenAttacks;
+            this.allAtacksChosen=true;
+          }
       }
     }
-  
-   
-  
+  }
+
   </script>
   
   <style>
-
   .fightwindow{
     background-color: rgba(13, 184, 236, 0.479);
   }

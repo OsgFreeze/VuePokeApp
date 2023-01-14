@@ -4,7 +4,6 @@
         
         <div v-if="visible" class="randomPokemon"> 
              <img class="randomPokemonPicture" :src="this.randomPokemonObject.sprites.other.home.front_default" />
-
              <fightWindow class="fightwindow">  </fightWindow>
         </div>
     </div>
@@ -43,7 +42,7 @@
             await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNumber}`).then((response) => { 
             this.randomPokemonObject = response.data; 
             this.visible=true;
-            console.log("Pokemon Name: " + this.randomPokemonObject.name); 
+            console.log("Pokemon Name: " + this.randomPokemonObject.name); //zeigt pokemon Name in Konsole
             this.sortAttacksFromRandomPokemon(); //andere Methode aufrufen
             })
         }, 
@@ -52,7 +51,7 @@
         async sortAttacksFromRandomPokemon(){                                  
           const Pokedata = this.randomPokemonObject;                           
           this.anzahlLernbareAttacken = Pokedata.moves.length;  
-          console.log("anzahl lernbare Attacken: " + this.anzahlLernbareAttacken);            
+          console.log("anzahl lernbare Attacken: " + this.anzahlLernbareAttacken);  //zeigt anz lernbaren Attacken
 
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {             
             let attackUrlFromIndex = Pokedata.moves[i].move.url                     
@@ -78,14 +77,14 @@
 
 
         async SelectFourRandomAttacks(){   
-          console.log("anzahl Schadensattacken: " + this.newAttackArray.length);
+          console.log("anzahl Schadensattacken: " + this.newAttackArray.length);  //zeigt anz schadens Attacken
           let untergrenze=0;
           let anzahlSchadensAttacken = this.newAttackArray.length; 
           for (let i=0; i < 4; i++) {
             let randomNumber  = Math.floor(Math.random() * (anzahlSchadensAttacken - untergrenze + 1)) + 1;  
-            this.fourAttackArray[i] = this.newAttackArray[randomNumber];                           //fourAttackArray = finaler attacken-Array mit allen Infos!                                               
-            console.log("     Attack Name: " + this.fourAttackArray[i].name                        //                  [aktuell noch mit doppelten Attacken] 
-                      + "   Damage: " + this.fourAttackArray[i].power
+            this.fourAttackArray[i] = this.newAttackArray[randomNumber];           //fourAttackArray = finaler attacken-Array mit allen Infos!                                               
+            console.log("     Attack Name: " + this.fourAttackArray[i].name        //[aktuell noch mit doppelten Attacken] 
+                      + "   Damage: " + this.fourAttackArray[i].power              //zeigt 4 Random Attacken infos 
                       + "   Genauigkeit: " + this.fourAttackArray[i].accuracy
                       + "   PP: " + this.fourAttackArray[i].pp
                       );
