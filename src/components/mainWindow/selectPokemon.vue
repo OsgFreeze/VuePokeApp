@@ -9,13 +9,13 @@
 
   <div class="dataAusgabeFeld"> <!-- gibt alle Informationen über das Pokemon aus -->
     <div v-if="pokeLoaded"> 
-      <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> {{pokemonObject.stats[index].stat.name}} = {{pokemonStat.base_stat}}</p>
+      <p class="baseStats" v-for="(pokemonStat, index) in pokemonStats" :key="index"> {{pokemonObject.stats[index].stat.name}} = {{pokemonStat.base_stat}}</p>
       <img class="PokemonPictureHD" :src="pokemonObject.sprites.other.home.front_default"/> 
       <!-- <img class="PokemonPictureHD" :src="pokemonObject.sprites.other.home.front_shiny"/> -->
     </div>
   </div>
 
-  <selectAttack class="selecAttack" :pokemonObjectÜbergeben="this.pokemonObject"  /> <!-- übergebe Daten zur Attacken Auswahl -->
+  <selectAttack class="selecAttack" :übergebenesPokemonObjekt="this.pokemonObject" :testObjekt="this.testObject" /> <!-- übergebe Daten zur Attacken Auswahl -->
 
 </template>
 
@@ -34,10 +34,10 @@ export default {
       pokeLoaded: false,  //  Pokemondaten bereits geladen ?
       PokeNumber: 1,      //  startwert für Eingabefeld
       pokemonStats: [],   //  speichert die basis Werte von einem Pokemon
-      pokemonObject: {}   //  speichert die Pokemon Daten von dem API Call
+      pokemonObject: {},  //  speichert die Pokemon Daten von dem API Call
+
     }
   },
-
 
   methods: { 
     async loadApiNumber(){ //API Call für Pokemon Daten
@@ -46,6 +46,8 @@ export default {
         this.pokemonObject = response.data; //Pokemon Objekt in variable "pokemonObject" Speichern
         this.pokemonStats =  this.pokemonObject.stats;
         this.pokeLoaded = true;
+
+        this.testObject.myPokemon = response.data;
       })
     },
     
@@ -63,11 +65,9 @@ export default {
 </script>
 
 <style>
-
-#selectPokemon {
-  font-family: Arial;
+.baseStats{
+  background-color:rgba(0, 174, 255, 0.295);
 }
-
 .PokemonPictureHD {
   height: 250px;
   width: 250px;
