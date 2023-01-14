@@ -1,19 +1,19 @@
 <template> 
 
     <div class="mainWindow"> <selectPokemon/> </div> 
-    <div class="sideBar"> <displayPokemonSideBar/> </div>
+    <div class="sideBar"> <selectPokemonFromSidebar/> </div>
 
 </template>
 <script> 
 
 import selectPokemon from './components/mainWindow/selectPokemon.vue';
-import displayPokemonSideBar from './components/sideBarPokedex/displayPokemonSideBar.vue';
+import selectPokemonFromSidebar from './components/sideBarPokedex/selectPokemonFromSidebar.vue';
 
 export default {
   name: 'App',
   components: { 
     selectPokemon,
-    displayPokemonSideBar,
+    selectPokemonFromSidebar,
   }, 
 
   data(){  
