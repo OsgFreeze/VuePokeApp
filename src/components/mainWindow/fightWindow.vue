@@ -1,13 +1,8 @@
 <template>
     <div class="myFightWindow">   
-      <p> fight Window {{uebergebenesPokemon}} </p>  
-      <img class="fightWindowPicture" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/132.gif">
+      {{beideÜbergebenenPokemonDaten}}
+      <audio controls="off" autoplay="on" volume="0.01" loop="true" >    <source src="./fightMusic.mp3"  type="audio/mpeg">    </audio>  <!-- audio Abspielen für Kampfmusic  <source src="./fightMusic.mp3" --> 
     </div>
-
-    <div> 
-      <audio controls="off" autoplay="on" volume="0.01" loop="true" >    <source src="./fightMusic.mp3"  type="audio/mpeg">    </audio>  <!-- audio Abspielen für Kampfmusic  <source src="./fightMusic.mp3" -->
-    </div>
-
   </template>
   
   <script>
@@ -16,25 +11,17 @@
     name: 'fightWindow',
     components: {  
     }, 
-    props: ['uebergebenesPokemon'], 
-    
+    props: ['beideÜbergebenenPokemonDaten'], 
     data(){ 
       return {
         data: {}
       }
     },
     methods: {
-      getAttacks(){
+    }
 
-      },
-      getPokeData(){
-        this.data = this.ubergebenesObject1;
-        console.log(this.data);
-      }
-
-    } 
-  }
-
+  } 
+  
   </script>
   
   <style>

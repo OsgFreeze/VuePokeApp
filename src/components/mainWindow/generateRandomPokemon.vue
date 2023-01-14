@@ -25,6 +25,7 @@
       return {
         randomPokemonObject: {},
         AttackobjektArray: [],
+        newAttackArray: [],
         visible: false,
       }
     },
@@ -36,27 +37,48 @@
             await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNumber}`).then((response) => { 
             this.randomPokemonObject = response.data; 
             this.visible=true;
-            console.log(this.randomPokemonObject.name); //sollte ein Random Pokemon Name ausgeben
+            console.log("Pokemon Name: " + this.randomPokemonObject.name); 
             this.sortAttacksRandomPokemon(); //andere Methode aufrufen
             })
         }, 
  
+        
         async sortAttacksRandomPokemon(){                                  
           const Pokedata = this.randomPokemonObject;                           
           this.anzahlLernbareAttacken = Pokedata.moves.length;  
-          console.log(this.anzahlLernbareAttacken);            
+          console.log("anzahl lernbare Attacken: " + this.anzahlLernbareAttacken);            
 
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {             
             let attackUrlFromIndex = Pokedata.moves[i].move.url                     
             await axios.get(attackUrlFromIndex).then((response) => {    
-            const attackData = response.data; 
-            this.AttackobjektArray[i] = attackData; //speichert alle informationen zur Attacke im neuen Array -> erzeugt ein Attacken[ Objekt{} ] Array für das random Pokemon
+              const attackData = response.data; 
+              this.AttackobjektArray[i] = attackData; 
+              //console.log(this.AttackobjektArray[i]);
             })
-        } 
-        console.log(this.AttackobjektArray); //funktioniert (muss noch verfeinert werden! nicht nur attackData ausgeben)
-     },
+          }     
+          this.filterAttacksByDamage(); //andere Methode aufrufen
+        },
+     
+
+        async filterAttacksByDamage (){        
+          for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
+            if(this.AttackobjektArray[i].power > 0 ){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
+              this.newAttackArray = this.AttackobjektArray[i]; 
+            }     
+          } 
+          this.fourRandomAttacks(); //andere Methode aufrufen
+        },
+
+
+        async fourRandomAttacks(){        
+          //for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
+           // if(this.AttackobjektArray[i].power > 0 ){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
+           //   this.newAttackArray = this.AttackobjektArray[i]; 
+           // }     
+          //} 
+        }
+      }
     }
-}
   </script>
   
   <style>
