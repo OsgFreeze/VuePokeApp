@@ -38,13 +38,13 @@
             console.log(this.randomPokemonObject.name); //sollte ein Random Pokemon Name ausgeben
             })
         }, 
-        async sortRandomPokemon(methodenVariable){   
+      //  async sortRandomPokemon(methodenVariable){   
             //await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNumber}`).then((response) => { 
-            this.randomPokemonObject = response.data; 
-            this.visible=true;
-            console.log(this.randomPokemonObject.name); //sollte ein Random Pokemon Name ausgeben
+           // this.randomPokemonObject = response.data; 
+           // this.visible=true;
+           // console.log(this.randomPokemonObject.name); //sollte ein Random Pokemon Name ausgeben
            // })
-        }, 
+      //  }, 
 
         //async getAttackData(){                                            
       //const Pokedata = this.übergebenesObject;                           
