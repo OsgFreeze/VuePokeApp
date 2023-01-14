@@ -1,5 +1,4 @@
 <template>
-
     <div>   
        diese Information kommt von der Parent Component: {{this.übergebenesObject.name}} <!--{{ this.übergebenesObject }} -->
 
@@ -15,21 +14,18 @@
       </p>
        
       <generateRandomPokemon class="generateRandomPokemon"/>
-      <fightWindow class="fightwindow" :uebergebenesPokemon="this.anzahlLernbareAttacken" />
 
     </div>
-
   </template>
   
   <script>
   import axios from 'axios'
-  import fightWindow from './fightWindow.vue';
+
   import generateRandomPokemon from './generateRandomPokemon.vue';
 
   export default {
     name: 'selectAttack',
     components: {  
-      fightWindow,
       generateRandomPokemon
     }, 
     props: ['übergebenesObject'], //übergebenes pokemonObjekt von parent
@@ -52,7 +48,6 @@
         this.anzahlLernbareAttacken = Pokedata.moves.length;               //local variable für Anzahl lernbare Attacken                           funktioniert ✓
 
         for (let i=0; i < this.anzahlLernbareAttacken; i++) {              //durchläuft so oft wie viele Attacken ein Pokemon lernen kann.         funktioniert ✓
-
           let attackURL = Pokedata.moves[i].move.url                     
           await axios.get(attackURL).then((response) => {    
           const attackData = response.data; 

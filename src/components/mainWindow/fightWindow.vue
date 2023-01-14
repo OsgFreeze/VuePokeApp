@@ -4,6 +4,10 @@
       <img class="fightWindowPicture" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/132.gif">
     </div>
 
+    <div> 
+      <audio controls="off" autoplay="on" volume="0.01" loop="true" >    <source src="./fightMusic.mp3"  type="audio/mpeg">    </audio>  <!-- audio Abspielen für Kampfmusic  <source src="./fightMusic.mp3" -->
+    </div>
+
   </template>
   
   <script>
@@ -35,8 +39,9 @@
   
   <style>
 .myFightWindow{
-  width: 900px;
-  height: 550px;
+  width: 100;
+  background-color: rgba(255, 127, 80, 0.473);
+
 }
 
 .fightWindowPicture{
