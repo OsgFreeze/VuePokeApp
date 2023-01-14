@@ -4,7 +4,7 @@
         
         <div v-if="visible" class="randomPokemon"> 
              <img class="randomPokemonPicture" :src="this.randomPokemonObject.sprites.other.home.front_default" />
-             <fightWindow class="fightwindow">  </fightWindow>
+             <fightWindow class="fightwindow" :beideÜbergebenenPokemonDaten= "this.twoCompletePokemonArray">  </fightWindow>
         </div>
     </div>
 
@@ -27,11 +27,11 @@
         AttackobjektArray: [],
         newAttackArray: [],
         fourAttackArray: [],
+        finalRandomPokemonWithAttackArray: [],
+        twoCompletePokemonArray: [], 
+
         visible: false,
         newAttackArrayLength: 0,
-
-        finalRandomPokemonWithAttackArray: [],
-
       }
     },
 
@@ -94,8 +94,11 @@
           this.finalRandomPokemonWithAttackArray[1] = this.fourAttackArray;      //Attacken Daten in Array[1] speichern -> Array[ {pokemon Data}, [Attacken] 
           console.log(this.finalRandomPokemonWithAttackArray);                   //Funktioniert ✓
 
-          console.log(this.übergebenesfinalPokemonWithAttackArray); //aktuell noch leeres Objekt
-           
+          //console.log(this.übergebenesfinalPokemonWithAttackArray); //gibt fertiges random Pokemon Objekt in Console aus
+                                                                    
+          this.twoCompletePokemonArray[0] = this.finalRandomPokemonWithAttackArray;  // Wert0 -> 
+          this.twoCompletePokemonArray[1] = this.übergebenesfinalPokemonWithAttackArray //von props einfach weiterleiten.
+          console.log("beide Pokemon Übertragen ✓");
         }
       }
     }

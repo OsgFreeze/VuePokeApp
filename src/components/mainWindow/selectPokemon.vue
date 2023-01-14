@@ -42,9 +42,7 @@ export default {
       pokeLoaded: null,
       pokePicture: {},
       learnableAttackNameArray: [],
-
       pokemonObject: {} //speichert die Pokemon Daten von dem API Call
-      
     }
   },
 
@@ -52,12 +50,10 @@ export default {
   methods: { 
     async loadApiNumber(){ //API Call für Pokemon Daten
       await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
-        console.log(response);
-
+        console.log(response); //pokemon data Ausgeben
         const data = response.data;
         this.pokemonObject = data; //Pokemon Objekt in variable "pokemonObject" Speichern
         this.pokeLoaded = true;
-
         this.myPokemonName = data.name;
         this.pokemonStats =  data.stats;
         this.weight = data.weight;
@@ -66,7 +62,6 @@ export default {
       })
     },
     
-
     async setNrPlus(){ //ausgewähltes Pokemon +1 -> danach API CALL
       this.PokeNumber = (this.PokeNumber + 1);
       this.loadApiNumber();
@@ -85,11 +80,11 @@ export default {
 #selectPokemon {
   font-family: Arial;
 }
+
 .PokemonPictureHD {
   height: 250px;
   width: 250px;
 }
-
 
 .selecAttack {
   background-color:red;

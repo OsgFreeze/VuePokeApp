@@ -78,7 +78,7 @@
             if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
               this.newAttackArray[b] = this.AttackobjektArray[i]; 
               b++;
-              console.log(this.newAttackArray[b]);
+              //console.log(this.newAttackArray[b]);
             }     
           } 
           this.finalPokemonWithAttackArray[0]=this.pokemonObjectÜbergeben;
@@ -89,7 +89,7 @@
           this.arrayindex++;
           if(this.arrayindex==4){ 
             this.attackVisible = false;
-            this.finalPokemonWithAttackArray[1]=this.chosenAttacks;
+            this.finalPokemonWithAttackArray[1]=this.chosenAttacks; //index=1, weil wir die Attackeninformation an Stelle [1, -> 2] zwei im übergabe Array Speichern wollen
             this.allAtacksChosen=true;
           }
       }

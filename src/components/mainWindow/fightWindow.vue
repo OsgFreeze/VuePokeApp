@@ -1,7 +1,12 @@
 <template>
     <div class="myFightWindow">   
-      {{beideÜbergebenenPokemonDaten}}
       <audio controls="off" autoplay="on" volume="0.01" loop="true" >    <source src="./fightMusic.mp3"  type="audio/mpeg">    </audio>  <!-- audio Abspielen für Kampfmusic  <source src="./fightMusic.mp3" --> 
+    </div>
+
+    <button @click="showPokeInfo"> Press me for PokeData </button>
+
+    <div class="displayPokemonData"> 
+        
     </div>
   </template>
   
@@ -14,10 +19,23 @@
     props: ['beideÜbergebenenPokemonDaten'], 
     data(){ 
       return {
-        data: {}
+        data: {
+          Pokemon: [],
+          enemyPokemon: [],
+        }
       }
     },
     methods: {
+      showPokeInfo() {
+        console.log("diese Info kommt von der fightWindow Komponente: ");
+        //console.log(this.beideÜbergebenenPokemonDaten);
+        this.Pokemon=this.beideÜbergebenenPokemonDaten[0];
+        this.enemyPokemon=this.beideÜbergebenenPokemonDaten[1];
+
+        console.log("main Pokemon: " + this.Pokemon);
+        console.log("random Pokemon: " + this.enemyPokemon);
+
+      }
     }
 
   } 
