@@ -8,16 +8,14 @@
   </div>
 
   <div class="dataAusgabeFeld"> <!-- gibt alle Informationen über das Pokemon aus -->
-    <span v-if="weight">Aktuell ausgewähltes Pokemon: {{myPokemonName}}  , er wiegt: {{weight}}kg </span>
-    <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> {{pokemonObject.stats[index].stat.name}} = {{pokemonStat.base_stat}}</p>
-      <div v-if="pokeLoaded"> 
-      <img class="PokemonPictureHD" :src="pokePicture.other.home.front_default"/> 
-      <img class="PokemonPictureHD" :src="pokePicture.other.home.front_shiny"/>
-
+    <div v-if="pokeLoaded"> 
+      <p v-for="(pokemonStat, index) in pokemonStats" :key="index"> {{pokemonObject.stats[index].stat.name}} = {{pokemonStat.base_stat}}</p>
+      <img class="PokemonPictureHD" :src="pokemonObject.sprites.other.home.front_default"/> 
+      <!-- <img class="PokemonPictureHD" :src="pokemonObject.sprites.other.home.front_shiny"/> -->
     </div>
   </div>
 
-  <selectAttack class="selecAttack" :pokemonObjectÜbergeben="this.pokemonObject"  /> <!-- Springe zu Attackenauswahl-Komponente & übergebe Objekt -> {pokemonObject} -->
+  <selectAttack class="selecAttack" :pokemonObjectÜbergeben="this.pokemonObject"  /> <!-- übergebe Daten zur Attacken Auswahl -->
 
 </template>
 
@@ -31,18 +29,11 @@ export default {
     selectAttack, 
   }, 
 
-  data(){  //notwendige lokale Variablen Erstellen
+  data(){  
     return {
-      active: false,
-      PokeName: null,
-      PokeNumber: 1,
-      myPokemonName: "",
-      pokemonStats: [],
-      weight: null,
-      pokeLoaded: null,
-      pokePicture: {},
-      learnableAttackNameArray: [],
-      pokemonObject: {} //speichert die Pokemon Daten von dem API Call
+      pokeLoaded: false,  //  Pokemondaten bereits geladen ?
+      PokeNumber: 1,      //  startwert für Eingabefeld
+      pokemonObject: {}   //  speichert die Pokemon Daten von dem API Call
     }
   },
 
@@ -51,22 +42,16 @@ export default {
     async loadApiNumber(){ //API Call für Pokemon Daten
       await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
         console.log(response); //pokemon data Ausgeben
-        const data = response.data;
-        this.pokemonObject = data; //Pokemon Objekt in variable "pokemonObject" Speichern
+        this.pokemonObject = response.data; //Pokemon Objekt in variable "pokemonObject" Speichern
         this.pokeLoaded = true;
-        this.myPokemonName = data.name;
-        this.pokemonStats =  data.stats;
-        this.weight = data.weight;
-        this.pokePicture = data.sprites;
-        
       })
     },
     
     async setNrPlus(){ //ausgewähltes Pokemon +1 -> danach API CALL
       this.PokeNumber = (this.PokeNumber + 1);
       this.loadApiNumber();
- 
     },
+
     async setNrMinus(){ //ausgewähltes Pokemon -1 -> danach API CALL
       this.PokeNumber = (this.PokeNumber - 1);
       this.loadApiNumber();

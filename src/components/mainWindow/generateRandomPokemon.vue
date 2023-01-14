@@ -28,7 +28,11 @@
         newAttackArray: [],
         fourAttackArray: [],
         finalRandomPokemonWithAttackArray: [],
-        twoCompletePokemonArray: [], 
+
+        twoCompletePokemon: {
+          pokemon1: [], 
+          pokemon2: [],
+        }, 
 
         visible: false,
         newAttackArrayLength: 0,
@@ -102,14 +106,11 @@
 
           //console.log(this.übergebenesfinalPokemonWithAttackArray); //gibt fertiges random Pokemon Objekt in Console aus
                                                                     
-          this.twoCompletePokemonArray[0] = this.finalRandomPokemonWithAttackArray;  // Wert0 -> 
-          this.twoCompletePokemonArray[1] = this.übergebenesfinalPokemonWithAttackArray //von props einfach weiterleiten.
-          console.log("beide Pokemon Übertragen ✓");
+          this.twoCompletePokemon.pokemon1 = this.finalRandomPokemonWithAttackArray;  
+          this.twoCompletePokemon.pokemon2 = this.übergebenesfinalPokemonWithAttackArray 
+          //console.log("beide Pokemon Übertragen ✓");
           this.visible=true;
         },
-
-
-
 
       }
     }
