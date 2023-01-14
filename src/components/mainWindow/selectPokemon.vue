@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <selectAttack class="selecAttack" :übergebenesObject="this.pokemonObject"  /> <!-- Springe zu Attackenauswahl-Komponente & übergebe Objekt -> {pokemonObject} -->
+  <selectAttack class="selecAttack" :pokemonObjectÜbergeben="this.pokemonObject"  /> <!-- Springe zu Attackenauswahl-Komponente & übergebe Objekt -> {pokemonObject} -->
 
 </template>
 
@@ -43,7 +43,7 @@ export default {
       pokePicture: {},
       learnableAttackNameArray: [],
 
-      pokemonObject: {}
+      pokemonObject: {} //speichert die Pokemon Daten von dem API Call
       
     }
   },
