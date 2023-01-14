@@ -26,6 +26,7 @@
         randomPokemonObject: {},
         AttackobjektArray: [],
         newAttackArray: [],
+        fourAttackArray: [],
         visible: false,
       }
     },
@@ -38,12 +39,12 @@
             this.randomPokemonObject = response.data; 
             this.visible=true;
             console.log("Pokemon Name: " + this.randomPokemonObject.name); 
-            this.sortAttacksRandomPokemon(); //andere Methode aufrufen
+            this.sortAttacksFromRandomPokemon(); //andere Methode aufrufen
             })
         }, 
  
         
-        async sortAttacksRandomPokemon(){                                  
+        async sortAttacksFromRandomPokemon(){                                  
           const Pokedata = this.randomPokemonObject;                           
           this.anzahlLernbareAttacken = Pokedata.moves.length;  
           console.log("anzahl lernbare Attacken: " + this.anzahlLernbareAttacken);            
@@ -56,26 +57,36 @@
               //console.log(this.AttackobjektArray[i]);
             })
           }     
-          this.filterAttacksByDamage(); //andere Methode aufrufen
+          this.filterAttacksFromByDamage(); //andere Methode aufrufen
         },
      
 
-        async filterAttacksByDamage (){        
+        async filterAttacksFromByDamage(){        
+          let b= 0;
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
             if(this.AttackobjektArray[i].power > 0 ){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
-              this.newAttackArray = this.AttackobjektArray[i]; 
+              this.newAttackArray[b] = this.AttackobjektArray[i]; 
+              b++;
             }     
           } 
-          this.fourRandomAttacks(); //andere Methode aufrufen
+          console.log(this.newAttackArray); 
+          this.SelectFourRandomAttacks(); //andere Methode aufrufen
         },
 
 
-        async fourRandomAttacks(){        
-          //for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
+        async SelectFourRandomAttacks(){   
+          let untergrenze=0;
+          let anzahlSchadensAttacken = 30; //funktioniert so ned: this.newAttackArray.length
+          for (let i=0; i < 4; i++) {
+            let randomNumber  = Math.floor(Math.random() * (anzahlSchadensAttacken - untergrenze + 1)) + 1;  
+            this.fourAttackArray[i] = this.newAttackArray[randomNumber];
+            //console.log("   random_Number: " + randomNumber);
+            console.log("     Attack Name: " + this.fourAttackArray[i].name + "    Damage: " + this.fourAttackArray[i].power);
+            "->%d<-\n", i
+          }
            // if(this.AttackobjektArray[i].power > 0 ){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
            //   this.newAttackArray = this.AttackobjektArray[i]; 
-           // }     
-          //} 
+           // }      
         }
       }
     }
