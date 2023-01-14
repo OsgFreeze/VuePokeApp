@@ -1,12 +1,13 @@
 <template>
     <div class="myFightWindow">   
-      <audio controls="off" autoplay="on" volume="0.01" loop="true" >    <source src="./fightMusic.mp3"  type="audio/mpeg">    </audio>  <!-- audio Abspielen für Kampfmusic  <source src="./fightMusic.mp3" --> 
+      <audio controls="true" autoplay="off" volume="0.01" loop="false" >    <source src="./fightMusic.mp3"  type="audio/mpeg">    </audio>  <!-- audio Abspielen für Kampfmusic  <source src="./fightMusic.mp3" --> 
     </div>
 
     <button @click="showPokeInfo"> Press me for PokeData </button>
 
-    <div class="displayPokemonData"> 
-        
+    <div class="displayPokemonData" v-if="this.pokemonDataLoaded"> 
+
+      {{randomPokemon.name}}
     </div>
   </template>
   
@@ -16,12 +17,13 @@
     name: 'fightWindow',
     components: {  
     }, 
-    props: ['beideÜbergebenenPokemonDaten'], 
+    props: ['beideÜbergebenenPokemonDaten', 'randomPokemon'],
     data(){ 
       return {
         data: {
-          Pokemon: [],
-          enemyPokemon: [],
+          Pokemon: {},
+          enemyPokemon: {},
+          pokemonDataLoaded: false,
         }
       }
     },
@@ -29,11 +31,12 @@
       showPokeInfo() {
         console.log("diese Info kommt von der fightWindow Komponente: ");
         //console.log(this.beideÜbergebenenPokemonDaten);
-        this.Pokemon=this.beideÜbergebenenPokemonDaten[0];
+        this.Pokemon[0]=this.beideÜbergebenenPokemonDaten[0];
         this.enemyPokemon=this.beideÜbergebenenPokemonDaten[1];
 
-        console.log("main Pokemon: " + this.Pokemon);
-        console.log("random Pokemon: " + this.enemyPokemon);
+        console.log("main Pokemon: " + this.beideÜbergebenenPokemonDaten[0]);
+        console.log("random Pokemon: " + this.beideÜbergebenenPokemonDaten[1]);
+        this.pokemonDataLoaded = true;
 
       }
     }

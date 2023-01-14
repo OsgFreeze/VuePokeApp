@@ -4,14 +4,12 @@
         <p> <!-- Zeilenumbruch--> </p> 
         <button @click="getAttackData"> Pokemon Attacken anzeigen </button> 
 
-
         <p v-if="allAttacksChosen"> Ausgewählte Attacken:  <!-- zeigt ausgewählte Attacken an -->
             {{this.chosenAttacks[0].name}}  
             {{this.chosenAttacks[1].name}}, 
             {{this.chosenAttacks[2].name}},
             {{this.chosenAttacks[3].name}}, 
         </p> 
-
 
         <div v-if="attackVisible">  <!-- attacken Auuswahlfenster -->
           <p v-for="(Attackobjekt, index) in AttackobjektArray" :key="index"> 
@@ -88,9 +86,9 @@
           this.chosenAttacks[this.arrayindex]= this.AttackobjektArray[attackNumber];
           this.arrayindex++;
           if(this.arrayindex==4){ 
-            this.attackVisible = false;
+            this.attackVisible = false; //attackeliste nicht mehr sichtbar.
             this.finalPokemonWithAttackArray[1]=this.chosenAttacks; //index=1, weil wir die Attackeninformation an Stelle [1, -> 2] zwei im übergabe Array Speichern wollen
-            this.allAtacksChosen=true;
+            this.allAtacksChosen=true; //zeigt ausgewählte Attacken an.
           }
       }
     }

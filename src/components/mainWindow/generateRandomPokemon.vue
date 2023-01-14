@@ -4,7 +4,7 @@
         
         <div v-if="visible" class="randomPokemon"> 
              <img class="randomPokemonPicture" :src="this.randomPokemonObject.sprites.other.home.front_default" />
-             <fightWindow class="fightwindow" :beideÜbergebenenPokemonDaten= "this.twoCompletePokemonArray">  </fightWindow>
+             <fightWindow class="fightwindow" :beideÜbergebenenPokemonDaten= "this.twoCompletePokemonArray" :randomPokemon ="this.randomPokemonObject">  </fightWindow>
         </div>
     </div>
 
@@ -35,23 +35,25 @@
       }
     },
 
+
+
     methods: {    
-        async generateRandomPokemon(obergrenze){   
+        async generateRandomPokemon(obergrenze){   //erzeugt ein random Pokemon Object
             let untergrenze=1;
-            let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze + 1)) + 1;   // *nur* diese Zeile wurde online nachgeschaut  ->  [nicht selbst gecoded!]
+            let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze + 1)) + 1;  
             await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNumber}`).then((response) => { 
             this.randomPokemonObject = response.data; 
-            this.visible=true;
-            console.log("Pokemon Name: " + this.randomPokemonObject.name); //zeigt pokemon Name in Konsole
-            this.sortAttacksFromRandomPokemon(); //andere Methode aufrufen
+            this.sortAttacksFromRandomPokemon(); 
             })
         }, 
  
         
-        async sortAttacksFromRandomPokemon(){                                  
+
+
+        async sortAttacksFromRandomPokemon(){   //erstellt ein neuen Attacken Array                            
           const Pokedata = this.randomPokemonObject;                           
           this.anzahlLernbareAttacken = Pokedata.moves.length;  
-          console.log("anzahl lernbare Attacken: " + this.anzahlLernbareAttacken);  //zeigt anz lernbaren Attacken
+          console.log("anzahl lernbare Attacken: " + this.anzahlLernbareAttacken);  
 
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {             
             let attackUrlFromIndex = Pokedata.moves[i].move.url                     
@@ -60,20 +62,25 @@
               this.AttackobjektArray[i] = attackData; 
             })
           }     
-          this.filterAttacksFromByDamage(); //andere Methode aufrufen
+          this.filterAttacksFromByDamage(); 
         },
      
 
-        async filterAttacksFromByDamage(){        
+
+
+
+        async filterAttacksFromByDamage(){ //speichert alle Attackeninformationen die Schaden machen in neuen Array       
           let b = 0;
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
-            if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
+            if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){   
               this.newAttackArray[b] = this.AttackobjektArray[i]; 
               b++;
             }     
           } 
-          this.SelectFourRandomAttacks(); //andere Methode aufrufen
+          this.SelectFourRandomAttacks(); 
         },
+
+
 
 
         async SelectFourRandomAttacks(){   
@@ -89,7 +96,6 @@
                       + "   PP: " + this.fourAttackArray[i].pp
                       );
           } 
-
           this.finalRandomPokemonWithAttackArray[0] = this.randomPokemonObject;  //Pokemon Daten in Array[0] speichern -> Array[ {pokemon Data} ]
           this.finalRandomPokemonWithAttackArray[1] = this.fourAttackArray;      //Attacken Daten in Array[1] speichern -> Array[ {pokemon Data}, [Attacken] 
           console.log(this.finalRandomPokemonWithAttackArray);                   //Funktioniert ✓
@@ -99,7 +105,12 @@
           this.twoCompletePokemonArray[0] = this.finalRandomPokemonWithAttackArray;  // Wert0 -> 
           this.twoCompletePokemonArray[1] = this.übergebenesfinalPokemonWithAttackArray //von props einfach weiterleiten.
           console.log("beide Pokemon Übertragen ✓");
-        }
+          this.visible=true;
+        },
+
+
+
+
       }
     }
   </script>
