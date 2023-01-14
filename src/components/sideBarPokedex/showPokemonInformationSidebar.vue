@@ -1,14 +1,14 @@
 <template>
 
     <div>   
-        sidebar: [Empty]
+        sidebar: [show Empty]
     </div>
   
 </template>
   
   <script>
   export default {
-    name: 'displayPokemonSideBar',
+    name: 'showPokemonInformationSidebar',
     components: {  
     }, 
     data(){ 
@@ -23,4 +23,3 @@
   
   <style>
   </style>
-  
