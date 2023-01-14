@@ -33,6 +33,7 @@ export default {
     return {
       pokeLoaded: false,  //  Pokemondaten bereits geladen ?
       PokeNumber: 1,      //  startwert für Eingabefeld
+      pokemonStats: [],   //  speichert die basis Werte von einem Pokemon
       pokemonObject: {}   //  speichert die Pokemon Daten von dem API Call
     }
   },
@@ -43,6 +44,7 @@ export default {
       await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
         console.log(response); //pokemon data Ausgeben
         this.pokemonObject = response.data; //Pokemon Objekt in variable "pokemonObject" Speichern
+        this.pokemonStats =  this.pokemonObject.stats;
         this.pokeLoaded = true;
       })
     },
