@@ -1,13 +1,11 @@
 <template class="generateRandomPokemon">
     <div>   
-        <button @click="generateRandomPokemon(898)"> generateRandomPokemon </button> <!-- 898, da bis dahin alle Pokemon verfügbar sind -->
-        
-        <div v-if="visible" class="randomPokemon"> 
-             <img class="randomPokemonPicture" :src="this.randomPokemonObject.sprites.other.home.front_default" />
-             <fightWindow class="fightwindow" :beideÜbergebenenPokemonDaten= "this.twoCompletePokemonArray" :randomPokemon ="this.randomPokemonObject">  </fightWindow>
-        </div>
+      <button @click="generateRandomPokemon(898)"> generateRandomPokemon </button> <!-- 898, da bis dahin alle Pokemon verfügbar sind -->
+      <div v-if="visible" class="randomPokemon"> <!-- Zeigt Information über das zufällig ausgewählte Pokemon -->
+          <img class="randomPokemonPicture" :src="this.randomPokemonObject.sprites.other.home.front_default" />
+          <fightWindow class="fightwindow"/>
+      </div>
     </div>
-
   </template>
   
   <script>
@@ -19,7 +17,7 @@
     components: {  
       fightWindow,
     }, 
-    props: ['übergebenesfinalPokemonWithAttackArray'], 
+    props: ['übergebenesPokemonObject'], 
     
     data(){ 
       return {
@@ -51,9 +49,6 @@
             })
         }, 
  
-        
-
-
         async sortAttacksFromRandomPokemon(){   //erstellt ein neuen Attacken Array                            
           const Pokedata = this.randomPokemonObject;                           
           this.anzahlLernbareAttacken = Pokedata.moves.length;  
@@ -69,10 +64,6 @@
           this.filterAttacksFromByDamage(); 
         },
      
-
-
-
-
         async filterAttacksFromByDamage(){ //speichert alle Attackeninformationen die Schaden machen in neuen Array       
           let b = 0;
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
@@ -83,9 +74,6 @@
           } 
           this.SelectFourRandomAttacks(); 
         },
-
-
-
 
         async SelectFourRandomAttacks(){   
           console.log("anzahl Schadensattacken: " + this.newAttackArray.length);  //zeigt anz schadens Attacken
@@ -100,15 +88,7 @@
                       + "   PP: " + this.fourAttackArray[i].pp
                       );
           } 
-          this.finalRandomPokemonWithAttackArray[0] = this.randomPokemonObject;  //Pokemon Daten in Array[0] speichern -> Array[ {pokemon Data} ]
-          this.finalRandomPokemonWithAttackArray[1] = this.fourAttackArray;      //Attacken Daten in Array[1] speichern -> Array[ {pokemon Data}, [Attacken] 
-          console.log(this.finalRandomPokemonWithAttackArray);                   //Funktioniert ✓
-
-          //console.log(this.übergebenesfinalPokemonWithAttackArray); //gibt fertiges random Pokemon Objekt in Console aus
-                                                                    
-          this.twoCompletePokemon.pokemon1 = this.finalRandomPokemonWithAttackArray;  
-          this.twoCompletePokemon.pokemon2 = this.übergebenesfinalPokemonWithAttackArray 
-          //console.log("beide Pokemon Übertragen ✓");
+          
           this.visible=true;
         },
 
