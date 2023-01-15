@@ -42,7 +42,10 @@ export default {
   methods: { 
     async loadApiNumber(){ //API Call für Pokemon Daten
       await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
+
+        console.log("pokemon API Daten: "); 
         console.log(response); //pokemon data Ausgeben
+        
         this.pokemonObject = response.data; //Pokemon Objekt in variable "pokemonObject" Speichern
         this.pokemonStats =  this.pokemonObject.stats;
         this.pokeLoaded = true;
