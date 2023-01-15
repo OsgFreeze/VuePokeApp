@@ -2,21 +2,24 @@
     <div>   
       <button @click="getAttackData"> Pokemon Attacken anzeigen </button> 
 
-      <div v-if="attackVisible">  <!-- attacken Auuswahlfenster -->
-        <p v-for="(Attackobjekt, index) in AttackobjektArray" :key="index"> 
+
+      <p> {{this.chosenAttacks.name}} </p>  <!-- zeigt ausgewählte Attacken an --> 
+
+      <div v-if="this.visible">  <!-- attacken Auswahlfenster [nur Schadensattacken]--> 
+        <p v-for="(Attackobjekt, index) in newDamageAttackArray" :key="index"> 
           {{index}} 
           <button @click="selectAttack(index)"> Name: {{Attackobjekt.name}} Power: {{Attackobjekt.power}} genauigkeit: {{Attackobjekt.accuracy}} </button> 
         </p> 
       </div> 
 
-      <generateRandomPokemon class="generateRandomPokemon" :übergebenesfinalPokemonWithAttackArray="this.finalPokemonWithAttackArray"        />
+     
+      <generateRandomPokemon v-if="this.setRandomPokemonButtonVisible" class="generateRandomPokemon" :übergebenesPokemonObject="this.pokemonObject" />
 
     </div>
   </template>
   
   <script>
   import axios from 'axios'
-
   import generateRandomPokemon from './generateRandomPokemon.vue';
 
   export default {
@@ -24,67 +27,75 @@
     components: {  
       generateRandomPokemon
     }, 
-    props: ['übergebenesPokemonObjekt', 'testObjekt'], //übergebenes pokemonObjekt von parent
+    props: ['übergebenesPokemonObjekt'],   //übergebenes pokemonObjekt von parent
     data(){ 
       return {
-        baseDamage: 0,
-        arrayindex: 0,
-        anzahlLernbareAttacken: 0,
+        baseDamage: 0,                //     speichert den Schaden einer Attacke
+        anzahlLernbareAttacken: 0,    //     speichert die maximale Anzahl an lernbaren Attacken eines Pokemon 
+        chosenAttacksIndex: 0,        //     wird 'ausgelagert' benötigt für die selectAttack() Methode, das diese nicht bei jedem aufruf auf 0 zurückgesetzt wird     
 
-        attackName: "[none]",
         visible: false,
-        attackVisible: true,
-        allAttacksChosen: false,
+        setRandomPokemonButtonVisible: false,
 
-        pokemonObject: { 
-          pokemonData: {},   //     Bsp:  {name: "hubert", size:40}
-          attackData: {}
+        pokemonObject: {              //     ->   hier wird das fertige Pokemon[] gespeichert
+          pokemonData: {},            //     speichert alle Informationen über ein Pokemon 
+          attackData: {}              //     speichert alle Informationen über die Attacken
         },
 
-        AttackobjektArray: [],
-        newAttackArray: [],
-        chosenAttacks: [null],
-        finalPokemonWithAttackArray: [], //hier werden die Pokemon Daten + Informationen zu den 4 Ausgewählten Attacken gespeichert
+        AttackobjektArray: [],        //     speichert jede lernbare Attacke eines Pokemon       
+        newDamageAttackArray: [],     //     speichern alle Attacken die Schaden machen. 
+        chosenAttacks: [],            //     speichert alle ausgewählten Attacken. 
       }
     },
 
     methods: {
-      async getAttackData(){                                               //gibt Informationen zu den übergebenen lernbaren Attacken aus 
-      
-        const Pokedata = this.übergebenesPokemonObjekt;                    //objekt.daten in Pokedata speichern                                    funktioniert ✓
-        this.anzahlLernbareAttacken = Pokedata.moves.length;               //local variable für Anzahl lernbare Attacken                           funktioniert ✓
-
-        for (let i=0; i < this.anzahlLernbareAttacken; i++) {              //durchläuft so oft wie viele Attacken ein Pokemon lernen kann.         funktioniert ✓
+      async getAttackData(){  //   ->   gibt Informationen zu den übergebenen lernbaren Attacken aus  [funktioniert ✓]
+        const Pokedata = this.übergebenesPokemonObjekt;                                            
+        this.anzahlLernbareAttacken = Pokedata.moves.length;   
+        for (let i=0; i < this.anzahlLernbareAttacken; i++) { 
           let attackURL = Pokedata.moves[i].move.url                     
           await axios.get(attackURL).then((response) => {    
-            const attackData = response.data; 
-            this.AttackobjektArray[i] = attackData;
+            const localAttackData = response.data; 
+            this.AttackobjektArray[i] = localAttackData;
           })
         } 
-        this.visible=true;
         this.filterAttacksByDamage();
       },
     
-      async filterAttacksByDamage(){        
+
+      async filterAttacksByDamage(){  //   ->   speichert alle Attackeninformationen die Schaden machen in newAttackArray[]
           let b = 0;
-          for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
-            if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){   //speichert alle Attackeninformationen die Schaden machen in neuen Array
-              this.newAttackArray[b] = this.AttackobjektArray[i]; 
+          for (let i=0; i < this.anzahlLernbareAttacken; i++) {  //funktioniert ✓
+            if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){  //funktioniert ✓
+              this.newDamageAttackArray[b] = this.AttackobjektArray[i];  
               b++;
-              //console.log(this.newAttackArray[b]);
-            }     
+            }    
           } 
-          this.pokemonObject.pokemonData = this.übergebenesPokemonObjekt;
+
+          console.log("Array mit allen Attacken");
+          console.log(this.AttackobjektArray);    //alter Array
+
+          console.log("Array mit gefliterten schadens Attacken");
+          console.log(this.newDamageAttackArray); //neuer Array
+
+
+          this.visible=true; 
+          this.setRandomPokemonButtonVisible= true;
         },
 
-      selectAttack(attackNumber){ 
-          this.chosenAttacks[this.arrayindex]= this.AttackobjektArray[attackNumber];
-          this.arrayindex++;
+      selectAttack(attackNumber){  //   ->   erstellt neuen Array[] in dem nur die 4 ausgewählten Attacken gespeichert werden.
+          this.chosenAttacks[this.chosenAttacksIndex]= this.newDamageAttackArray[attackNumber]; 
+          this.chosenAttacksIndex++;                                           
 
-          if(this.arrayindex==4){ 
-            this.pokemonObject.attackData=this.chosenAttacks; //index=1, weil wir die Attackeninformation an Stelle [1, -> 2] zwei im übergabe Array Speichern wollen
-            this.allAtacksChosen=true; //zeigt ausgewählte Attacken an.
-            this.attackVisible = false;
+          if(this.chosenAttacksIndex==4){ 
+
+            console.log("Array mit 4 Attacken");
+            console.log(this.chosenAttacks); //gibt neuen Array mit 4 werten aus
+
+            this.pokemonObject.pokemonData = this.übergebenesPokemonObjekt;   //   Speichert das übergebene Pokemon in lokales pokemon[] 
+            this.pokemonObject.attackData = this.chosenAttacks;               //   speichert (alle 4 Attacken) in pokemon[] 
+            this.visible = false;                                             //   setzt sichtbarkeit von dem attacken Auswahlfenster auf false
+            this.setRandomPokemonButtonVisible= true;                         //   macht generateRandomPokemon Button sichtbar
            }
       }
     }

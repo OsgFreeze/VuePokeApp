@@ -15,7 +15,7 @@
     </div>
   </div>
 
-  <selectAttack class="selecAttack" :übergebenesPokemonObjekt="this.pokemonObject" :testObjekt="this.testObject" /> <!-- übergebe Daten zur Attacken Auswahl -->
+  <selectAttack class="selecAttack" :übergebenesPokemonObjekt="this.pokemonObject" /> <!-- übergebe Daten zur Attacken Auswahl -->
 
 </template>
 
@@ -46,8 +46,6 @@ export default {
         this.pokemonObject = response.data; //Pokemon Objekt in variable "pokemonObject" Speichern
         this.pokemonStats =  this.pokemonObject.stats;
         this.pokeLoaded = true;
-
-        this.testObject.myPokemon = response.data;
       })
     },
     
