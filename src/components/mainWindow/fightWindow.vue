@@ -94,7 +94,6 @@
     }
 
     .right{
-      background-color: rgba(185, 34, 135, 0);
       height: 100;
       width: 520px;
       display: flex;
@@ -133,7 +132,7 @@
 .gegnerPokeStatsR{
   width: 100;
   height: 150px;
-  background-color: rgb(196, 214, 0);
+  background-color: rgba(196, 214, 0, 0);
   display: flex;
   flex-direction: column
 }
