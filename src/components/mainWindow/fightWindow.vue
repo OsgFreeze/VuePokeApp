@@ -4,14 +4,13 @@
           <img class="backgroundPicture" src="https://cutewallpaper.org/21/pokemon-battle-backgrounds/Index-of-spritesgen6bgs.jpg" />
             <div class="left"> 
               <div class="obenL"> 
-                <div class="PokeStatsL">               
-                    Name: {{ this.übergebenePokemon.myPokemon.pokemonData.name }}
-                    Höhe: {{ this.übergebenePokemon.myPokemon.pokemonData.height }}
-                    Gewicht: {{ this.übergebenePokemon.myPokemon.pokemonData.weight }}
-
+                <div class="PokeStatsL">      
+                  <p class="pokemonInfoStyle" style="padding-top: 75px;">         
+                    {{ this.übergebenePokemon.myPokemon.pokemonData.name + " Lv. 50"}}   
+                  </p>  
                 </div>
-                <div class="HealthBarL"> 
-                  HealthBarL
+                <div class="healthBarMyPokemon"> 
+                  [Healthbar MyPokemon]
                 </div>
               </div>
 
@@ -24,13 +23,13 @@
               <div class="obenR"> 
                 <div class="gegnerPokeStatsR">
                   <div class="gegnerInformationen">
-                    Name: {{ this.übergebenePokemon.enemyPokemon.enemyPokemon.name }}
-                    Höhe: {{ this.übergebenePokemon.enemyPokemon.enemyPokemon.height }}
-                    Gewicht: {{ this.übergebenePokemon.enemyPokemon.enemyPokemon.weight }}
+                    <p class="pokemonInfoStyle" style="padding-top: 30px;">
+                      {{ this.übergebenePokemon.enemyPokemon.enemyPokemon.name  + " Lv. 50"}}
+                    </p>
                   </div>
 
                   <div class="healthbarGegner">
-                    healthbarGegner
+                    [healthbarGegner]
                   </div>
                 </div>
 
@@ -70,7 +69,9 @@
         </div>
 
         <div class="konsoleUnten"> 
-            <p> hier steht text von der Konsole</p>
+            <p style="text-align: center;" > 
+              [hier steht text von der Konsole]
+            </p>
         </div>
   </div>
 </template>
@@ -90,6 +91,7 @@
       }
     },
     methods: {
+
     }
 
   } 
@@ -110,8 +112,11 @@
       position: relative;
     }
     .konsoleUnten{
-      background-color: rgb(34, 157, 214);
+      background-color: rgba(92, 133, 223, 0.479);
       height: 100px;
+      border-color: rgb(0, 0, 0);
+      border-width: 5px;
+      border-style: solid;
     }
 
     .left{
@@ -139,13 +144,11 @@
     }
 
     .pokemonSpriteL{
-      background-color: rgba(59, 185, 34, 0);
       height: 490px;
       width: 100;
     }
 
 .obenR{
-  background-color: rgba(196, 214, 34, 0);
   height: 490px;
   width: 100;
   display: flex;
@@ -155,7 +158,6 @@
 .gegnerPokeStatsR{
   width: 100;
   height: 150px;
-  background-color: rgba(196, 214, 0, 0);
   display: flex;
   flex-direction: column
 }
@@ -163,29 +165,26 @@
 .gegnerPokemonR{
   width: 100;
   height: 340px;
-  background-color: rgba(214, 34, 205, 0);
 }
 
 .gegnerInformationen{
-  background-color: rgb(89, 170, 207);
   width: 100;
   height: 75px;
 }
 
 .healthbarGegner{
-  background-color: rgb(221, 87, 75);
+  /* background-color: rgba(221, 87, 75, 0.575); */
   width: 100;
   height: 75px;
 }
 
 .PokeStatsL{
-  background-color: rgb(89, 170, 207);
   width: 100;
   height: 120px;
 
 }
-.HealthBarL{
-
+.healthBarMyPokemon{
+ /* background-color: rgba(221, 87, 75, 0.575); */
   width: 100;
   height: 90px;
 }
@@ -271,5 +270,11 @@ width: 520px;
 .button1:hover {
   background-color: #555555;
   color: white;
+}
+
+.pokemonInfoStyle{
+  color:aliceblue;
+  font-size: 20px;
+  /* padding-left: 60px; */
 }
   </style>
