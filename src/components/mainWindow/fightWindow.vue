@@ -34,8 +34,12 @@
                 </div>
               </div>
 
-              <div class="untenR"> 
-                ubenR
+              <div class="attackenauswahlFenster"> 
+                
+                <button class="ButtonAttacke1"> {{übergebenePokemon.myPokemon.attackData[0].name}} </button>
+                <button class="ButtonAttacke2"> {{übergebenePokemon.myPokemon.attackData[1].name}} </button>
+                <button class="ButtonAttacke3"> {{übergebenePokemon.myPokemon.attackData[2].name}} </button>
+                <button class="ButtonAttacke4"> {{übergebenePokemon.myPokemon.attackData[3].name}} </button>
               </div>
             </div>
         </div>
@@ -123,7 +127,7 @@
   flex-direction: column
 }
 
-.untenR{
+.attackenauswahlFenster{
   background-color: rgba(236, 132, 14, 0);
   height: 210px;
   width: 100;
@@ -144,25 +148,25 @@
 }
 
 .gegnerInformationen{
-  background-color: rgba(196, 214, 34, 0);
+  background-color: rgb(89, 170, 207);
   width: 100;
   height: 75px;
 }
 
 .healthbarGegner{
-  background-color: rgba(34, 157, 214, 0);
+  background-color: rgb(221, 87, 75);
   width: 100;
   height: 75px;
 }
 
 .PokeStatsL{
-  background-color: rgba(133, 31, 0, 0);
+  background-color: rgb(89, 170, 207);
   width: 100;
   height: 120px;
 
 }
 .HealthBarL{
-  background-color: rgba(61, 5, 0, 0);
+  background-color: rgb(221, 87, 75);
   width: 100;
   height: 90px;
 }
@@ -170,14 +174,12 @@
 .myPokemonPicture{
   width: 490;
   height: 490px;
-  background-color: rgba(179, 131, 190, 0);
   padding-left: 150px;
 }
 
 .enemyPokemonPicture{
   width: 340;
   height: 340px;
-  background-color: rgba(179, 131, 190, 0);
 }
 
 .backgroundPicture{
