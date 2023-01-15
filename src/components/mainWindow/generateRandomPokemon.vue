@@ -103,6 +103,7 @@
         //Speichert alle verfügbaren Informationen(Pokemon1[], Pokemon2[]) in das übergabe Objekt  ->  [twoCompletePokemon]
           this.twoCompletePokemon.myPokemon = this.übergebenesPokemonObject;
           this.twoCompletePokemon.enemyPokemon = this.randomPokemonEnemy;
+          console.log(this.twoCompletePokemon)
           this.randomPokemonLoaded=true;
         },
       }
