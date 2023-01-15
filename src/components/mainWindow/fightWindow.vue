@@ -1,14 +1,14 @@
 <template>
-    <div class="myFightWindow">   
+    <div>   
       <audio controls="true" autoplay="off" volume="0.01" loop="false" >    <source src="./fightMusic.mp3"  type="audio/mpeg">    </audio>  <!-- audio Abspielen für Kampfmusic  <source src="./fightMusic.mp3" --> 
     </div>
 
-    <button @click="showPokeInfo"> Press me for PokeData </button>
+    <button @click="showPokeInfo"> Press me for Fight Window -> übergebene Pokemon Data </button>
 
-    <div class="displayPokemonData" v-if="this.pokemonDataLoaded"> 
+    <div class="displayPokemonData" > 
 
-      {{randomPokemon.name}}
     </div>
+
   </template>
   
   <script>
@@ -17,24 +17,22 @@
     name: 'fightWindow',
     components: {  
     }, 
-    props: ['beideÜbergebenenPokemonDaten', 'randomPokemon'],
+    props: ['übergebenePokemon'],
     data(){ 
       return {
         data: {
-          Pokemon: {},
-          enemyPokemon: {},
-          pokemonDataLoaded: false,
+
         }
       }
     },
     methods: {
       showPokeInfo() {
+        
         console.log("diese Info kommt von der fightWindow Komponente: ");
         //console.log(this.beideÜbergebenenPokemonDaten);
-
         console.log("main Pokemon: " + this.beideÜbergebenenPokemonDaten.pokemon1);
         console.log("random Pokemon: " + this.beideÜbergebenenPokemonDaten.pokemon2);
-        this.pokemonDataLoaded = true;
+
 
       }
     }
@@ -44,12 +42,6 @@
   </script>
   
   <style>
-.myFightWindow{
-  width: 100;
-  height: 50;
-  background-color: rgb(255, 127, 80);
-
-}
 
 .fightWindowPicture{
   width: 200px;

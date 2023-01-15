@@ -1,9 +1,9 @@
 <template class="generateRandomPokemon">
     <div>   
       <button @click="generateRandomPokemon(898)"> generateRandomPokemon </button> <!-- 898, da bis dahin alle Pokemon verfügbar sind -->
-      <div v-if="visible" class="randomPokemon"> <!-- Zeigt Information über das zufällig ausgewählte Pokemon -->
+      <div v-if="randomPokemonLoaded" > <!-- Zeigt Information über das zufällig ausgewählte Pokemon -->
           <img class="randomPokemonPicture" :src="this.randomPokemonObject.sprites.other.home.front_default" />
-          <fightWindow class="fightwindow"/>
+          <fightWindow class="fightwindow" :übergebenePokemon="this.twoCompletePokemon"/>
       </div>
     </div>
   </template>
@@ -25,43 +25,45 @@
         AttackobjektArray: [],
         newAttackArray: [],
         fourAttackArray: [],
-        finalRandomPokemonWithAttackArray: [],
 
-        twoCompletePokemon: {
-          pokemon1: [], 
-          pokemon2: [],
+        randomPokemonEnemy: {  //speichert alle local gesammelten Informationen in einem Objekt 
+          enemyPokemon: {},
+          enemyAttacks: {}
+        },
+
+        twoCompletePokemon: { //fasst beide Pokemon in einem übergabe Objekt             
+          myPokemon: {},     
+          enemyPokemon: {},                             
         }, 
 
-        visible: false,
+        randomPokemonLoaded: false,
         newAttackArrayLength: 0,
+        anzahlLernbareAttacken: 0,
+        anzahlSchadensAttacken: 0,
       }
     },
 
-
-
     methods: {    
-        async generateRandomPokemon(obergrenze){   //erzeugt ein random Pokemon Object
+        async generateRandomPokemon(obergrenze){   //erzeugt ein random Pokemon Object & speichert ergebniss in [this.randomPokemonObject] 
             let untergrenze=1;
-            let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze + 1)) + 1;  
-            await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNumber}`).then((response) => { 
+            let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze - 1)) + 1;   
+            await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNumber}`).then((response) => {  
             this.randomPokemonObject = response.data; 
-            this.sortAttacksFromRandomPokemon(); 
+            this.getAttackDataFromRandomPokemon(); 
             })
         }, 
- 
-        async sortAttacksFromRandomPokemon(){   //erstellt ein neuen Attacken Array                            
-          const Pokedata = this.randomPokemonObject;                           
-          this.anzahlLernbareAttacken = Pokedata.moves.length;  
-          console.log("anzahl lernbare Attacken: " + this.anzahlLernbareAttacken);  
 
-          for (let i=0; i < this.anzahlLernbareAttacken; i++) {             
-            let attackUrlFromIndex = Pokedata.moves[i].move.url                     
+        async getAttackDataFromRandomPokemon(){   //erstellt ein neuen Attacken Array von dem random Pokemon                            
+          const localPokedata = this.randomPokemonObject; // generiertes pokemon Objekt nochmal local speichern in Variable -> zur vereinfachung.                          
+          this.anzahlLernbareAttacken = localPokedata.moves.length;  // anzahl lernbare Attacken von generiertes pokemon Objekt
+          for (let i=0; i < this.anzahlLernbareAttacken; i++) {           
+            let attackUrlFromIndex = localPokedata.moves[i].move.url                  
             await axios.get(attackUrlFromIndex).then((response) => {    
-              const attackData = response.data; 
-              this.AttackobjektArray[i] = attackData; 
+              const attackData = response.data;  
+              this.AttackobjektArray[i] = attackData;  
             })
-          }     
-          this.filterAttacksFromByDamage(); 
+          } 
+          this.filterAttacksFromByDamage();
         },
      
         async filterAttacksFromByDamage(){ //speichert alle Attackeninformationen die Schaden machen in neuen Array       
@@ -75,23 +77,29 @@
           this.SelectFourRandomAttacks(); 
         },
 
-        async SelectFourRandomAttacks(){   
-          console.log("anzahl Schadensattacken: " + this.newAttackArray.length);  //zeigt anz schadens Attacken
+        async SelectFourRandomAttacks(){   //[aktuell noch mit doppelten Attacken]
+          console.log("anzahl Schadensattacken: " + this.newAttackArray.length); 
           let untergrenze=0;
-          let anzahlSchadensAttacken = this.newAttackArray.length; 
-          for (let i=0; i < 4; i++) {
-            let randomNumber  = Math.floor(Math.random() * (anzahlSchadensAttacken - untergrenze + 1)) + 1;  
-            this.fourAttackArray[i] = this.newAttackArray[randomNumber];           //fourAttackArray = finaler attacken-Array mit allen Infos!                                               
-            console.log("     Attack Name: " + this.fourAttackArray[i].name        //[aktuell noch mit doppelten Attacken] 
-                      + "   Damage: " + this.fourAttackArray[i].power              //zeigt 4 Random Attacken infos 
+          this.anzahlSchadensAttacken = this.newAttackArray.length; 
+          for (let i=0; i < 4; i++) { 
+            let randomNumber  = Math.floor(Math.random() * (this.anzahlSchadensAttacken - untergrenze - 1)) + 1; 
+            this.fourAttackArray[i] = this.newAttackArray[randomNumber];           !                                           
+            console.log("   Attack Name: " + this.fourAttackArray[i].name         
+                      + "   Damage: " + this.fourAttackArray[i].power               
                       + "   Genauigkeit: " + this.fourAttackArray[i].accuracy
                       + "   PP: " + this.fourAttackArray[i].pp
                       );
           } 
-          
-          this.visible=true;
-        },
 
+        //Speichert alle random Pokemon Informationen(pokemon,Attacken) in das übergabe Objekt  ->  [randomPokemonEnemy]
+          this.randomPokemonEnemy.enemyPokemon = this.randomPokemonObject;
+          this.randomPokemonEnemy.enemyAttacks = this.fourAttackArray; 
+
+        //Speichert alle verfügbaren Informationen(Pokemon1[], Pokemon2[]) in das übergabe Objekt  ->  [twoCompletePokemon]
+          this.twoCompletePokemon.myPokemon = this.übergebenesPokemonObject;
+          this.twoCompletePokemon.enemyPokemon = this.randomPokemonEnemy;
+          this.randomPokemonLoaded=true;
+        },
       }
     }
   </script>

@@ -66,15 +66,15 @@
           let b = 0;
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {  //funktioniert ✓
             if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){  //funktioniert ✓
-              this.newDamageAttackArray[b] = this.AttackobjektArray[i];  
+              this.newDamageAttackArray[b] = this.AttackobjektArray[i];  //funktioniert ✓
               b++;
             }    
           } 
           this.visible=true; 
           console.log("Array mit allen Attacken:");
-          console.log(this.AttackobjektArray);    //alter Array
+          console.log(this.AttackobjektArray);    //alter Array ausgeben
           console.log("Array mit gefliterten schadens Attacken:");
-          console.log(this.newDamageAttackArray); //neuer Array
+          console.log(this.newDamageAttackArray); //neuer Array ausgeben
         },
 
       selectAttack(attackNumber){  //   ->   erstellt neuen Array[] in dem nur die 4 ausgewählten Attacken gespeichert werden.
@@ -83,16 +83,16 @@
           if(this.chosenAttacksIndex==4){ 
             console.log("Array mit 4 Attacken");
             console.log(this.chosenAttacks); //gibt neuen Array mit 4 werten aus
-            this.pokemonObject.pokemonData = this.übergebenesPokemonObjekt;   //   Speichert das übergebene Pokemon in lokales pokemon[] 
-            this.pokemonObject.attackData = this.chosenAttacks;               //   speichert (alle 4 Attacken) in pokemon[] 
-            this.visible = false;                                             //   setzt sichtbarkeit von dem attacken Auswahlfenster auf false
+            this.pokemonObject.pokemonData = this.übergebenesPokemonObjekt;    //   Speichert das übergebene Pokemon in lokales pokemon[] 
+            this.pokemonObject.attackData = this.chosenAttacks;                //   speichert (alle 4 Attacken) in pokemon[] 
+            this.visible = false;                                              //   setzt sichtbarkeit von dem attacken Auswahlfenster auf false
             this.fourAttacksChosen = true;                                     //   sichtbar sobald 4 Attacken ausgewählt wurden
            }
       }
     }
   }
   </script>
-  
+
   <style>
   .fightwindow{
     background-color: rgba(13, 184, 236, 0.479);
