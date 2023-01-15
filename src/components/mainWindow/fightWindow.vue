@@ -27,13 +27,9 @@
     },
     methods: {
       showPokeInfo() {
-        
+
         console.log("diese Info kommt von der fightWindow Komponente: ");
-        //console.log(this.beideÜbergebenenPokemonDaten);
-        console.log("main Pokemon: " + this.beideÜbergebenenPokemonDaten.pokemon1);
-        console.log("random Pokemon: " + this.beideÜbergebenenPokemonDaten.pokemon2);
-
-
+        console.log(this.übergebenePokemon);
       }
     }
 
