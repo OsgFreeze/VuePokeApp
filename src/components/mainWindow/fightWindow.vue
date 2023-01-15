@@ -43,12 +43,14 @@
                   <div class="divButtonAttackeLinksOben"> 
                     <button class="button button1"> 
                       {{übergebenePokemon.myPokemon.attackData[0].name}}
+                      {{übergebenePokemon.myPokemon.attackData[0].power}}
                      </button> 
                   </div>
 
                   <div class="divButtonAttackeRechtsOben"> 
                     <button class="button button1"> 
                       {{übergebenePokemon.myPokemon.attackData[1].name}} 
+                      {{übergebenePokemon.myPokemon.attackData[1].power}}
                     </button> 
                   </div>
                 </div>
@@ -56,11 +58,13 @@
                   <div class="divButtonAttackeLinksUnten"> 
                     <button class="button button1"> 
                       {{übergebenePokemon.myPokemon.attackData[2].name}} 
+                      {{übergebenePokemon.myPokemon.attackData[2].power}}
                     </button> 
                   </div>
                   <div class="divButtonAttackeRechtsUnten"> 
                      <button class="button button1"> 
                       {{übergebenePokemon.myPokemon.attackData[3].name}} 
+                      {{übergebenePokemon.myPokemon.attackData[3].power}}
                     </button> 
                   </div>
               </div>
@@ -69,8 +73,8 @@
         </div>
 
         <div class="konsoleUnten"> 
-            <p style="text-align: center;" > 
-              [hier steht text von der Konsole]
+            <p style="text-align: center"> 
+              {{this.konsolenAusgabe}}
             </p>
         </div>
   </div>
@@ -87,6 +91,7 @@
         data: {
           myPokemon:{},       //hier wird das eigene Pokemon gespeichert
           enemyPokemon: {},   //hier wird das gegner Pokemon gespeichert
+          konsolenAusgabe: "[hier steht text von der Konsole]",
         }
       }
     },
@@ -214,7 +219,6 @@
 }
 
 
-
 .ButtonZweiAuswahlfensterOben{
 display: flex;
 flex-direction: row;
@@ -259,6 +263,7 @@ width: 520px;
   cursor: pointer;
   width: 240px;
   height: 90px;
+  border-radius: 7%;
 }
 
 .button1 {
