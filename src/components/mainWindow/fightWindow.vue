@@ -11,8 +11,8 @@
                 </div>
               </div>
 
-              <div class="untenL"> 
-                untenL
+              <div class="pokemonSpriteL"> 
+                mein Pokemon Sprite
               </div>
             </div>
 
@@ -71,13 +71,10 @@
     .komplettesKampffenster{
       height: 800px;
       width: 1320px; 
-      background-color: rgb(0, 0, 0);
       display: flex;
       flex-direction: column;
-
     }
     .KampffensterOben{
-      background-color: rgb(238, 5, 5);
       height: 700px;
       display: flex;
       flex-direction: row;
@@ -106,14 +103,13 @@
 }
 
 .obenL{
-  background-color: rgb(185, 34, 34);
   height: 210px;
   width: 100;
   display: flex;
   flex-direction: column
 }
 
-.untenL{
+.pokemonSpriteL{
   background-color: rgb(59, 185, 34);
   height: 490px;
   width: 100;
@@ -160,11 +156,15 @@
 }
 
 .PokeStatsL{
-  background-color: rgb(185, 34, 34);
+  background-color: rgb(133, 31, 31);
+  width: 100;
+  height: 120px;
 
 }
-.class.HealthBar{
-  background-color: rgb(167, 73, 221);
+.HealthBarL{
+  background-color: rgb(61, 5, 75);
+  width: 100;
+  height: 90px;
 }
 
 
