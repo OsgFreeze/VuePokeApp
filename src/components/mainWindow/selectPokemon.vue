@@ -15,7 +15,7 @@
     </div>
   </div>
 
-  <selectAttack class="selecAttack" :übergebenesPokemonObjekt="this.pokemonObject" /> <!-- übergebe Daten zur Attacken Auswahl -->
+  <selectAttack :übergebenesPokemonObjekt="this.pokemonObject" /> <!-- übergebe Daten zur Attacken Auswahl -->
 
 </template>
 
@@ -44,7 +44,7 @@ export default {
         this.pokemonObject = response.data; //Pokemon Objekt in variable "pokemonObject" Speichern
         this.pokemonStats =  this.pokemonObject.stats;
         this.pokeLoaded = true;
-        
+
         console.log("pokemon API Daten: "); 
         console.log(response); //pokemon data Ausgeben
       })
