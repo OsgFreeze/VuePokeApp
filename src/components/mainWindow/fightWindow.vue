@@ -1,4 +1,5 @@
 <template>
+  <button @click="this.startGame"> start Methode in Fight Window aufrufen</button>
   <div class="komplettesKampffenster"> 
         <div class="KampffensterOben"> 
           <img class="backgroundPicture" src="https://cutewallpaper.org/21/pokemon-battle-backgrounds/Index-of-spritesgen6bgs.jpg" />
@@ -92,15 +93,20 @@
           myPokemon:{},       //hier wird das eigene Pokemon gespeichert
           enemyPokemon: {},   //hier wird das gegner Pokemon gespeichert
           konsolenAusgabe: "[hier steht text von der Konsole]",
+          visible: false,
         }
       }
     },
     methods: {
+      startGame(){ //übergaben Variable local Speichern
+        this.myPokemon=this.übergebenePokemon.myPokemon; 
+        this.enemyPokemon=this.übergebenePokemon.enemyPokemon; 
+        this.visible=true;
+      }
 
+      
     }
-
   } 
-  
   </script>
   
   <style>
@@ -253,7 +259,7 @@ width: 520px;
   background-color: #4CAF50; /* Green */
   border: none;
   color: white;
-  padding: 38px 85px;
+  /* padding: 38px 85px; */
   text-align: center;
   text-decoration: none;
   display: inline-block;
