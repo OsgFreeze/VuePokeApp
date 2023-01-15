@@ -1,14 +1,16 @@
 <template>
-  <div> 
-        <div class="Kampffenster"> 
-              <div id="Links">
+  <div class="komplettesKampffenster"> 
+        <div class="KampffensterOben"> 
+              <div id="rinks">
               </div>
 
               <div id="rechts">
               </div>
         </div>
 
-        <div class="konsole"> 
+
+        <div class="konsoleUnten"> 
+          <p> hier steht text von der Konsole</p>
         </div>
   </div>
 </template>
