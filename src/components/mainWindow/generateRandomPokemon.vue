@@ -3,7 +3,7 @@
       <button @click="generateRandomPokemon(898)"> generateRandomPokemon </button> <!-- 898, da bis dahin alle Pokemon verfügbar sind -->
       <div v-if="randomPokemonLoaded" > <!-- Zeigt Information über das zufällig ausgewählte Pokemon -->
           <img class="randomPokemonPicture" :src="this.randomPokemonObject.sprites.other.home.front_default" />
-          <fightWindow class="fightwindow" :übergebenePokemon="this.twoCompletePokemon"/>
+          <fightWindow  :übergebenePokemon="this.twoCompletePokemon"/>
       </div>
     </div>
   </template>
@@ -103,8 +103,6 @@
         //Speichert alle verfügbaren Informationen(Pokemon1[], Pokemon2[]) in das übergabe Objekt  ->  [twoCompletePokemon]
           this.twoCompletePokemon.myPokemon = this.übergebenesPokemonObject;
           this.twoCompletePokemon.enemyPokemon = this.randomPokemonEnemy;
-          console.log("information von generateRandomPokemon");
-          console.log(this.twoCompletePokemon)
           this.randomPokemonLoaded=true;
         },
       }
