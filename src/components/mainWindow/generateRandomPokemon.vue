@@ -119,7 +119,6 @@
     .randomPokemonPicture{
         height: 250px;
         width: 250px;
-        background-color: rgba(46, 204, 72, 0.726)
     }
    
   </style>
