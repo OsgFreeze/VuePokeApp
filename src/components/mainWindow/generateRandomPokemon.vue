@@ -53,6 +53,7 @@
             let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze - 1)) + 1;   
             await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNumber}`).then((response) => {  
             this.randomPokemonObject = response.data; 
+            console.log("random pokemon Name: " + this.randomPokemonObject.name);
             this.getAttackDataFromRandomPokemon(); 
             })
         }, 

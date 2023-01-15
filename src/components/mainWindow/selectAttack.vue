@@ -82,7 +82,7 @@
           this.chosenAttacksIndex++;                                           
           if(this.chosenAttacksIndex==4){ 
             console.log("Array mit 4 Attacken");
-            console.log(this.chosenAttacks); //gibt neuen Array mit 4 werten aus
+            console.log(this.chosenAttacks);    //gibt neuen Array mit 4 werten aus
             this.pokemonObject.pokemonData = this.übergebenesPokemonObjekt;    //   Speichert das übergebene Pokemon in lokales pokemon[] 
             this.pokemonObject.attackData = this.chosenAttacks;                //   speichert (alle 4 Attacken) in pokemon[] 
             this.visible = false;                                              //   setzt sichtbarkeit von dem attacken Auswahlfenster auf false
