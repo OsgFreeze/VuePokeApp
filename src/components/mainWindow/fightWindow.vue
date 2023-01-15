@@ -1,15 +1,17 @@
 <template>
-    <div>   
-      <audio controls="true" autoplay="off" volume="0.01" loop="false" >    <source src="./fightMusic.mp3"  type="audio/mpeg">    </audio>  <!-- audio Abspielen für Kampfmusic -->
-    </div>
+  <div> 
+        <div class="Kampffenster"> 
+              <div id="Links">
+              </div>
 
-    <button @click="showPokeInfo"> Press me for Fight Window -> übergebene Pokemon Data </button>
+              <div id="rechts">
+              </div>
+        </div>
 
-    <div class="displayPokemonData" > 
-
-    </div>
-
-  </template>
+        <div class="konsole"> 
+        </div>
+  </div>
+</template>
   
   <script>
 
@@ -36,8 +38,4 @@
   </script>
   
   <style>
-.fightWindowPicture{
-  width: 200px;
-  height: 200px;
-}
   </style>
