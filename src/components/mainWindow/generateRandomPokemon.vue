@@ -45,6 +45,10 @@
 
     methods: {    
         async generateRandomPokemon(obergrenze){   //erzeugt ein random Pokemon Object & speichert ergebniss in [this.randomPokemonObject] 
+          this.anzahlLernbareAttacken= 0,
+          this.anzahlSchadensAttacken= 0,
+          this.newAttackArray=[];
+
             let untergrenze=1;
             let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze - 1)) + 1;   
             await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNumber}`).then((response) => {  
