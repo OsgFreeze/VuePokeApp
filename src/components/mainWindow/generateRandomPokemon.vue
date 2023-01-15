@@ -96,6 +96,8 @@
                       );
           } 
 
+          console.log(this.twoCompletePokemon);
+
         //Speichert alle random Pokemon Informationen(pokemon,Attacken) in das übergabe Objekt  ->  [randomPokemonEnemy]
           this.randomPokemonEnemy.enemyPokemon = this.randomPokemonObject;
           this.randomPokemonEnemy.enemyAttacks = this.fourAttackArray; 
