@@ -1,8 +1,7 @@
 <template>
   <div class="komplettesKampffenster"> 
         <div class="KampffensterOben"> 
-          <img class="backgroundPicture" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2fb2821a-1406-4a1d-9b04-6668f278e944/d83m36e-3b58ca48-fe8a-456e-9ffc-a5a84eca6613.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzJmYjI4MjFhLTE0MDYtNGExZC05YjA0LTY2NjhmMjc4ZTk0NFwvZDgzbTM2ZS0zYjU4Y2E0OC1mZThhLTQ1NmUtOWZmYy1hNWE4NGVjYTY2MTMucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.jOpoPaOypPatcb4k7flznTP9YiwUEX2q2BKoeWUPU74" />
-  
+          <img class="backgroundPicture" src="https://cutewallpaper.org/21/pokemon-battle-backgrounds/Index-of-spritesgen6bgs.jpg" />
             <div class="left"> 
               <div class="obenL"> 
                 <div class="PokeStatsL">
@@ -134,7 +133,7 @@
 .gegnerPokeStatsR{
   width: 100;
   height: 150px;
-  background-color: rgb(196, 214, 34);
+  background-color: rgb(196, 214, 0);
   display: flex;
   flex-direction: column
 }
@@ -158,13 +157,13 @@
 }
 
 .PokeStatsL{
-  background-color: rgb(133, 31, 31);
+  background-color: rgba(133, 31, 0, 0);
   width: 100;
   height: 120px;
 
 }
 .HealthBarL{
-  background-color: rgb(61, 5, 75);
+  background-color: rgba(61, 5, 0, 0);
   width: 100;
   height: 90px;
 }
@@ -187,16 +186,4 @@
   height: 100%;
   position: relative;
 }
-
-
-
-
-
-
-
-
-
-
-
-
   </style>

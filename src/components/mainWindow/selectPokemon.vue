@@ -64,15 +64,10 @@ export default {
 </script>
 
 <style>
-.baseStats{
-  background-color:rgba(0, 174, 255, 0.295);
-}
+
 .PokemonPictureHD {
   height: 250px;
   width: 250px;
 }
 
-.selecAttack {
-  background-color:red;
-}
 </style>
