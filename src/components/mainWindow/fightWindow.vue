@@ -1,5 +1,9 @@
 <template>
-  <button @click="this.startGame"> start Methode in Fight Window aufrufen</button>
+  <audio controls=true volume="0.01" autoplay="true">
+    <source src="./fightMusic.mp3" type="audio/mpeg">
+    Sorry - Ihr Browser hat keine Unterstützung für dieses Audio-Format.
+  </audio>
+
   <div class="komplettesKampffenster"> 
         <div class="KampffensterOben"> 
           <img class="backgroundPicture" src="https://cutewallpaper.org/21/pokemon-battle-backgrounds/Index-of-spritesgen6bgs.jpg" />
