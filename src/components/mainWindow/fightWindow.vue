@@ -42,14 +42,14 @@
               <div class="attackenauswahlFenster">  <!-- Hier werden die 4 Attacken angezeigt-->
                 <div class="ButtonZweiAuswahlfensterOben"> 
                   <div class="divButtonAttackeLinksOben"> 
-                    <button class="button button1"> 
+                    <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[0])"> 
                       {{übergebenePokemon.myPokemon.attackData[0].name}}
                       {{übergebenePokemon.myPokemon.attackData[0].power}}
                      </button> 
                   </div>
 
                   <div class="divButtonAttackeRechtsOben"> 
-                    <button class="button button1"> 
+                    <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[1])">  
                       {{übergebenePokemon.myPokemon.attackData[1].name}} 
                       {{übergebenePokemon.myPokemon.attackData[1].power}}
                     </button> 
@@ -57,13 +57,13 @@
                 </div>
                 <div class="ButtonZweiAuswahlfensterUnten">
                   <div class="divButtonAttackeLinksUnten"> 
-                    <button class="button button1"> 
+                    <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[2])">
                       {{übergebenePokemon.myPokemon.attackData[2].name}} 
                       {{übergebenePokemon.myPokemon.attackData[2].power}}
                     </button> 
                   </div>
                   <div class="divButtonAttackeRechtsUnten"> 
-                     <button class="button button1"> 
+                     <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[3])">
                       {{übergebenePokemon.myPokemon.attackData[3].name}} 
                       {{übergebenePokemon.myPokemon.attackData[3].power}}
                     </button> 
@@ -98,18 +98,40 @@
       }
     },
     methods: {
-      startGame(){ //übergaben Variable local Speichern
-        this.myPokemon=this.übergebenePokemon.myPokemon; 
-        this.enemyPokemon=this.übergebenePokemon.enemyPokemon; 
-        this.visible=true;
-      }
+      testPrint(index){
+        console.log("test" + index);
+      },
 
-      
+      buttonPressedMethod(attackData){ //Attackendurchlauf starten
+        console.log(attackData); //Funktioniert -> Werte kommen an ✓
+        this.visible=false;
+        this.calculateDamageToEnemyPokemon(attackData); //jetzt theoretischer Schaden an gegner-Pokemon berechen
+      },
+
+      calculateDamageToEnemyPokemon(ausgewählteAttacke){ 
+       let gegnerPokemonData =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  //Funktioniert  ->  Return werte sind in Array[] gespeichert, da mehrere Types Möglich.
+       console.log(ausgewählteAttacke);  //aktuell nur drinnen weil ohne Fehlermeldung :)
+       console.log("gegner Type: " + gegnerPokemonData.types[0].type.name);  //Funktioniert -> Werte kommen an ✓
+
+      },
+
+      choseRandomPokemonFromEnemy() {
+      },
+
+      calculateDamageToMyPokemon(){
+      },
+
+      setDamageToMyPokemon(){
+      },
+
+      setDamageToEnemyPokemon(){
+      },
+
     }
   } 
   </script>
   
-  <style>
+  <style>   /*  SEHR VIEL CSS CODE  */
     .komplettesKampffenster{
       height: 800px;
       width: 1320px; 
