@@ -1,5 +1,10 @@
 <template>
-  <button @click="this.startGame"> start Methode in Fight Window aufrufen</button>
+  <button @click="attackenWiederAnzeigen"> press me</button>
+  <audio controls=true volume="0.01" >
+    <source src="./fightMusic.mp3" type="audio/mpeg">
+    Sorry - Ihr Browser hat keine Unterstützung für dieses Audio-Format.
+  </audio>
+
   <div class="komplettesKampffenster"> 
         <div class="KampffensterOben"> 
           <img class="backgroundPicture" src="https://cutewallpaper.org/21/pokemon-battle-backgrounds/Index-of-spritesgen6bgs.jpg" />
@@ -8,6 +13,7 @@
                 <div class="PokeStatsL">      
                   <p class="pokemonInfoStyle" style="padding-top: 75px;">         
                     {{ this.übergebenePokemon.myPokemon.pokemonData.name + " Lv. 50"}}   
+                    {{"HP. " + this.übergebenePokemon.myPokemon.pokemonData.stats[0].base_stat}}
                   </p>  
                 </div>
                 <div class="healthBarMyPokemon"> 
@@ -39,7 +45,7 @@
                 </div>
               </div>
 
-              <div class="attackenauswahlFenster">  <!-- Hier werden die 4 Attacken angezeigt-->
+              <div class="attackenauswahlFenster" >  <!-- Hier werden die 4 Attacken angezeigt-->
                 <div class="ButtonZweiAuswahlfensterOben"> 
                   <div class="divButtonAttackeLinksOben"> 
                     <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[0])"> 
@@ -75,7 +81,7 @@
 
         <div class="konsoleUnten"> 
             <p style="text-align: center"> 
-              {{this.konsolenAusgabe}}
+              {{"calculated Damage " + this.calculatedDamage}}
             </p>
         </div>
   </div>
@@ -90,32 +96,59 @@
     data(){ 
       return {
         data: {
-          myPokemon:{},       //hier wird das eigene Pokemon gespeichert
-          enemyPokemon: {},   //hier wird das gegner Pokemon gespeichert
+          myPokemon:{},                                                  //hier wird das eigene Pokemon gespeichert
+          enemyPokemon: {},                                             //hier wird das gegner Pokemon gespeichert
           konsolenAusgabe: "[hier steht text von der Konsole]",
-          visible: false,
+          visible: true,
+          calculatedDamage: 0,
         }
       }
     },
+    
     methods: {
       testPrint(index){
         console.log("test" + index);
       },
-
       buttonPressedMethod(attackData){ //Attackendurchlauf starten
-        console.log(attackData); //Funktioniert -> Werte kommen an ✓
+        //console.log(attackData); //Funktioniert -> Werte kommen an ✓
         this.visible=false;
         this.calculateDamageToEnemyPokemon(attackData); //jetzt theoretischer Schaden an gegner-Pokemon berechen
       },
 
-      calculateDamageToEnemyPokemon(ausgewählteAttacke){ 
-       let gegnerPokemonData =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  //Funktioniert  ->  Return werte sind in Array[] gespeichert, da mehrere Types Möglich.
-       console.log(ausgewählteAttacke);  //aktuell nur drinnen weil ohne Fehlermeldung :)
-       console.log("gegner Type: " + gegnerPokemonData.types[0].type.name);  //Funktioniert -> Werte kommen an ✓
 
+
+      calculateDamageToEnemyPokemon(ausgewählteAttacke){ //ausgewählte Attacke enthällt alle informationen zur "ausgewählten" Attacke.
+       let gegnerPokemon =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  
+       let myPokemon =  this.übergebenePokemon.myPokemon.pokemonData;
+       let damageMultiplicator = (1.5); //gibt zb. STAB oder Typen multiplikatoren an -> muss noch implementiert werden
+
+       let angriffsWert = myPokemon.stats[1].base_stat; // Angriffswert local Speichern
+       let enemyDefense = gegnerPokemon.stats[2].base_stat; //Verteidigungswert
+
+       //let spezialAngriffsWert = myPokemon.stats[3].base_stat; // spezial Angriffswert local Speichern
+       //let enemySpezialVerteidigung = gegnerPokemon.stats[4].base_stat // spezial Verteidugung von Gegner local Speichern
+
+       
+       //let enemyPokemonTypes = gegnerPokemon.types //  Achtung, Types ist Array -> kann mehrere Types haben     bsp: [types[0].type.name],[types[1].type.name] 
+       //let myPokemonTypes = myPokemon.types
+
+ 
+        this.calculatedDamage = (((22*ausgewählteAttacke.power)*(angriffsWert/enemyDefense))/52)*damageMultiplicator;
+      
+
+       console.log( myPokemon.name + " setzt Attacke: " + ausgewählteAttacke.name + " ein ");  // zeigt eingesetzt Attacke in Konsole 
+       console.log( "  damage -> " + this.calculatedDamage )
+       //console.log(" Damage: " + ausgewählteAttacke.name);  
+       //console.log("your Type: " + myPokemonTypes.types[0].type.name);
+       //console.log("gegner Type: " + enemyPokemonTypes.types[0].type.name);  //Funktioniert -> Werte kommen an ✓
       },
 
       choseRandomPokemonFromEnemy() {
+      },
+
+      attackenWiederAnzeigen(){
+        this.visible=true;
+        console.log(this.visible)
       },
 
       calculateDamageToMyPokemon(){
