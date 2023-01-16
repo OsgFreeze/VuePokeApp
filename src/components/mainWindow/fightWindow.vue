@@ -1,9 +1,13 @@
 <template>
-  <button @click="attackenWiederAnzeigen"> press me</button>
-  <audio controls=true volume="0.01" >
-    <source src="./fightMusic.mp3" type="audio/mpeg">
+  <audio controls=true volume="0.01">
+    <source src="./fightMusic.mp3" autoplay type="audio/mpeg">
     Sorry - Ihr Browser hat keine Unterstützung für dieses Audio-Format.
   </audio>
+
+  
+  <button style="margin-left: 10px" @click="ReviveMyHealthbar">Revive my Pokemon</button>
+
+  <button style="margin-left: 10px" @click="ReviveEnemyHealthbar">Revive enemy Pokemon</button>
 
   <div class="komplettesKampffenster"> 
         <div class="KampffensterOben"> 
@@ -11,14 +15,15 @@
             <div class="left"> 
               <div class="obenL"> 
                 <div class="PokeStatsL">      
-                  <p class="pokemonInfoStyle" style="padding-top: 75px;">         
+                  <p class="pokemonInfoStyleL">         
                     {{ this.übergebenePokemon.myPokemon.pokemonData.name + " Lv. 50"}}   
                     {{"HP. " + this.übergebenePokemon.myPokemon.pokemonData.stats[0].base_stat}}
                   </p>  
+                </div>               
+                <div class="healthBarMyPokemon">    <!-- Unsere HealthBar-->                
+                  <div id="MyHealth" class="StatusBarMyPokemon"></div>                
                 </div>
-                <div class="healthBarMyPokemon"> 
-                  [Healthbar MyPokemon]
-                </div>
+
               </div>
 
               <div class="pokemonSpriteL"> 
@@ -30,13 +35,13 @@
               <div class="obenR"> 
                 <div class="gegnerPokeStatsR">
                   <div class="gegnerInformationen">
-                    <p class="pokemonInfoStyle" style="padding-top: 30px;">
+                    <p class="pokemonInfoStyleR" style="padding-top: 30px;">
                       {{ this.übergebenePokemon.enemyPokemon.enemyPokemon.name  + " Lv. 50"}}
                     </p>
                   </div>
 
-                  <div class="healthbarGegner">
-                    [healthbarGegner]
+                  <div class="healthbarGegner">  <!-- Healthbar Gegner -->
+                    <div id="EnemyHealth" class="StatusBarGegner"></div>
                   </div>
                 </div>
 
@@ -45,7 +50,7 @@
                 </div>
               </div>
 
-              <div class="attackenauswahlFenster" >  <!-- Hier werden die 4 Attacken angezeigt-->
+              <div class="attackenauswahlFenster" v-if="visible">  <!-- Hier werden die 4 Attacken angezeigt-->
                 <div class="ButtonZweiAuswahlfensterOben"> 
                   <div class="divButtonAttackeLinksOben"> 
                     <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[0])"> 
@@ -80,8 +85,8 @@
         </div>
 
         <div class="konsoleUnten"> 
-            <p style="text-align: center"> 
-              {{"calculated Damage " + this.calculatedDamage}}
+            <p style="text-align: left ; margin-left: 100px" > 
+                {{this.konsolenAusgabe}}
             </p>
         </div>
   </div>
@@ -93,73 +98,120 @@
     components: {  
     }, 
     props: ['übergebenePokemon'],
+    
     data(){ 
       return {
-        data: {
-          myPokemon:{},                                                  //hier wird das eigene Pokemon gespeichert
-          enemyPokemon: {},                                             //hier wird das gegner Pokemon gespeichert
-          konsolenAusgabe: "[hier steht text von der Konsole]",
+          myPokemon:{},       //hier wird das eigene Pokemon gespeichert
+          enemyPokemon: {},   //hier wird das gegner Pokemon gespeichert
+          konsolenAusgabe: "[Konsolen Ausgabe]",
           visible: true,
-          calculatedDamage: 0,
-        }
+          MyPokemonHealth: 100,      //HP bzw Pixel von der eigenen Pokemon Healthbar
+          stillalive1: true,         
+          EnemyHealth: 100,          //HP bzw Pixel von Healthbar des Gegeners
+          stillalive2: true,
+          DmgToMyPokemon: 0,         //speichert den aktuellen Dmg der am eigenen Pokemon ausgeführt werden soll
+          DmgToEnemyPokemon: 0,      //speichert den aktuellen Dmg der am Gegner Pokemon ausgeführt werden soll
       }
     },
-    
     methods: {
-      testPrint(index){
-        console.log("test" + index);
-      },
+
       buttonPressedMethod(attackData){ //Attackendurchlauf starten
         //console.log(attackData); //Funktioniert -> Werte kommen an ✓
         this.visible=false;
         this.calculateDamageToEnemyPokemon(attackData); //jetzt theoretischer Schaden an gegner-Pokemon berechen
+
+        // soll eventuell entscheiden welches Pokemon zuerst angreifen darf ?!
+
       },
-
-
-
       calculateDamageToEnemyPokemon(ausgewählteAttacke){ //ausgewählte Attacke enthällt alle informationen zur "ausgewählten" Attacke.
-       let gegnerPokemon =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  
-       let myPokemon =  this.übergebenePokemon.myPokemon.pokemonData;
-       let damageMultiplicator = (1.5); //gibt zb. STAB oder Typen multiplikatoren an -> muss noch implementiert werden
+       let verteidigendesPokemon =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  
+       let angreifendesPokemon =  this.übergebenePokemon.myPokemon.pokemonData;
+       let angriffsWert = angreifendesPokemon.stats[1].base_stat; // Angriffswert local Speichern
+       let enemyDefense = verteidigendesPokemon.stats[2].base_stat; //Verteidigungswert
+       let kpWert = angreifendesPokemon.stats[0].base_stat;
+       let damageMultiplicator = (1); //gibt zb. STAB oder Typen multiplikatoren an -> muss noch implementiert werden
+       //let spezialAngriffsWert = angreifendesPokemon.stats[3].base_stat; // spezial Angriffswert local Speichern
+       //let enemySpezialVerteidigung = verteidigendesPokemon.stats[4].base_stat // spezial Verteidugung von Gegner local Speichern
+       //let enemyPokemonTypes = verteidigendesPokemon.types //  Achtung, Types ist Array -> kann mehrere Types haben     bsp: [types[0].type.name],[types[1].type.name] 
+       //let myPokemonTypes = angreifendesPokemon.types
+       let calculatedDamage = (((10*ausgewählteAttacke.power)*(angriffsWert/enemyDefense))/52)*damageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
+       this.konsolenAusgabe = angreifendesPokemon.name + " setzt Attacke: " + ausgewählteAttacke.name + " ein ; damage -> " + Math.round(calculatedDamage);
+       this.DmgToEnemyPokemon = calculatedDamage;
+       this.visible = false;
+       this.setDamageToEnemyHealthbar( this.EnemyHealth, this.DmgToEnemyPokemon, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
 
-       let angriffsWert = myPokemon.stats[1].base_stat; // Angriffswert local Speichern
-       let enemyDefense = gegnerPokemon.stats[2].base_stat; //Verteidigungswert
 
-       //let spezialAngriffsWert = myPokemon.stats[3].base_stat; // spezial Angriffswert local Speichern
-       //let enemySpezialVerteidigung = gegnerPokemon.stats[4].base_stat // spezial Verteidugung von Gegner local Speichern
+       setTimeout(()=>{
+        this.choseRandomAttackFromEnemy();
+       },1000);
 
-       
-       //let enemyPokemonTypes = gegnerPokemon.types //  Achtung, Types ist Array -> kann mehrere Types haben     bsp: [types[0].type.name],[types[1].type.name] 
-       //let myPokemonTypes = myPokemon.types
 
- 
-        this.calculatedDamage = (((22*ausgewählteAttacke.power)*(angriffsWert/enemyDefense))/52)*damageMultiplicator;
-      
-
-       console.log( myPokemon.name + " setzt Attacke: " + ausgewählteAttacke.name + " ein ");  // zeigt eingesetzt Attacke in Konsole 
-       console.log( "  damage -> " + this.calculatedDamage )
-       //console.log(" Damage: " + ausgewählteAttacke.name);  
-       //console.log("your Type: " + myPokemonTypes.types[0].type.name);
-       //console.log("gegner Type: " + enemyPokemonTypes.types[0].type.name);  //Funktioniert -> Werte kommen an ✓
       },
 
-      choseRandomPokemonFromEnemy() {
+
+      choseRandomAttackFromEnemy() { //erstmal gegner KI -> eventuell später mit Prio System??
+        let untergrenze=0;
+        let obergrenze=3; //AttackenArray geht von index [0-3]
+        let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze - 1)) + 1; //gibt random Zahl zwischen 0-3 zurück.
+        let ChoosenAttack = this.übergebenePokemon.enemyPokemon.enemyAttacks[randomNumber]; //speichert Informationen zur ausgewählten Attacke in ChoosenAttack
+        this.calculateDamageToMyPokemon(ChoosenAttack);
       },
 
-      attackenWiederAnzeigen(){
-        this.visible=true;
-        console.log(this.visible)
+      calculateDamageToMyPokemon(randomGegnerAttackenInformationen){
+        let angreifendesPokemon =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  
+        let VerteidigendesPokemon =  this.übergebenePokemon.myPokemon.pokemonData;
+        let angriffsWert = angreifendesPokemon.stats[1].base_stat; // Angriffswert local Speichern
+        let enemyDefense = VerteidigendesPokemon.stats[2].base_stat; //Verteidigungswert
+        let damageMultiplicator = (1); //gibt zb. STAB oder Typen multiplikatoren an -> muss noch implementiert werden
+        let calculatedDamage = (((10*randomGegnerAttackenInformationen.power)*(angriffsWert/enemyDefense))/52)*damageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
+        console.log(angreifendesPokemon.name + "  setzt Attacke " + randomGegnerAttackenInformationen.name + " ein");
+        console.log("der gegner hat: " + calculatedDamage + " Schaden gemacht")
+        this.setDamageToMyHealthbar(this.MyPokemonHealth, calculatedDamage)   //berechneter Schaden an mein Pokemon Healthbar weiterleiten
       },
 
-      calculateDamageToMyPokemon(){
+      setDamageToMyHealthbar(Leben, x){
+        const myPokeData = document.getElementById("MyHealth");       
+        if(Leben > 0 && x < Leben){       
+        Leben = Leben - x;
+        console.log("dein aktuelles Leben in %: " + Leben); //gibt MyPokemon Leben in % in Konsole an
+        myPokeData.style.width = Leben+"%"
+        this.MyPokemonHealth = Leben;
+        }else{
+          this.MyPokemonHealth = 0;
+          myPokeData.style.width = "0%";
+          this.stillalive1 = false;
+        }
       },
-
-      setDamageToMyPokemon(){
+      ReviveMyHealthbar(){
+        this.MyPokemonHealth = 100;
+        console.log(this.MyPokemonHealth);
+        const myPokeData = document.getElementById("MyHealth");
+        myPokeData.style.width = this.MyPokemonHealth+"%";
+        this.visible = true;
       },
-
-      setDamageToEnemyPokemon(){
+      setDamageToEnemyHealthbar(Leben, Dmg, Kp){
+        const enemyData = document.getElementById("EnemyHealth");         //Holt sich die CSS Klasse
+        const dmg = Dmg;                                                  //Dmg kommt wird als Member übergeben und zugewiesen
+        const finalDmg = dmg / (Kp / 100);                               //berechnen Schaden in Prozenz abhängig von den Gegner KP um
+        if(Leben > 0 && finalDmg < Leben){                                //gibt Gegner Leben in % in Konsole an                                            
+          Leben = Leben - finalDmg;                                       //aktuelles Leben - dmg
+          console.log("gegner Leben in %: " + Leben);
+          enemyData.style.width = Leben+"%";                              //passt die Healthbar der entsprechenden Prozentualen Veränderung an
+          this.EnemyHealth = Leben;                                       //Neuer Lebensstand wird global gespeichert
+          this.visible = true;                                            //Attack Buttons werden wieder visible
+        }else{
+          this.EnemyHealth = 0;
+          enemyData.style.width = "0%";
+          this.stillalive2 = false;                                       //wenn Leben unter 0 ist
+        }
       },
-
+      ReviveEnemyHealthbar(){
+        this.EnemyHealth = 100;
+        console.log(this.EnemyHealth);
+        const enemyData = document.getElementById("EnemyHealth");
+        enemyData.style.width = this.EnemyHealth+"%";
+        this.visible = true;
+      },
     }
   } 
   </script>
@@ -184,7 +236,6 @@
       border-width: 5px;
       border-style: solid;
     }
-
     .left{
       height: 100;
       width: 800px;
@@ -192,7 +243,6 @@
       flex-direction: column;
       position: absolute;
     }
-
     .right{
       height: 100;
       width: 520px;
@@ -201,102 +251,105 @@
       position: absolute;
       padding-left: 800px;
     }
-
     .obenL{
       height: 210px;
       width: 100;
       display: flex;
       flex-direction: column
     }
-
     .pokemonSpriteL{
       height: 490px;
       width: 100;
     }
-
 .obenR{
   height: 490px;
   width: 100;
   display: flex;
   flex-direction: column
 }
-
 .gegnerPokeStatsR{
   width: 100;
   height: 150px;
   display: flex;
   flex-direction: column
 }
-
 .gegnerPokemonR{
   width: 100;
   height: 340px;
 }
-
 .gegnerInformationen{
   width: 100;
   height: 75px;
 }
-
-.healthbarGegner{
-  /* background-color: rgba(221, 87, 75, 0.575); */
-  width: 100;
-  height: 75px;
+.healthbarGegner{ 
+  width: 350px;
+  height: 20px;
+  color: black;
+  background-color: #ffffff;
+  border-style: solid;
+  border-width: 4px;
+  position: relative;
 }
-
+.StatusBarGegner{
+  height: 100%;
+  width: 100%;
+  background-color: red;
+  position: absolute;
+  transition: width .5s linear;
+}
 .PokeStatsL{
   width: 100;
   height: 120px;
-
 }
 .healthBarMyPokemon{
- /* background-color: rgba(221, 87, 75, 0.575); */
-  width: 100;
-  height: 90px;
+  width: 350px;
+  height: 25px;
+  color: rgb(0, 0, 0);
+  background-color: #ffffff;
+  border-style: solid;
+  border-width: 4px;
+  position: relative;
+  margin-left: 200px;
 }
-
+.StatusBarMyPokemon{
+  height: 100%;
+  width: 100%;
+  background-color: red;
+  position: absolute;
+  transition: width .5s linear;
+}
 .myPokemonPicture{
   width: 490;
   height: 490px;
   padding-left: 150px;
 }
-
 .enemyPokemonPicture{
   width: 340;
   height: 340px;
 }
-
 .backgroundPicture{
   width: 100%;
   height: 100%;
   position: relative;
 }
-
 .attackenauswahlFenster{
   height: 210px;
   width: 100;
   display: flex;
   flex-direction: column;
 }
-
-
 .ButtonZweiAuswahlfensterOben{
 display: flex;
 flex-direction: row;
 height: 105px;
 width: 520px;
 }
-
 .divButtonAttackeLinksOben{
   width: 260px;
-
 }
 .divButtonAttackeRechtsOben{
   width: 260px;;
 }
-
-
-
 .ButtonZweiAuswahlfensterUnten{
   display: flex;
   flex-direction: row;
@@ -309,7 +362,6 @@ width: 520px;
 .divButtonAttackeRechtsUnten{
   width: 260px;
 }
-
 .button {
   background-color: #4CAF50; /* Green */
   border: none;
@@ -319,28 +371,31 @@ width: 520px;
   text-decoration: none;
   display: inline-block;
   font-size: 15px;
-
   transition-duration: 0.4s;
   cursor: pointer;
   width: 240px;
   height: 90px;
   border-radius: 7%;
 }
-
 .button1 {
   background-color: white;
   color: black;
   border: 2px solid #555555;
 }
-
 .button1:hover {
   background-color: #555555;
   color: white;
 }
-
-.pokemonInfoStyle{
+.pokemonInfoStyleL{
+  color:rgb(0, 0, 0);
+  font-size: 25px;
+  padding-left: 200px;
+  padding-top: 65px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.pokemonInfoStyleR{
   color:aliceblue;
   font-size: 20px;
-  /* padding-left: 60px; */
+  
 }
   </style>
