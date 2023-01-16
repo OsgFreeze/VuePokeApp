@@ -12,6 +12,7 @@
                 <div class="PokeStatsL">      
                   <p class="pokemonInfoStyle" style="padding-top: 75px;">         
                     {{ this.übergebenePokemon.myPokemon.pokemonData.name + " Lv. 50"}}   
+                    {{"HP. " + this.übergebenePokemon.myPokemon.pokemonData.stats[0].base_stat}}
                   </p>  
                 </div>
                 <div class="healthBarMyPokemon"> 
@@ -107,17 +108,42 @@
       },
 
       buttonPressedMethod(attackData){ //Attackendurchlauf starten
-        console.log(attackData); //Funktioniert -> Werte kommen an ✓
+        //console.log(attackData); //Funktioniert -> Werte kommen an ✓
         this.visible=false;
         this.calculateDamageToEnemyPokemon(attackData); //jetzt theoretischer Schaden an gegner-Pokemon berechen
       },
 
-      calculateDamageToEnemyPokemon(ausgewählteAttacke){ 
-       let gegnerPokemonData =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  //Funktioniert  ->  Return werte sind in Array[] gespeichert, da mehrere Types Möglich.
-       console.log(ausgewählteAttacke);  //aktuell nur drinnen weil ohne Fehlermeldung :)
-       console.log("gegner Type: " + gegnerPokemonData.types[0].type.name);  //Funktioniert -> Werte kommen an ✓
 
+
+
+      calculateDamageToEnemyPokemon(ausgewählteAttacke){ //ausgewählte Attacke enthällt alle informationen zur "ausgewählten" Attacke.
+       let gegnerPokemon =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  
+       let myPokemon =  this.übergebenePokemon.myPokemon.pokemonData;
+
+       let angriffsWert = myPokemon.stats[1].base_stat; // Angriffswert local Speichern
+       let enemyDefense = gegnerPokemon.stats[2].base_stat; //Verteidigungswert
+
+       let damageMultiplicator = (1.5); //gibt zb. STAB oder Typen multiplikatoren an -> muss noch implementiert werden
+
+       //let spezialAngriffsWert = myPokemon.stats[3].base_stat; // spezial Angriffswert local Speichern
+       //let enemySpezialVerteidigung = gegnerPokemon.stats[4].base_stat // spezial Verteidugung von Gegner local Speichern
+
+       //let enemyPokemonTypes = gegnerPokemon.types //  Achtung, Types ist Array -> kann mehrere Types haben     bsp: [types[0].type.name],[types[1].type.name] 
+       //let myPokemonTypes = myPokemon.types
+
+       let calculatedDamage = (((22*ausgewählteAttacke.power)*(angriffsWert/enemyDefense))/52)*damageMultiplicator;
+
+       console.log( myPokemon.name + " setzt Attacke: " + ausgewählteAttacke.name + " ein ");  // zeigt eingesetzt Attacke in Konsole 
+       console.log( "  damage -> " +calculatedDamage )
+       //console.log(" Damage: " + ausgewählteAttacke.name);  
+       //console.log("your Type: " + myPokemonTypes.types[0].type.name);
+       //console.log("gegner Type: " + enemyPokemonTypes.types[0].type.name);  //Funktioniert -> Werte kommen an ✓
       },
+
+
+
+
+
 
       choseRandomPokemonFromEnemy() {
       },
