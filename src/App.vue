@@ -1,19 +1,19 @@
 <template> 
 
     <div class="mainWindow"> <selectPokemon/> </div> 
-    <div class="sideBar"> <selectPokemonFromSidebar/> </div>
+    <div class="sideBar"> <displayPokemonSideBar/> </div>
 
 </template>
 <script> 
 
 import selectPokemon from './components/mainWindow/selectPokemon.vue';
-import selectPokemonFromSidebar from './components/sideBarPokedex/selectPokemonFromSidebar.vue';
+import displayPokemonSideBar from './components/sideBarPokedex/displayPokemonSideBar.vue';
 
 export default {
   name: 'App',
   components: { 
     selectPokemon,
-    selectPokemonFromSidebar,
+    displayPokemonSideBar,
   }, 
 
   data(){  
@@ -24,7 +24,6 @@ export default {
 </script>
 
 <style>
-
   .mainWindow{
     background-color:rgba(118, 215, 218, 0.24);
     width: 70%;

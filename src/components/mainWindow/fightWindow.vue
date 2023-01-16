@@ -6,7 +6,6 @@
 
   
   <button style="margin-left: 10px" @click="ReviveMyHealthbar">Revive my Pokemon</button>
-
   <button style="margin-left: 10px" @click="ReviveEnemyHealthbar">Revive enemy Pokemon</button>
 
   <div class="komplettesKampffenster"> 
@@ -21,7 +20,9 @@
                   </p>  
                 </div>               
                 <div class="healthBarMyPokemon">    <!-- Unsere HealthBar-->                
-                  <div id="MyHealth" class="StatusBarMyPokemon"></div>                
+                  <div id="MyHealth" class="StatusBarMyPokemon">
+                    {{MyPokemonHealth.toFixed(2)}}%
+                  </div>                
                 </div>
 
               </div>
@@ -41,7 +42,7 @@
                   </div>
 
                   <div class="healthbarGegner">  <!-- Healthbar Gegner -->
-                    <div id="EnemyHealth" class="StatusBarGegner"></div>
+                    <div ref="enemyHealth" id="EnemyHealth" class="StatusBarGegner"></div>
                   </div>
                 </div>
 
@@ -53,30 +54,35 @@
               <div class="attackenauswahlFenster" v-if="visible">  <!-- Hier werden die 4 Attacken angezeigt-->
                 <div class="ButtonZweiAuswahlfensterOben"> 
                   <div class="divButtonAttackeLinksOben"> 
-                    <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[0])"> 
+                    <button class="button buttonStyle button1"  @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[0])">                     
                       {{übergebenePokemon.myPokemon.attackData[0].name}}
                       {{übergebenePokemon.myPokemon.attackData[0].power}}
+                      {{übergebenePokemon.myPokemon.attackData[0].type.name}} 
                      </button> 
                   </div>
 
                   <div class="divButtonAttackeRechtsOben"> 
-                    <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[1])">  
+                    <button class="button buttonStyle button2" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[1])">  
                       {{übergebenePokemon.myPokemon.attackData[1].name}} 
                       {{übergebenePokemon.myPokemon.attackData[1].power}}
+                      {{übergebenePokemon.myPokemon.attackData[1].type.name}}
+
                     </button> 
                   </div>
                 </div>
                 <div class="ButtonZweiAuswahlfensterUnten">
                   <div class="divButtonAttackeLinksUnten"> 
-                    <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[2])">
+                    <button class="button buttonStyle button3" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[2])">
                       {{übergebenePokemon.myPokemon.attackData[2].name}} 
                       {{übergebenePokemon.myPokemon.attackData[2].power}}
+                      {{übergebenePokemon.myPokemon.attackData[2].type.name}}
                     </button> 
                   </div>
                   <div class="divButtonAttackeRechtsUnten"> 
-                     <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[3])">
+                     <button class="button buttonStyle button4" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[3])">
                       {{übergebenePokemon.myPokemon.attackData[3].name}} 
                       {{übergebenePokemon.myPokemon.attackData[3].power}}
+                      {{übergebenePokemon.myPokemon.attackData[3].type.name}}
                     </button> 
                   </div>
               </div>
@@ -98,7 +104,7 @@
     components: {  
     }, 
     props: ['übergebenePokemon'],
-    
+    inject: ["pokemonHelper"],
     data(){ 
       return {
           myPokemon:{},       //hier wird das eigene Pokemon gespeichert
@@ -111,6 +117,13 @@
           stillalive2: true,
           DmgToMyPokemon: 0,         //speichert den aktuellen Dmg der am eigenen Pokemon ausgeführt werden soll
           DmgToEnemyPokemon: 0,      //speichert den aktuellen Dmg der am Gegner Pokemon ausgeführt werden soll
+
+          backgroundColor: { 
+            normal: "weiß",
+            feuer: "rot",
+            wasser: "blau",
+
+          }
       }
     },
     methods: {
@@ -118,17 +131,21 @@
       buttonPressedMethod(attackData){ //Attackendurchlauf starten
         //console.log(attackData); //Funktioniert -> Werte kommen an ✓
         this.visible=false;
-        this.calculateDamageToEnemyPokemon(attackData); //jetzt theoretischer Schaden an gegner-Pokemon berechen
 
+        setTimeout(()=>{
+          this.calculateDamageToEnemyPokemon(attackData); //jetzt theoretischer Schaden an gegner-Pokemon berechen
+       },500);
+       
         // soll eventuell entscheiden welches Pokemon zuerst angreifen darf ?!
 
       },
       calculateDamageToEnemyPokemon(ausgewählteAttacke){ //ausgewählte Attacke enthällt alle informationen zur "ausgewählten" Attacke.
        let verteidigendesPokemon =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  
-       let angreifendesPokemon =  this.übergebenePokemon.myPokemon.pokemonData;
+       let angreifendesPokemon =  this.übergebenePokemon.myPokemon.pokemonData;  
        let angriffsWert = angreifendesPokemon.stats[1].base_stat; // Angriffswert local Speichern
        let enemyDefense = verteidigendesPokemon.stats[2].base_stat; //Verteidigungswert
        let kpWert = angreifendesPokemon.stats[0].base_stat;
+
        let damageMultiplicator = (1); //gibt zb. STAB oder Typen multiplikatoren an -> muss noch implementiert werden
        //let spezialAngriffsWert = angreifendesPokemon.stats[3].base_stat; // spezial Angriffswert local Speichern
        //let enemySpezialVerteidigung = verteidigendesPokemon.stats[4].base_stat // spezial Verteidugung von Gegner local Speichern
@@ -140,14 +157,12 @@
        this.visible = false;
        this.setDamageToEnemyHealthbar( this.EnemyHealth, this.DmgToEnemyPokemon, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
 
-
        setTimeout(()=>{
         this.choseRandomAttackFromEnemy();
        },1000);
-
-
       },
 
+      
 
       choseRandomAttackFromEnemy() { //erstmal gegner KI -> eventuell später mit Prio System??
         let untergrenze=0;
@@ -189,19 +204,20 @@
         myPokeData.style.width = this.MyPokemonHealth+"%";
         this.visible = true;
       },
-      setDamageToEnemyHealthbar(Leben, Dmg, Kp){
+      setDamageToEnemyHealthbar(health, Dmg, Kp){
         const enemyData = document.getElementById("EnemyHealth");         //Holt sich die CSS Klasse
         const dmg = Dmg;                                                  //Dmg kommt wird als Member übergeben und zugewiesen
         const finalDmg = dmg / (Kp / 100);                               //berechnen Schaden in Prozenz abhängig von den Gegner KP um
-        if(Leben > 0 && finalDmg < Leben){                                //gibt Gegner Leben in % in Konsole an                                            
-          Leben = Leben - finalDmg;                                       //aktuelles Leben - dmg
-          console.log("gegner Leben in %: " + Leben);
-          enemyData.style.width = Leben+"%";                              //passt die Healthbar der entsprechenden Prozentualen Veränderung an
-          this.EnemyHealth = Leben;                                       //Neuer Lebensstand wird global gespeichert
+        if(health > 0 && finalDmg < health){                                //gibt Gegner Leben in % in Konsole an                                            
+          health = health - finalDmg;                                       //aktuelles Leben - dmg
+          console.log("gegner Leben in %: " + health);
+          enemyData.style.width = health+"%";                              //passt die Healthbar der entsprechenden Prozentualen Veränderung an
+          this.EnemyHealth = health;                                       //Neuer Lebensstand wird global gespeichert
           this.visible = true;                                            //Attack Buttons werden wieder visible
         }else{
           this.EnemyHealth = 0;
           enemyData.style.width = "0%";
+          //TODO var umbennen
           this.stillalive2 = false;                                       //wenn Leben unter 0 ist
         }
       },
@@ -209,9 +225,13 @@
         this.EnemyHealth = 100;
         console.log(this.EnemyHealth);
         const enemyData = document.getElementById("EnemyHealth");
+        //refactorn zu -> this.$refs.enemyHealth (console.log)
         enemyData.style.width = this.EnemyHealth+"%";
         this.visible = true;
       },
+    },
+    mounted(){
+      this.pokemonHelper.setGameStarted();
     }
   } 
   </script>
@@ -377,12 +397,12 @@ width: 520px;
   height: 90px;
   border-radius: 7%;
 }
-.button1 {
+.buttonStyle {
   background-color: white;
   color: black;
   border: 2px solid #555555;
 }
-.button1:hover {
+.buttonStyle:hover {
   background-color: #555555;
   color: white;
 }
@@ -396,6 +416,6 @@ width: 520px;
 .pokemonInfoStyleR{
   color:aliceblue;
   font-size: 20px;
-  
 }
-  </style>
+
+</style>
