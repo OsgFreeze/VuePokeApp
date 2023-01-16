@@ -1,15 +1,17 @@
 <template>
+  <button @click="this.startGame"> start Methode in Fight Window aufrufen</button>
   <div class="komplettesKampffenster"> 
         <div class="KampffensterOben"> 
-          <img class="backgroundPicture" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2fb2821a-1406-4a1d-9b04-6668f278e944/d83m36e-3b58ca48-fe8a-456e-9ffc-a5a84eca6613.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzJmYjI4MjFhLTE0MDYtNGExZC05YjA0LTY2NjhmMjc4ZTk0NFwvZDgzbTM2ZS0zYjU4Y2E0OC1mZThhLTQ1NmUtOWZmYy1hNWE4NGVjYTY2MTMucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.jOpoPaOypPatcb4k7flznTP9YiwUEX2q2BKoeWUPU74" />
-  
+          <img class="backgroundPicture" src="https://cutewallpaper.org/21/pokemon-battle-backgrounds/Index-of-spritesgen6bgs.jpg" />
             <div class="left"> 
               <div class="obenL"> 
-                <div class="PokeStatsL">
-                  PokeStatsL
+                <div class="PokeStatsL">      
+                  <p class="pokemonInfoStyle" style="padding-top: 75px;">         
+                    {{ this.übergebenePokemon.myPokemon.pokemonData.name + " Lv. 50"}}   
+                  </p>  
                 </div>
-                <div class="HealthBarL"> 
-                  HealthBarL
+                <div class="healthBarMyPokemon"> 
+                  [Healthbar MyPokemon]
                 </div>
               </div>
 
@@ -22,11 +24,13 @@
               <div class="obenR"> 
                 <div class="gegnerPokeStatsR">
                   <div class="gegnerInformationen">
-                    GegnerInformationen
+                    <p class="pokemonInfoStyle" style="padding-top: 30px;">
+                      {{ this.übergebenePokemon.enemyPokemon.enemyPokemon.name  + " Lv. 50"}}
+                    </p>
                   </div>
 
                   <div class="healthbarGegner">
-                    healthbarGegner
+                    [healthbarGegner]
                   </div>
                 </div>
 
@@ -35,14 +39,44 @@
                 </div>
               </div>
 
-              <div class="untenR"> 
-                ubenR
+              <div class="attackenauswahlFenster">  <!-- Hier werden die 4 Attacken angezeigt-->
+                <div class="ButtonZweiAuswahlfensterOben"> 
+                  <div class="divButtonAttackeLinksOben"> 
+                    <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[0])"> 
+                      {{übergebenePokemon.myPokemon.attackData[0].name}}
+                      {{übergebenePokemon.myPokemon.attackData[0].power}}
+                     </button> 
+                  </div>
+
+                  <div class="divButtonAttackeRechtsOben"> 
+                    <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[1])">  
+                      {{übergebenePokemon.myPokemon.attackData[1].name}} 
+                      {{übergebenePokemon.myPokemon.attackData[1].power}}
+                    </button> 
+                  </div>
+                </div>
+                <div class="ButtonZweiAuswahlfensterUnten">
+                  <div class="divButtonAttackeLinksUnten"> 
+                    <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[2])">
+                      {{übergebenePokemon.myPokemon.attackData[2].name}} 
+                      {{übergebenePokemon.myPokemon.attackData[2].power}}
+                    </button> 
+                  </div>
+                  <div class="divButtonAttackeRechtsUnten"> 
+                     <button class="button button1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[3])">
+                      {{übergebenePokemon.myPokemon.attackData[3].name}} 
+                      {{übergebenePokemon.myPokemon.attackData[3].power}}
+                    </button> 
+                  </div>
               </div>
             </div>
+          </div>
         </div>
 
         <div class="konsoleUnten"> 
-            <p> hier steht text von der Konsole</p>
+            <p style="text-align: center"> 
+              {{this.konsolenAusgabe}}
+            </p>
         </div>
   </div>
 </template>
@@ -56,19 +90,48 @@
     data(){ 
       return {
         data: {
+          myPokemon:{},       //hier wird das eigene Pokemon gespeichert
+          enemyPokemon: {},   //hier wird das gegner Pokemon gespeichert
+          konsolenAusgabe: "[hier steht text von der Konsole]",
+          visible: false,
         }
       }
     },
     methods: {
-      showPokeInfo() {
-      }
-    }
+      testPrint(index){
+        console.log("test" + index);
+      },
 
+      buttonPressedMethod(attackData){ //Attackendurchlauf starten
+        console.log(attackData); //Funktioniert -> Werte kommen an ✓
+        this.visible=false;
+        this.calculateDamageToEnemyPokemon(attackData); //jetzt theoretischer Schaden an gegner-Pokemon berechen
+      },
+
+      calculateDamageToEnemyPokemon(ausgewählteAttacke){ 
+       let gegnerPokemonData =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  //Funktioniert  ->  Return werte sind in Array[] gespeichert, da mehrere Types Möglich.
+       console.log(ausgewählteAttacke);  //aktuell nur drinnen weil ohne Fehlermeldung :)
+       console.log("gegner Type: " + gegnerPokemonData.types[0].type.name);  //Funktioniert -> Werte kommen an ✓
+
+      },
+
+      choseRandomPokemonFromEnemy() {
+      },
+
+      calculateDamageToMyPokemon(){
+      },
+
+      setDamageToMyPokemon(){
+      },
+
+      setDamageToEnemyPokemon(){
+      },
+
+    }
   } 
-  
   </script>
   
-  <style>
+  <style>   /*  SEHR VIEL CSS CODE  */
     .komplettesKampffenster{
       height: 800px;
       width: 1320px; 
@@ -82,8 +145,11 @@
       position: relative;
     }
     .konsoleUnten{
-      background-color: rgb(34, 157, 214);
+      background-color: rgba(92, 133, 223, 0.479);
       height: 100px;
+      border-color: rgb(0, 0, 0);
+      border-width: 5px;
+      border-style: solid;
     }
 
     .left{
@@ -95,7 +161,6 @@
     }
 
     .right{
-      background-color: rgba(185, 34, 135, 0);
       height: 100;
       width: 520px;
       display: flex;
@@ -112,29 +177,20 @@
     }
 
     .pokemonSpriteL{
-      background-color: rgba(59, 185, 34, 0);
       height: 490px;
       width: 100;
     }
 
 .obenR{
-  background-color: rgba(196, 214, 34, 0);
   height: 490px;
   width: 100;
   display: flex;
   flex-direction: column
 }
 
-.untenR{
-  background-color: rgba(236, 132, 14, 0);
-  height: 210px;
-  width: 100;
-}
-
 .gegnerPokeStatsR{
   width: 100;
   height: 150px;
-  background-color: rgb(196, 214, 34);
   display: flex;
   flex-direction: column
 }
@@ -142,29 +198,26 @@
 .gegnerPokemonR{
   width: 100;
   height: 340px;
-  background-color: rgba(214, 34, 205, 0);
 }
 
 .gegnerInformationen{
-  background-color: rgba(196, 214, 34, 0);
   width: 100;
   height: 75px;
 }
 
 .healthbarGegner{
-  background-color: rgba(34, 157, 214, 0);
+  /* background-color: rgba(221, 87, 75, 0.575); */
   width: 100;
   height: 75px;
 }
 
 .PokeStatsL{
-  background-color: rgb(133, 31, 31);
   width: 100;
   height: 120px;
 
 }
-.HealthBarL{
-  background-color: rgb(61, 5, 75);
+.healthBarMyPokemon{
+ /* background-color: rgba(221, 87, 75, 0.575); */
   width: 100;
   height: 90px;
 }
@@ -172,14 +225,12 @@
 .myPokemonPicture{
   width: 490;
   height: 490px;
-  background-color: rgba(179, 131, 190, 0);
   padding-left: 150px;
 }
 
 .enemyPokemonPicture{
   width: 340;
   height: 340px;
-  background-color: rgba(179, 131, 190, 0);
 }
 
 .backgroundPicture{
@@ -188,15 +239,75 @@
   position: relative;
 }
 
+.attackenauswahlFenster{
+  height: 210px;
+  width: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.ButtonZweiAuswahlfensterOben{
+display: flex;
+flex-direction: row;
+height: 105px;
+width: 520px;
+}
+
+.divButtonAttackeLinksOben{
+  width: 260px;
+
+}
+.divButtonAttackeRechtsOben{
+  width: 260px;;
+}
 
 
 
+.ButtonZweiAuswahlfensterUnten{
+  display: flex;
+  flex-direction: row;
+  height: 105px;
+  width: 100;
+}
+.divButtonAttackeLinksUnten{
+  width: 260px;
+}
+.divButtonAttackeRechtsUnten{
+  width: 260px;
+}
 
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  /* padding: 38px 85px; */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
 
+  transition-duration: 0.4s;
+  cursor: pointer;
+  width: 240px;
+  height: 90px;
+  border-radius: 7%;
+}
 
+.button1 {
+  background-color: white;
+  color: black;
+  border: 2px solid #555555;
+}
 
+.button1:hover {
+  background-color: #555555;
+  color: white;
+}
 
-
-
-
+.pokemonInfoStyle{
+  color:aliceblue;
+  font-size: 20px;
+  /* padding-left: 60px; */
+}
   </style>

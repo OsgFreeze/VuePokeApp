@@ -26,13 +26,13 @@ export default {
 <style>
 
   .mainWindow{
-    background-color:rgba(50, 216, 111, 0.349);
+    background-color:rgba(118, 215, 218, 0.24);
     width: 70%;
     height: 100%;
   }
 
   .sideBar{ 
-    background-color:rgba(181, 152, 207, 0.26);
+    background-color:rgba(241, 94, 84, 0.26);
     position: fixed;
     overflow-x: hidden;
     height: 100%;
