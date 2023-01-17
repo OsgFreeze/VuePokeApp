@@ -69,7 +69,8 @@
       },
     
 
-      async filterAttacksByDamage(){  //   ->   speichert alle Attackeninformationen die Schaden machen in newAttackArray[]
+    // speichert alle Attackeninformationen die Schaden machen in newAttackArray[]
+      async filterAttacksByDamage(){  
           let b = 0;
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {  //funktioniert ✓
             if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){  //funktioniert ✓
@@ -78,14 +79,11 @@
             }    
           } 
           this.visible=true; 
-          console.log("Array mit allen Attacken:");
-          console.log(this.AttackobjektArray);    //alter Array ausgeben
-          console.log("Array mit gefliterten schadens Attacken:");
-          console.log(this.newDamageAttackArray); //neuer Array ausgeben
         },
 
+
+   //überprüfe ob Attacke bereits gewählt ist.  
       selectAttack(attackNumber){  
-        //überprüfe ob Attacke bereits gewählt ist.
         const alreadySelected = this.chosenAttacks.findIndex((attack) => attack.name === this.newDamageAttackArray[attackNumber].name)
 
           if(alreadySelected > -1){
@@ -98,8 +96,6 @@
               this.chosenAttacksIndex++;                                           
             if(this.chosenAttacksIndex == MAX_ATTACKS){ 
               //Maximale Anzahl der Attacken gewählt, setzte nächste Logic ein.
-              console.log("Array mit 4 Attacken");
-              console.log(this.chosenAttacks);    //gibt neuen Array mit 4 werten aus
               this.pokemonObject.pokemonData = this.übergebenesPokemonObjekt;    //   Speichert das übergebene Pokemon in lokales pokemon[] 
               this.pokemonObject.attackData = this.chosenAttacks;                //   speichert (alle 4 Attacken) in pokemon[] 
               this.visible = false;                                              //   setzt sichtbarkeit von dem attacken Auswahlfenster auf false

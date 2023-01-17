@@ -28,11 +28,12 @@ export default {
   components: {
     selectAttack, 
   }, 
+  
   provide(){
     const me = this;
     const pokemonHelper = {}
 
-    //Setzt das Game auf Started, damit wissen wir, dass der Kampf begonnen hat.
+  //Setzt das Game auf started, damit wissen wir, dass der Kampf begonnen hat.
     pokemonHelper.setGameStarted = function(){
       me.gameStarted = true;
     }
@@ -40,12 +41,13 @@ export default {
     //Macht den Status, ob die Game Information geladen ausgeblendet werden müssen,
     //überall verfügbar.
     //defineProperty verwenden, um einen getter zu verwenden.
+
     Object.defineProperty(pokemonHelper, "hidePokemonInfos", {
       get: function(){return me.hidePokemonInfos}  
     })
-
     return {pokemonHelper}
   },
+
   computed: {
       //Gibt Live Update über den Game Status
       hidePokemonInfos(){
@@ -63,23 +65,25 @@ export default {
   },
 
   methods: { 
-    async loadApiNumber(){ //API Call für Pokemon Daten
+  //API Call für Pokemon Daten 
+    async loadApiNumber(){ 
       await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
-        this.pokemonObject = response.data; //Pokemon Objekt in variable "pokemonObject" Speichern
+        this.pokemonObject = response.data; 
         this.pokemonStats =  this.pokemonObject.stats;
         this.pokeLoaded = true;
-
-        console.log("pokemon API Daten: "); 
-        console.log(response); //pokemon data Ausgeben
       })
     },
     
-    async setNrPlus(){ //ausgewähltes Pokemon +1 -> danach API CALL
+
+  //ausgewähltes Pokemon +1 -> danach API CALL  
+    async setNrPlus(){ 
       this.PokeNumber = (this.PokeNumber + 1);
       this.loadApiNumber();
     },
 
-    async setNrMinus(){ //ausgewähltes Pokemon -1 -> danach API CALL
+
+  //ausgewähltes Pokemon -1 -> danach API CALL  
+    async setNrMinus(){ 
       this.PokeNumber = (this.PokeNumber - 1);
       this.loadApiNumber();
     },
@@ -88,10 +92,8 @@ export default {
 </script>
 
 <style>
-
 .PokemonPictureHD {
   height: 250px;
   width: 250px;
 }
-
 </style>
