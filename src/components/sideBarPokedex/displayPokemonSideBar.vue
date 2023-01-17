@@ -10,16 +10,18 @@
       <button @click="getApi2" type="button" :disabled="trueFalse == false">Compare</button>
   </form>
 
-  <div>
-      Name: {{ pokemonName }} <br>
-      <!-- Kommt in diesen Spielen vor: <p v-for="(version, index) in genName" :key="index">{{ index + 1 }}  {{version.version.name}}</p> -->
-      <img class="PokemonPicture" :src="pokemonSprite.other.home.front_default"/>
-      
+  <div> 
+    <!-- Fehlermeldung, kann Pokemon Sprite ja erst Rendern sobald man den Api call macht, muss durch Button oder sowas die API Call methode aufrufen -->
 
+      Name: {{ pokemonName }} <br>
+       <!-- Kommt in diesen Spielen vor: <p v-for="(version, index) in genName" :key="index">{{ index + 1 }}  {{version.version.name}}</p> -->
+       <!-- <img class="PokemonPicture" :src="pokemonSprite.other.home.front_default" /> -->
   </div>
+
   <div>
       <br>
-      Name:{{ pokemonNameCompare }} <br>
+        Name:{{ pokemonNameCompare }} 
+      <br>
       Kommt in diesen Spielen vor: <p v-for="(version, index) in genNameCompare" :key="index">{{ index + 1 }}  {{version.version.name}}</p>
   </div>
 </template>

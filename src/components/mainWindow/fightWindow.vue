@@ -58,6 +58,7 @@
                       {{übergebenePokemon.myPokemon.attackData[0].name}}
                       {{übergebenePokemon.myPokemon.attackData[0].power}}
                       {{übergebenePokemon.myPokemon.attackData[0].type.name}} 
+                      {{" [" + übergebenePokemon.myPokemon.attackData[0].damage_class.name + "]"}} 
                      </button> 
                   </div>
 
@@ -66,7 +67,7 @@
                       {{übergebenePokemon.myPokemon.attackData[1].name}} 
                       {{übergebenePokemon.myPokemon.attackData[1].power}}
                       {{übergebenePokemon.myPokemon.attackData[1].type.name}}
-
+                      {{" [" + übergebenePokemon.myPokemon.attackData[1].damage_class.name + "]"}} 
                     </button> 
                   </div>
                 </div>
@@ -76,6 +77,7 @@
                       {{übergebenePokemon.myPokemon.attackData[2].name}} 
                       {{übergebenePokemon.myPokemon.attackData[2].power}}
                       {{übergebenePokemon.myPokemon.attackData[2].type.name}}
+                      {{" [" + übergebenePokemon.myPokemon.attackData[2].damage_class.name + "]"}}
                     </button> 
                   </div>
                   <div class="divButtonAttackeRechtsUnten"> 
@@ -83,6 +85,7 @@
                       {{übergebenePokemon.myPokemon.attackData[3].name}} 
                       {{übergebenePokemon.myPokemon.attackData[3].power}}
                       {{übergebenePokemon.myPokemon.attackData[3].type.name}}
+                      {{" [" + übergebenePokemon.myPokemon.attackData[3].damage_class.name + "]"}} 
                     </button> 
                   </div>
               </div>
@@ -91,7 +94,7 @@
         </div>
 
         <div class="konsoleUnten"> 
-            <p style="text-align: left ; margin-left: 100px" > 
+            <p style="text-align: center; margin-top: 32px;" > 
                 {{this.konsolenAusgabe}}
             </p>
         </div>
@@ -128,115 +131,180 @@
     },
     methods: {
 
-      buttonPressedMethod(attackData){ //Attackendurchlauf starten
-        //console.log(attackData); //Funktioniert -> Werte kommen an ✓
-        this.visible=false;
-
+  //Attackendurchlauf starten
+      buttonPressedMethod(attackData){
+        this.visible=false; //Attacken Auswahlfenster auf *nicht* sichtbar 
         setTimeout(()=>{
-          this.calculateDamageToEnemyPokemon(attackData); //jetzt theoretischer Schaden an gegner-Pokemon berechen
+          this.calculateDamageToEnemyPokemon(attackData); //neue Methode aufrufen
        },500);
        
-        // soll eventuell entscheiden welches Pokemon zuerst angreifen darf ?!
+
+        // hier soll eventuell entschieden welches Pokemon zuerst angreifen darf ?!
+        // Iniative Vergleichen und dann zuerst die Methoden vom Schnelleren ausführen. Dann vom Langsameren 
+        //   -> Machbar und implimentierbar ✓
+
 
       },
-      calculateDamageToEnemyPokemon(ausgewählteAttacke){ //ausgewählte Attacke enthällt alle informationen zur "ausgewählten" Attacke.
-       let verteidigendesPokemon =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  
-       let angreifendesPokemon =  this.übergebenePokemon.myPokemon.pokemonData;  
-       let angriffsWert = angreifendesPokemon.stats[1].base_stat; // Angriffswert local Speichern
-       let enemyDefense = verteidigendesPokemon.stats[2].base_stat; //Verteidigungswert
-       let kpWert = angreifendesPokemon.stats[0].base_stat;
 
-       let damageMultiplicator = (1); //gibt zb. STAB oder Typen multiplikatoren an -> muss noch implementiert werden
-       //let spezialAngriffsWert = angreifendesPokemon.stats[3].base_stat; // spezial Angriffswert local Speichern
-       //let enemySpezialVerteidigung = verteidigendesPokemon.stats[4].base_stat // spezial Verteidugung von Gegner local Speichern
-       //let enemyPokemonTypes = verteidigendesPokemon.types //  Achtung, Types ist Array -> kann mehrere Types haben     bsp: [types[0].type.name],[types[1].type.name] 
-       //let myPokemonTypes = angreifendesPokemon.types
-       let calculatedDamage = (((10*ausgewählteAttacke.power)*(angriffsWert/enemyDefense))/52)*damageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
-       this.konsolenAusgabe = angreifendesPokemon.name + " setzt Attacke: " + ausgewählteAttacke.name + " ein ; damage -> " + Math.round(calculatedDamage);
-       this.DmgToEnemyPokemon = calculatedDamage;
-       this.visible = false;
-       this.setDamageToEnemyHealthbar( this.EnemyHealth, this.DmgToEnemyPokemon, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
+  //Berechnet den Schaden an das gegner Pokemon  
+      calculateDamageToEnemyPokemon(ausgewählteAttacke){ // <- ausgewählte Attacke enthällt alle informationen zur "ausgewählten" Attacke.
+        let verteidigendesPokemon =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  
+        let angreifendesPokemon =  this.übergebenePokemon.myPokemon.pokemonData;
 
-       setTimeout(()=>{
-        this.choseRandomAttackFromEnemy();
-       },1000);
-      },
+        let kpWert = verteidigendesPokemon.stats[0].base_stat;  
+        let angriffsWert = angreifendesPokemon.stats[1].base_stat;  // Angriffswert -> Angreifer
+        let enemyDefense = verteidigendesPokemon.stats[2].base_stat; //Verteidigungswert -> Gegner
+        let spezialAngriffsWert = angreifendesPokemon.stats[3].base_stat; // spezial Angriffswert  -> Angreifer
+        let enemySpezialVerteidigung = verteidigendesPokemon.stats[4].base_stat // spezial Verteidugung  -> Gegner
+        let damageMultiplicator = (1); //gibt zb. STAB oder Typen multiplikatoren an -> Aktuell noch 1 <- bedeutet keine Multiplikatoren
 
+        //let enemyPokemonTypes = verteidigendesPokemon.types //  Achtung, Types ist Array -> kann mehrere Types haben  bsp: [types[0].type.name = Fire], [types[1].type.name = Fly] 
+        //let myPokemonTypes = angreifendesPokemon.types
       
+          // Schadensberechnung für 'physical' Angriffe 
+        if(ausgewählteAttacke.damage_class.name == "physical") {
+          console.log("if abfrage Funktioniert -> Physical Damage")
+          let calculatedPhsicalDamage = (((10*ausgewählteAttacke.power)*(angriffsWert/enemyDefense))/52)*damageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
+          calculatedPhsicalDamage = Math.round(calculatedPhsicalDamage); //Ergebniss Runden -> da sonnst sehr lange Zahl. 
+          this.konsolenAusgabe = (angreifendesPokemon.name + " setzt Attacke: " + ausgewählteAttacke.name + " ein " +  calculatedPhsicalDamage + " damage" )  //Ausgabefeld Unten ["konsole"]
+          this.DmgToEnemyPokemon = calculatedPhsicalDamage;
+          this.setDamageToEnemyHealthbar( this.EnemyHealth, this.DmgToEnemyPokemon, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
+        }
 
-      choseRandomAttackFromEnemy() { //erstmal gegner KI -> eventuell später mit Prio System??
+          // Schadensberechnung für 'special' Angriffe
+        if(ausgewählteAttacke.damage_class.name == "special") {
+          console.log("if abfrage Funktioniert -> Special Damage")
+          let calculatedSpecialDamage = (((10*ausgewählteAttacke.power)*(spezialAngriffsWert/enemySpezialVerteidigung))/52)*damageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
+          calculatedSpecialDamage = Math.round(calculatedSpecialDamage); //Ergebniss Runden -> da sonnst sehr lange Zahl. 
+          this.konsolenAusgabe = (angreifendesPokemon.name + " setzt Attacke: " + ausgewählteAttacke.name + " ein " +  calculatedSpecialDamage + " damage" )  //Ausgabefeld Unten ["konsole"]
+          this.setDamageToEnemyHealthbar( this.EnemyHealth, this.DmgToEnemyPokemon, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
+        }
+         // Setzt Timeout für besseres Spielgefühl -> "gegner sucht Attacke aus soll ein Moment dauern"      
+        setTimeout(()=>{
+          this.choseRandomAttackFromEnemy();
+        },1500);
+      },
+
+
+  //zufällige gegner Attacke auswählen 
+      choseRandomAttackFromEnemy() { 
         let untergrenze=0;
-        let obergrenze=3; //AttackenArray geht von index [0-3]
-        let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze - 1)) + 1; //gibt random Zahl zwischen 0-3 zurück.
+        let obergrenze=3;  //AttackenArray geht von index [0-3]
+        let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze - 1)) + 1; //gibt random Zahl zwischen [0-3] zurück.
         let ChoosenAttack = this.übergebenePokemon.enemyPokemon.enemyAttacks[randomNumber]; //speichert Informationen zur ausgewählten Attacke in ChoosenAttack
         this.calculateDamageToMyPokemon(ChoosenAttack);
       },
 
-      calculateDamageToMyPokemon(randomGegnerAttackenInformationen){
+
+
+
+  //Berechnet den Schaden an spieler Pokemon
+      calculateDamageToMyPokemon(gegnerAttackenInformationen){
         let angreifendesPokemon =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  
-        let VerteidigendesPokemon =  this.übergebenePokemon.myPokemon.pokemonData;
-        let angriffsWert = angreifendesPokemon.stats[1].base_stat; // Angriffswert local Speichern
-        let enemyDefense = VerteidigendesPokemon.stats[2].base_stat; //Verteidigungswert
-        let damageMultiplicator = (1); //gibt zb. STAB oder Typen multiplikatoren an -> muss noch implementiert werden
-        let calculatedDamage = (((10*randomGegnerAttackenInformationen.power)*(angriffsWert/enemyDefense))/52)*damageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
-        console.log(angreifendesPokemon.name + "  setzt Attacke " + randomGegnerAttackenInformationen.name + " ein");
-        console.log("der gegner hat: " + calculatedDamage + " Schaden gemacht")
-        this.setDamageToMyHealthbar(this.MyPokemonHealth, calculatedDamage)   //berechneter Schaden an mein Pokemon Healthbar weiterleiten
+        let verteidigendesPokemon =  this.übergebenePokemon.myPokemon.pokemonData;
+
+        let kpWert = verteidigendesPokemon.stats[0].base_stat;  
+        let angriffsWert = angreifendesPokemon.stats[1].base_stat;  // Angriffswert -> Angreifer
+        let enemyDefense = verteidigendesPokemon.stats[2].base_stat; //Verteidigungswert -> Gegner
+        let spezialAngriffsWert = angreifendesPokemon.stats[3].base_stat; // spezial Angriffswert  -> Angreifer
+        let enemySpezialVerteidigung = verteidigendesPokemon.stats[4].base_stat // spezial Verteidugung  -> Gegner
+        let damageMultiplicator = (1); //gibt zb. STAB oder Typen multiplikatoren an -> Aktuell noch 1 <- bedeutet keine Multiplikatoren
+
+        //let enemyPokemonTypes = verteidigendesPokemon.types //  Achtung, Types ist Array -> kann mehrere Types haben     bsp: [types[0].type.name],[types[1].type.name] 
+        //let myPokemonTypes = angreifendesPokemon.types
+      
+          // Schadensberechnung für 'physical' Angriffe 
+        if(gegnerAttackenInformationen.damage_class.name == "physical") {
+          console.log("if abfrage Funktioniert -> Physical Damage")
+          let calculatedPhsicalDamage = (((10*gegnerAttackenInformationen.power)*(angriffsWert/enemyDefense))/52)*damageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
+          calculatedPhsicalDamage = Math.round(calculatedPhsicalDamage); //Ergebniss Runden -> da sonnst sehr lange Zahl. 
+          this.konsolenAusgabe = (angreifendesPokemon.name + " setzt Attacke: " + gegnerAttackenInformationen.name + " ein " +  calculatedPhsicalDamage + " damage" )  //Ausgabefeld Unten ["konsole"]
+          this.DmgToMyPokemon = calculatedPhsicalDamage;
+        
+          this.setDamageToMyHealthbar( this.MyPokemonHealth, this.DmgToMyPokemon, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
+        }
+
+          // Schadensberechnung für 'special' Angriffe
+        if(gegnerAttackenInformationen.damage_class.name == "special") {
+          console.log("if abfrage Funktioniert -> Special Damage")
+          let calculatedSpecialDamage = (((10*gegnerAttackenInformationen.power)*(spezialAngriffsWert/enemySpezialVerteidigung))/52)*damageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
+          calculatedSpecialDamage = Math.round(calculatedSpecialDamage); //Ergebniss Runden -> da sonnst sehr lange Zahl. 
+          this.konsolenAusgabe = (angreifendesPokemon.name + " setzt Attacke: " + gegnerAttackenInformationen.name + " ein " +  calculatedSpecialDamage + " damage" )  //Ausgabefeld Unten ["konsole"]
+          this.DmgToMyPokemon = calculatedSpecialDamage;
+          this.setDamageToMyHealthbar( this.MyPokemonHealth, this.DmgToMyPokemon, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
+        }
       },
 
+
+  //setzt berechneten schaden zur spieler  Healthbar
       setDamageToMyHealthbar(Leben, x){
         const myPokeData = document.getElementById("MyHealth");       
         if(Leben > 0 && x < Leben){       
         Leben = Leben - x;
-        console.log("dein aktuelles Leben in %: " + Leben); //gibt MyPokemon Leben in % in Konsole an
+        //console.log("dein aktuelles Leben in %: " + Leben); //gibt MyPokemon Leben in % in Konsole an
         myPokeData.style.width = Leben+"%"
         this.MyPokemonHealth = Leben;
+        this.visible = true //Attacken Auswahlfenster auf *wieder* sichtbar
         }else{
           this.MyPokemonHealth = 0;
           myPokeData.style.width = "0%";
           this.stillalive1 = false;
         }
       },
+
+
+  //spieler Healthbar wieder auf 100% Leben bringen 
       ReviveMyHealthbar(){
         this.MyPokemonHealth = 100;
-        console.log(this.MyPokemonHealth);
+        //console.log(this.MyPokemonHealth);
         const myPokeData = document.getElementById("MyHealth");
         myPokeData.style.width = this.MyPokemonHealth+"%";
-        this.visible = true;
       },
+
+
+  //setzt berechneten schaden zur gegner Healthbar  
       setDamageToEnemyHealthbar(health, Dmg, Kp){
-        const enemyData = document.getElementById("EnemyHealth");         //Holt sich die CSS Klasse
-        const dmg = Dmg;                                                  //Dmg kommt wird als Member übergeben und zugewiesen
+        const enemyData = document.getElementById("EnemyHealth");        //Holt sich die CSS Klasse
+        const dmg = Dmg;                                                 //Dmg kommt wird als Member übergeben und zugewiesen
         const finalDmg = dmg / (Kp / 100);                               //berechnen Schaden in Prozenz abhängig von den Gegner KP um
-        if(health > 0 && finalDmg < health){                                //gibt Gegner Leben in % in Konsole an                                            
-          health = health - finalDmg;                                       //aktuelles Leben - dmg
-          console.log("gegner Leben in %: " + health);
-          enemyData.style.width = health+"%";                              //passt die Healthbar der entsprechenden Prozentualen Veränderung an
-          this.EnemyHealth = health;                                       //Neuer Lebensstand wird global gespeichert
-          this.visible = true;                                            //Attack Buttons werden wieder visible
+        if(health > 0 && finalDmg < health){                             //gibt Gegner Leben in % in Konsole an                                            
+          health = health - finalDmg;                                    //aktuelles Leben - dmg
+          //console.log("gegner Leben in %: " + health);
+          enemyData.style.width = health+"%";                            //passt die Healthbar der entsprechenden Prozentualen Veränderung an
+          this.EnemyHealth = health;                                     //Neuer Lebensstand wird global gespeichert
+          this.visible = true;                                           //Attack Buttons werden wieder visible
         }else{
           this.EnemyHealth = 0;
           enemyData.style.width = "0%";
           //TODO var umbennen
-          this.stillalive2 = false;                                       //wenn Leben unter 0 ist
+          this.stillalive2 = false;                                      //wenn Leben unter 0 ist
         }
+        
       },
+
+
+  //gegner Healthbar wieder auf 100% Leben bringen 
       ReviveEnemyHealthbar(){
         this.EnemyHealth = 100;
-        console.log(this.EnemyHealth);
+        //console.log(this.EnemyHealth);
         const enemyData = document.getElementById("EnemyHealth");
         //refactorn zu -> this.$refs.enemyHealth (console.log)
         enemyData.style.width = this.EnemyHealth+"%";
         this.visible = true;
       },
     },
+
+
+  //setzt Spiel auf 'gestartet'
     mounted(){
       this.pokemonHelper.setGameStarted();
     }
   } 
   </script>
+
   
-  <style>   /*  SEHR VIEL CSS CODE  */
+  <style>   
+  /*  SEHR VIEL CSS CODE  */
     .komplettesKampffenster{
       height: 800px;
       width: 1320px; 

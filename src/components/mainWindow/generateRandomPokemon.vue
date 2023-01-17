@@ -1,6 +1,6 @@
 <template class="generateRandomPokemon">
     <div>   
-      <button @click="generateRandomPokemon(898)"> generateRandomPokemon </button> <!-- 898, da bis dahin alle Pokemon verfügbar sind -->
+      <button @click="generateRandomPokemon(898)"> generate new random Pokemon </button> <!-- 898, da bis dahin alle Pokemon verfügbar sind -->
       <div v-if="randomPokemonLoaded" > <!-- Zeigt Information über das zufällig ausgewählte Pokemon -->
           <!-- <img class="randomPokemonPicture" :src="this.randomPokemonObject.sprites.other.home.front_default" /> -->
           <fightWindow  :übergebenePokemon="this.twoCompletePokemon"/>
