@@ -49,8 +49,8 @@
 
                 <div class="gegnerPokemonR"> 
           <!-- mein plan war mit v-if="true/false" jeweils das Shiny oder das normale anzuzeigen. -> klappe aber irgendwie ned-->
-                 <img class="enemyPokemonPicture" v-if="übergebenePokemon.enemyPokemon.enemyPokemonShiny":src="übergebenePokemon.enemyPokemon.enemyPokemon.sprites.front_default"/> 
-                 <img class="enemyPokemonPicture" v-if="übergebenePokemon.enemyPokemon.enemyPokemonShiny" :src="übergebenePokemon.enemyPokemon.enemyPokemon.sprites.front_shiny"/> 
+                 <img class="enemyPokemonPicture" v-if="übergebenePokemon.enemyPokemon.enemyPokemonShiny[1]" :src="übergebenePokemon.enemyPokemon.enemyPokemon.sprites.front_default"/> 
+                 <img class="enemyPokemonPicture" v-if="übergebenePokemon.enemyPokemon.enemyPokemonShiny[0]" :src="übergebenePokemon.enemyPokemon.enemyPokemon.sprites.front_shiny"/> 
                 </div>
               </div>
 
@@ -137,15 +137,45 @@ export default {
 
 //Attackendurchlauf starten
     buttonPressedMethod(attackData){
-      this.visible=false;  //Attacken Auswahlfenster auf *nicht* sichtbar 
-      setTimeout(()=>{  //neue Methode mit Verzögerung aufrufen
-        this.calculateDamageToEnemyPokemon(attackData); 
-      },500);
+      this.visible=false;  
+      let myPokemonIniative = this.übergebenePokemon.myPokemon.pokemonData.stats[5].base_stat
+      let EnemyPokemonIniative = this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[5].base_stat
+      console.log(myPokemonIniative +" , " + EnemyPokemonIniative);
+   
+  //System das Bestimmt wer zu erst Angreifen darf.   
+  //eingesetzt Attacke hat Prio ? [erste IF abfrage bestimmt, ob eine Attacke erstschlag Garantie hat.]
+      if(attackData.priority > 0){
+        //mein Pokemon greift zu erst an. <- hat Prio Attacke eingesetzt
+        setTimeout(()=>{
+            this.calculateDamageToEnemyPokemon(attackData); 
+          },1000);
+        
+          setTimeout(()=>{
+            this.choseRandomAttackFromEnemy();
+          },3000);
 
-      // hier soll eventuell entschieden welches Pokemon zuerst angreifen darf ?!
-      // Iniative Vergleichen und dann zuerst die Methoden vom Schnelleren ausführen. Dann vom Langsameren 
-      //   -> Machbar und implimentierbar ✓
+      }else{
+        if(myPokemonIniative < EnemyPokemonIniative){ 
+            //Gegner greift zu erst an.
+          setTimeout(()=>{
+           this.choseRandomAttackFromEnemy();
+          },1000);
 
+          setTimeout(()=>{
+           this.calculateDamageToEnemyPokemon(attackData); 
+          },3000);
+   
+        } else {
+            //mein Pokemon greift zu erst an.
+          setTimeout(()=>{
+            this.calculateDamageToEnemyPokemon(attackData); 
+          },1000);
+        
+          setTimeout(()=>{
+            this.choseRandomAttackFromEnemy();
+          },3000);
+        }
+      }
     },
 
 
@@ -212,11 +242,6 @@ export default {
           this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + ausgewählteAttacke.name + " ein: " +  calculatedSpecialDamage + " damage" )  //Ausgabefeld Unten ["konsole"]
         }
       }
-
-        // Setzt Timeout für besseres Spielgefühl -> "gegner sucht Attacke aus soll ein Moment dauern"      
-      setTimeout(()=>{
-        this.choseRandomAttackFromEnemy();
-      },2000);
     },
 
 

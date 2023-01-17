@@ -33,7 +33,7 @@
       //speichert das random Pokemon 
         randomPokemonEnemy: {  
         enemyPokemon: {},
-        enemyPokemonShiny: {},
+        enemyPokemonShiny: [],
         },
 
       //fasst beide Pokemon zusammen   
@@ -106,7 +106,14 @@
         //Speichert alle random Pokemon Informationen(pokemon,Attacken) in das übergabe Objekt  ->  [randomPokemonEnemy]
           this.randomPokemonEnemy.enemyPokemon = this.randomPokemonObject;
           this.randomPokemonEnemy.enemyAttacks = this.fourAttackArray; 
-          this.randomPokemonEnemy.enemyPokemonShiny = this.checkIfPokemonShiny();
+          this.randomPokemonEnemy.enemyPokemonShiny[0] = this.checkIfPokemonShiny();
+
+        //setze nicht Shiny auf false [wird für die unterklasse: Fightwindow benötigt] 
+          if(this.randomPokemonEnemy.enemyPokemonShiny[0] == true){ 
+            this.randomPokemonEnemy.enemyPokemonShiny[1] = false; 
+          } else {
+            this.randomPokemonEnemy.enemyPokemonShiny[1] = true;
+          }
 
         //Speichert alle verfügbaren Informationen(Pokemon1[], Pokemon2[]) in das übergabe Objekt  ->  [twoCompletePokemon]
           this.twoCompletePokemon.myPokemon = this.übergebenesPokemonObject;
@@ -118,10 +125,10 @@
 
       //bestimmt ob das pokemon Shiny ist
         checkIfPokemonShiny(){
-          let shinyChance = 5; //bestimmt Shiny Chance
+          let shinyChance = 25; //bestimmt Shiny Chance [1/50]
           let untergrenze = 1;
           let randomNumber  = Math.floor(Math.random() * (shinyChance - untergrenze - 1)) + 1; 
-
+            console.log(randomNumber)
           if(randomNumber == 1){ 
             return true // ist Shiny
           } else {
