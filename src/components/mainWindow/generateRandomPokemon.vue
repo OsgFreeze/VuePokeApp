@@ -2,7 +2,6 @@
     <div>   
       <button @click="generateRandomPokemon(898)"> generate new random Pokemon </button> <!-- 898, da bis dahin alle Pokemon verfügbar sind -->
       <div v-if="randomPokemonLoaded" > <!-- Zeigt Information über das zufällig ausgewählte Pokemon -->
-          <!-- <img class="randomPokemonPicture" :src="this.randomPokemonObject.sprites.other.home.front_default" /> -->
           <fightWindow  :übergebenePokemon="this.twoCompletePokemon"/>
       </div>
     </div>
@@ -21,46 +20,50 @@
     
     data(){ 
       return {
+      //alle notwendigen deklarierungen
         randomPokemonObject: {},
         AttackobjektArray: [],
         newAttackArray: [],
         fourAttackArray: [],
-
-        randomPokemonEnemy: {  //speichert alle local gesammelten Informationen in einem Objekt 
-          enemyPokemon: {},
-          enemyAttacks: {}
-        },
-
-        twoCompletePokemon: { //fasst beide Pokemon in einem übergabe Objekt             
-          myPokemon: {},     
-          enemyPokemon: {},                             
-        }, 
-
         randomPokemonLoaded: false,
         newAttackArrayLength: 0,
         anzahlLernbareAttacken: 0,
         anzahlSchadensAttacken: 0,
+
+      //speichert das random Pokemon 
+        randomPokemonEnemy: {  
+        enemyPokemon: {},
+        enemyPokemonShiny: [],
+        },
+
+      //fasst beide Pokemon zusammen   
+        twoCompletePokemon: {   
+          myPokemon: {},     
+          enemyPokemon: {},                             
+        }, 
       }
     },
 
     methods: {    
-        async generateRandomPokemon(obergrenze){   //erzeugt ein random Pokemon Object & speichert ergebniss in [this.randomPokemonObject] 
+    //erzeugt ein random Pokemon Object & speichert ergebniss in [this.randomPokemonObject]   
+        async generateRandomPokemon(obergrenze){  
           this.anzahlLernbareAttacken= 0,
           this.anzahlSchadensAttacken= 0,
           this.newAttackArray=[];
-
-            let untergrenze=1;
-            let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze - 1)) + 1;   
-            await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNumber}`).then((response) => {  
+          let untergrenze=1;
+          let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze - 1)) + 1;   
+          await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomNumber}`).then((response) => {  
             this.randomPokemonObject = response.data; 
             console.log("random pokemon Name: " + this.randomPokemonObject.name);
             this.getAttackDataFromRandomPokemon(); 
-            })
+          })
         }, 
 
-        async getAttackDataFromRandomPokemon(){   //erstellt ein neuen Attacken Array von dem random Pokemon                            
-          const localPokedata = this.randomPokemonObject; // generiertes pokemon Objekt nochmal local speichern in Variable -> zur vereinfachung.                          
-          this.anzahlLernbareAttacken = localPokedata.moves.length;  // anzahl lernbare Attacken von generiertes pokemon Objekt
+
+    //erstellt ein neuen Attacken Array von dem random Pokemon       
+        async getAttackDataFromRandomPokemon(){                 
+          const localPokedata = this.randomPokemonObject;                   // generiertes pokemon Objekt nochmal local speichern in Variable -> zur vereinfachung.                          
+          this.anzahlLernbareAttacken = localPokedata.moves.length;         // anzahl lernbare Attacken von generiertes pokemon Objekt
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {           
             let attackUrlFromIndex = localPokedata.moves[i].move.url                  
             await axios.get(attackUrlFromIndex).then((response) => {    
@@ -71,7 +74,9 @@
           this.filterAttacksFromByDamage();
         },
      
-        async filterAttacksFromByDamage(){ //speichert alle Attackeninformationen die Schaden machen in neuen Array       
+
+    //speichert alle Attackeninformationen die Schaden machen in neuen Array     
+        async filterAttacksFromByDamage(){  
           let b = 0;
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
             if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){   
@@ -82,7 +87,9 @@
           this.SelectFourRandomAttacks(); 
         },
 
-        async SelectFourRandomAttacks(){   //[aktuell noch mit doppelten Attacken]
+
+    // Methode um alle 4 ausgewählten Attacken zu speichern    
+        async SelectFourRandomAttacks(){   
           console.log("anzahl Schadensattacken: " + this.newAttackArray.length); 
           let untergrenze=0;
           this.anzahlSchadensAttacken = this.newAttackArray.length; 
@@ -96,17 +103,38 @@
                       );
           } 
 
-          console.log(this.twoCompletePokemon);
-
         //Speichert alle random Pokemon Informationen(pokemon,Attacken) in das übergabe Objekt  ->  [randomPokemonEnemy]
           this.randomPokemonEnemy.enemyPokemon = this.randomPokemonObject;
           this.randomPokemonEnemy.enemyAttacks = this.fourAttackArray; 
+          this.randomPokemonEnemy.enemyPokemonShiny[0] = this.checkIfPokemonShiny();
+
+        //setze nicht Shiny auf false [wird für die unterklasse: Fightwindow benötigt] 
+          if(this.randomPokemonEnemy.enemyPokemonShiny[0] == true){ 
+            this.randomPokemonEnemy.enemyPokemonShiny[1] = false; 
+          } else {
+            this.randomPokemonEnemy.enemyPokemonShiny[1] = true;
+          }
 
         //Speichert alle verfügbaren Informationen(Pokemon1[], Pokemon2[]) in das übergabe Objekt  ->  [twoCompletePokemon]
           this.twoCompletePokemon.myPokemon = this.übergebenesPokemonObject;
           this.twoCompletePokemon.enemyPokemon = this.randomPokemonEnemy;
           this.randomPokemonLoaded=true;
+
+          console.log(this.twoCompletePokemon);
         },
+
+      //bestimmt ob das pokemon Shiny ist
+        checkIfPokemonShiny(){
+          let shinyChance = 25; //bestimmt Shiny Chance [1/50]
+          let untergrenze = 1;
+          let randomNumber  = Math.floor(Math.random() * (shinyChance - untergrenze - 1)) + 1; 
+            console.log(randomNumber)
+          if(randomNumber == 1){ 
+            return true // ist Shiny
+          } else {
+            return false // nicht Shiny
+          }
+        }
       }
     }
   </script>
@@ -120,5 +148,4 @@
         height: 250px;
         width: 250px;
     }
-   
   </style>
