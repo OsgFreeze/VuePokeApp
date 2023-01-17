@@ -8,7 +8,7 @@
   </div>
 
   <div class="dataAusgabeFeld"> <!-- gibt alle Informationen über das Pokemon aus -->
-    <div v-if="pokeLoaded"> 
+    <div v-if="hidePokemonInfos"> 
       <p class="baseStats" v-for="(pokemonStat, index) in pokemonStats" :key="index"> {{pokemonObject.stats[index].stat.name}} = {{pokemonStat.base_stat}}</p>
       <img class="PokemonPictureHD" :src="pokemonObject.sprites.other.home.front_default"/> 
       <img class="PokemonPictureHD" :src="pokemonObject.sprites.other.home.front_shiny"/>
@@ -28,13 +28,37 @@ export default {
   components: {
     selectAttack, 
   }, 
+  provide(){
+    const me = this;
+    const pokemonHelper = {}
 
+    //Setzt das Game auf Started, damit wissen wir, dass der Kampf begonnen hat.
+    pokemonHelper.setGameStarted = function(){
+      me.gameStarted = true;
+    }
+
+    //Macht den Status, ob die Game Information geladen ausgeblendet werden müssen,
+    //überall verfügbar.
+    //defineProperty verwenden, um einen getter zu verwenden.
+    Object.defineProperty(pokemonHelper, "hidePokemonInfos", {
+      get: function(){return me.hidePokemonInfos}  
+    })
+
+    return {pokemonHelper}
+  },
+  computed: {
+      //Gibt Live Update über den Game Status
+      hidePokemonInfos(){
+        return !this.gameStarted && this.pokeLoaded;
+      }
+  },
   data(){  
     return {
       pokeLoaded: false,  //  Pokemondaten bereits geladen ?
       PokeNumber: 1,      //  startwert für Eingabefeld
       pokemonStats: [],   //  speichert die basis Werte von einem Pokemon
-      pokemonObject: {},  //  speichert die Pokemon Daten von dem API Call
+      pokemonObject: {},  //  speichert die Pokemon Daten von dem API Call,
+      gameStarted: false,
     }
   },
 
