@@ -90,7 +90,6 @@
 
     // Methode um alle 4 ausgewählten Attacken zu speichern    
         async SelectFourRandomAttacks(){   
-          console.log("anzahl Schadensattacken: " + this.newAttackArray.length); 
           let untergrenze=0;
           this.anzahlSchadensAttacken = this.newAttackArray.length; 
           for (let i=0; i < 4; i++) { 
@@ -128,7 +127,7 @@
           let shinyChance = 25; //bestimmt Shiny Chance [1/50]
           let untergrenze = 1;
           let randomNumber  = Math.floor(Math.random() * (shinyChance - untergrenze - 1)) + 1; 
-            console.log(randomNumber)
+            console.log("Shiny Number: " + randomNumber);
           if(randomNumber == 1){ 
             return true // ist Shiny
           } else {
