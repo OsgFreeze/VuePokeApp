@@ -106,7 +106,6 @@
   
 <script>
 import axios from 'axios'
-
 export default {
   name: 'fightWindow',
   components: {  
@@ -126,9 +125,10 @@ export default {
         DmgToMyPokemon: 0,         //speichert den aktuellen Dmg der am eigenen Pokemon ausgeführt werden soll
         DmgToEnemyPokemon: 0,      //speichert den aktuellen Dmg der am Gegner Pokemon ausgeführt werden soll
         damageMultiplicator: 1,    //standart Damage multiplicator [wird beeinflusst durch: Genauigkeit, pokemon_Typen, effektivität_Attacken]
+        attackerTypes: [], 
+        attackerTypesArray: [], 
         enemyTypes: [], 
         enemyTypesArray: [],           
-
       //Hardcoded für Button Hintergrundfarbe abhängig vom Type
         backgroundColor: { 
           normal: "weiß",
@@ -138,7 +138,6 @@ export default {
       }
     },
   methods: {
-
 //Attackendurchlauf starten
     buttonPressedMethod(attackData){
       this.visible=false;  
@@ -149,33 +148,45 @@ export default {
   //eingesetzt Attacke hat Prio ? [erste IF abfrage bestimmt, ob eine Attacke erstschlag Garantie hat.] -> wenn gleich ist setzt die zweite Else bedingung.
       if(attackData.priority > 0){
         //mein Pokemon greift zu erst an. <- hat Prio Attacke eingesetzt
-        setTimeout(()=>{
+          setTimeout(()=>{
+          if(this.pokemonEnemyStillAlive == true) {
             this.calculateDamageToEnemyPokemon(attackData); 
+          }
           },1000);
         
           setTimeout(()=>{
+          if(this.pokemonEnemyStillAlive == true) {
             this.choseRandomAttackFromEnemy();
+          }
           },3000);
-
+        
       }else{
-        if(myPokemonIniative < EnemyPokemonIniative){ 
-            //Gegner greift zu erst an.
-          setTimeout(()=>{
-           this.choseRandomAttackFromEnemy();
+          if(myPokemonIniative < EnemyPokemonIniative){ 
+              //Gegner greift zu erst an.
+            setTimeout(()=>{
+            if(this.pokemonPlayerStillAlive == true ) {
+              this.choseRandomAttackFromEnemy();
+            }
           },1000);
 
           setTimeout(()=>{
-           this.calculateDamageToEnemyPokemon(attackData); 
+            if(this.pokemonPlayerStillAlive == true) {
+              this.calculateDamageToEnemyPokemon(attackData); 
+            }
           },3000);
    
         } else {
             //mein Pokemon greift zu erst an.
           setTimeout(()=>{
-            this.calculateDamageToEnemyPokemon(attackData); 
+            if(this.pokemonPlayerStillAlive == true) {
+              this.calculateDamageToEnemyPokemon(attackData); 
+            }
           },1000);
         
           setTimeout(()=>{
+            if(this.pokemonEnemyStillAlive == true) {
             this.choseRandomAttackFromEnemy();
+            }
           },3000);
         }
       }
@@ -187,10 +198,8 @@ export default {
     let attackAccuracy = übergebeneAttacke.accuracy; // BSP: 90 -> trifft zu 90% 
     let untergrenze = 1;
     let obergrenze = 100;
-
       //gibt random Zahl zwischen [1-100] zurück.
     let zufallsZahl = Math.floor(Math.random() * (obergrenze - untergrenze - 1)) + 1; 
-
       //Prüft ob die Attacke trifft.
     if(zufallsZahl>attackAccuracy){   //BSP: Zufallszahl = 95, attackAccuracy=90,  so liegt 95 auserhalb der 90 [95>90] attacken Genauigkeit. -> Attacke Trifft nicht
       return 0;
@@ -202,20 +211,28 @@ export default {
 
 
 //Überprüft ob eine Attacke ein Pokemon sehr effektiv / Neutral oder nicht sehr effektiv trifft.
-    async calculateTypeDamageMultiplicator(eingesetzteAttacke, verteidigendesPokemon){
+    async calculateTypeDamageMultiplicator(eingesetzteAttacke, verteidigendesPokemon, angreifendesPokemon){
       let attackType = eingesetzteAttacke.type.name 
       this.enemyType = verteidigendesPokemon.types; 
-      this.damageMultiplicator = 1; //Wert wieder auf 1 Zurücksetzen.
-
+      this.attackerType = angreifendesPokemon.types; //Array
+        //alle Arrays und Werte nach einem Durchlauf wieder zurücksetzen.
+      this.attackerTypes = [], 
+      this.attackerTypesArray =  [], 
+      this.enemyTypes = [], 
+      this.enemyTypesArray = [], 
+      this.damageMultiplicator = 1; //Wert wieder auf 1 
         // speichert alle Types des verteidigendes Pokemon 
       this.enemyType = verteidigendesPokemon.types; 
       for (let i=0; i < this.enemyType.length; i++) { 
         this.enemyTypesArray[i] = verteidigendesPokemon.types[i].type.name;
       }
-        
+        // speichert alle Types des angreifendes Pokemon 
+      this.attackerType = angreifendesPokemon.types; 
+      for (let i=0; i < this.attackerType.length; i++) { 
+        this.attackerTypesArray[i] = angreifendesPokemon.types[i].type.name;
+      }
         //durchläuft so oft wie viele Types der Gegner hat
       for (let i=0; i < this.enemyTypesArray.length; i++) {  
-
         await axios.get(`https://pokeapi.co/api/v2/type/${this.enemyTypesArray[i]}`).then((response) => {  
             // hier werden alle damage Relationen für die angreifende Attacke gespeichert.
           let AttackenInformationen = response.data.damage_relations 
@@ -238,7 +255,7 @@ export default {
               this.damageMultiplicator = (this.damageMultiplicator*0.5)
             }
           }
-      
+    
             //Durchläuft so oft wie vie die Anzahl der Typen gegen die man keinen Schaden macht
           for (let i=0; i < noDamageFrom.length; i++) { 
               //prüft ob AttackType gleich wie der Name von Types die keinen Schaden machen.
@@ -248,6 +265,16 @@ export default {
           }
         })
       }
+
+        //berechnet den Stab Multiplikator. -> (Same Type As Attack Type)
+      for (let i=0; i < 1; i++) {  //Pokemon hat maximal 2 Types. 
+        if(angreifendesPokemon.type == attackType) { //Bsp: Atttacke: Gras , Angreifer type: Gras -> Damage * 1,5
+          this.damageMultiplicator = (this.damageMultiplicator*1,5) 
+          console.log("Stab IF wurde aufgerufen: " + this.damageMultiplicator)
+        }
+      }
+
+     console.log("der Zurückgegeben Damage Multiplicator: " + this.damageMultiplicator);
       return this.damageMultiplicator; //gibt den berechneten Schadensmultiplikator zurück
     },
 
@@ -256,23 +283,20 @@ export default {
    async calculateDamageToEnemyPokemon(ausgewählteAttacke){ // <- ausgewählte Attacke enthällt alle informationen zur "ausgewählten" Attacke.
       let verteidigendesPokemon =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  
       let angreifendesPokemon =  this.übergebenePokemon.myPokemon.pokemonData;
-
-      let kpWert = verteidigendesPokemon.stats[0].base_stat + 100;                    // KP                    ->   Verteidiger
-      let angriffsWert = angreifendesPokemon.stats[1].base_stat + 50;                 // Angriff               ->   Angreifer
-      let enemyDefense = verteidigendesPokemon.stats[2].base_stat + 50;               // Verteidigung          ->   Gegner
-      let spezialAngriffsWert = angreifendesPokemon.stats[3].base_stat + 50;          // spezial-Angriff       ->   Angreifer
-      let enemySpezialVerteidigung = verteidigendesPokemon.stats[4].base_stat + 50;   // spezial-Verteidigung  ->   Gegner
+      let kpWert = verteidigendesPokemon.stats[0].base_stat + 104;                    // KP                    ->   Verteidiger
+      let angriffsWert = angreifendesPokemon.stats[1].base_stat + 52;                 // Angriff               ->   Angreifer
+      let enemyDefense = verteidigendesPokemon.stats[2].base_stat + 52;               // Verteidigung          ->   Gegner
+      let spezialAngriffsWert = angreifendesPokemon.stats[3].base_stat + 52;          // spezial-Angriff       ->   Angreifer
+      let enemySpezialVerteidigung = verteidigendesPokemon.stats[4].base_stat + 52;   // spezial-Verteidigung  ->   Gegner
 
       let AttackMissedOrHitted = await this.calculateIfAttackMissed(ausgewählteAttacke);  //gibt 0 oder 1 zurück.
-      let typeMultiplicator = await this.calculateTypeDamageMultiplicator(ausgewählteAttacke, verteidigendesPokemon); //gibt den Type Schadensmulitiplikator zurück ( 0, 0.25, 0.5, 1, 1.5 + [..] etc.)
+      let typeMultiplicator = await this.calculateTypeDamageMultiplicator(ausgewählteAttacke, verteidigendesPokemon, angreifendesPokemon); //gibt den Type Schadensmulitiplikator zurück ( 0, 0.25, 0.5, 1, 1.5 + [..] etc.)
       let localDamageMultiplicator = (typeMultiplicator*AttackMissedOrHitted) //Multipliziert beide multiplicator
-
         // Schadensberechnung für 'physical' Angriffe 
       if(ausgewählteAttacke.damage_class.name == "physical") {
-        let calculatedPhsicalDamage = (((10*ausgewählteAttacke.power)*(angriffsWert/enemyDefense))/52)*localDamageMultiplicator;  
+        let calculatedPhsicalDamage = (((22*ausgewählteAttacke.power)*(angriffsWert/enemyDefense))/52)*localDamageMultiplicator;  
         calculatedPhsicalDamage = Math.round(calculatedPhsicalDamage); //Ergebniss Runden -> da sonnst sehr lange Zahl. 
         this.setDamageToEnemyHealthbar( this.EnemyHealth, calculatedPhsicalDamage, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
-
           //gibt in Konsole die eingesetzt Attacke aus
         if (calculatedPhsicalDamage == 0 ){
           this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + ausgewählteAttacke.name + " ein: " + " Attacke verfehlt" )  
@@ -280,18 +304,20 @@ export default {
           if (localDamageMultiplicator > 0 ||  localDamageMultiplicator < 1 ) {
            this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + ausgewählteAttacke.name + " ein " +  calculatedPhsicalDamage + " Schaden "  +  " nicht sehr Effektiv")  
           }
+          if (localDamageMultiplicator == 1) {
+            this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + ausgewählteAttacke.name + " ein " +  calculatedPhsicalDamage + " Schaden ")  
+          }
+          
           if (localDamageMultiplicator > 1) {
             this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + ausgewählteAttacke.name + " ein " +  calculatedPhsicalDamage + " Schaden " +  " sehr Effektiv")  
           }
         }
       }
-
         // Schadensberechnung für 'special' Angriffe
       if(ausgewählteAttacke.damage_class.name == "special") {
-        let calculatedSpecialDamage = (((10*ausgewählteAttacke.power)*(spezialAngriffsWert/enemySpezialVerteidigung))/52)*localDamageMultiplicator; 
+        let calculatedSpecialDamage = (((22*ausgewählteAttacke.power)*(spezialAngriffsWert/enemySpezialVerteidigung))/52)*localDamageMultiplicator; 
         calculatedSpecialDamage = Math.round(calculatedSpecialDamage); //Ergebniss Runden -> da sonnst sehr lange Zahl. 
         this.setDamageToEnemyHealthbar( this.EnemyHealth, calculatedSpecialDamage, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
-
           //gibt in Konsole die eingesetzt Attacke aus
         if (calculatedSpecialDamage == 0 ){
           this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + ausgewählteAttacke.name + " ein: " + " Attacke verfehlt" )  
@@ -319,26 +345,25 @@ export default {
       this.calculateDamageToMyPokemon(ChoosenAttack);
     },
 
-    //Berechnet den Schaden an spieler Pokemon
-    calculateDamageToMyPokemon(gegnerAttackenInformationen){
+
+//Berechnet den Schaden an spieler Pokemon
+    async calculateDamageToMyPokemon(gegnerAttackenInformationen){
       let angreifendesPokemon =  this.übergebenePokemon.enemyPokemon.enemyPokemon;  
       let verteidigendesPokemon =  this.übergebenePokemon.myPokemon.pokemonData;
+      let kpWert = verteidigendesPokemon.stats[0].base_stat + 104;                    // KP                    ->   Verteidiger 
+      let angriffsWert = angreifendesPokemon.stats[1].base_stat + 52;                 // Angriffswert          ->   Angreifer
+      let enemyDefense = verteidigendesPokemon.stats[2].base_stat + 52;               //Verteidigungswert      ->   Gegner
+      let spezialAngriffsWert = angreifendesPokemon.stats[3].base_stat + 52;          // spezial Angriffswert  ->   Angreifer
+      let enemySpezialVerteidigung = verteidigendesPokemon.stats[4].base_stat + 52;   // spezial Verteidugung  ->   Gegner
 
-      let kpWert = verteidigendesPokemon.stats[0].base_stat + 100;                    // KP                    ->   Verteidiger 
-      let angriffsWert = angreifendesPokemon.stats[1].base_stat + 50;                 // Angriffswert          ->   Angreifer
-      let enemyDefense = verteidigendesPokemon.stats[2].base_stat + 50;               //Verteidigungswert      ->   Gegner
-      let spezialAngriffsWert = angreifendesPokemon.stats[3].base_stat + 50;          // spezial Angriffswert  ->   Angreifer
-      let enemySpezialVerteidigung = verteidigendesPokemon.stats[4].base_stat + 50;   // spezial Verteidugung  ->   Gegner
-
-      let AttackMissedOrHitted = this.calculateIfAttackMissed(gegnerAttackenInformationen);  //gibt 0 oder 1 zurück.
-      let localDamageMultiplicator = (this.damageMultiplicator*AttackMissedOrHitted)  //Multipliziert den berechneten Schaden mit der Genauigkeit [1,0] Bsp: 90Damage*0 -> 0 Damage, da missed.
-
+      let AttackMissedOrHitted = await this.calculateIfAttackMissed(gegnerAttackenInformationen);  //gibt 0 oder 1 zurück.
+      let typeMultiplicator = await this.calculateTypeDamageMultiplicator(gegnerAttackenInformationen, verteidigendesPokemon, angreifendesPokemon); //gibt den Type Schadensmulitiplikator zurück ( 0, 0.25, 0.5, 1, 1.5 + [..] etc.)
+      let localDamageMultiplicator = (typeMultiplicator*AttackMissedOrHitted)  //Multipliziert den berechneten Schaden mit der Genauigkeit [1,0] Bsp: 90Damage*0 -> 0 Damage, da missed.
         // Schadensberechnung für 'physical' Angriffe 
       if(gegnerAttackenInformationen.damage_class.name == "physical") {
-        let calculatedPhsicalDamage = (((10*gegnerAttackenInformationen.power)*(angriffsWert/enemyDefense))/52)*localDamageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
+        let calculatedPhsicalDamage = (((22*gegnerAttackenInformationen.power)*(angriffsWert/enemyDefense))/52)*localDamageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
         calculatedPhsicalDamage = Math.round(calculatedPhsicalDamage); //Ergebniss Runden -> da sonnst sehr lange Zahl. 
         this.setDamageToMyHealthbar( this.MyPokemonHealth, calculatedPhsicalDamage, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
-
          //gibt in Konsole die eingesetzt Attacke aus
         if (calculatedPhsicalDamage == 0 ){
           this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + gegnerAttackenInformationen.name + " ein: " + " Attacke verfehlt" )  
@@ -349,19 +374,16 @@ export default {
           if (localDamageMultiplicator == 1) {
             this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + gegnerAttackenInformationen.name + " ein " +  calculatedPhsicalDamage + " Schaden ")  
           }
-
           if (localDamageMultiplicator > 1) {
             this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + gegnerAttackenInformationen.name + " ein " +  calculatedPhsicalDamage + " Schaden " +  " sehr Effektiv")  
           }
         }
       }
-
         // Schadensberechnung für 'special' Angriffe
       if(gegnerAttackenInformationen.damage_class.name == "special") {
-        let calculatedSpecialDamage = (((10*gegnerAttackenInformationen.power)*(spezialAngriffsWert/enemySpezialVerteidigung))/52)*localDamageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
+        let calculatedSpecialDamage = (((22*gegnerAttackenInformationen.power)*(spezialAngriffsWert/enemySpezialVerteidigung))/52)*localDamageMultiplicator; //10 -> für balancing eig. auf lv. 50 -> 22 
         calculatedSpecialDamage = Math.round(calculatedSpecialDamage); //Ergebniss Runden -> da sonnst sehr lange Zahl. 
         this.setDamageToMyHealthbar( this.MyPokemonHealth, calculatedSpecialDamage, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
-
           //gibt in Konsole die eingesetzt Attacke aus
         if (calculatedSpecialDamage == 0 ){
           this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + gegnerAttackenInformationen.name + " ein: " + " Attacke verfehlt" )  
@@ -369,14 +391,15 @@ export default {
           if (localDamageMultiplicator > 0 ||  localDamageMultiplicator < 1 ) {
            this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + gegnerAttackenInformationen.name + " ein " +  calculatedSpecialDamage + " Schaden "  +  " nicht sehr Effektiv")  
           }
+          if (localDamageMultiplicator == 1) {
+            this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + gegnerAttackenInformationen.name + " ein " +  calculatedSpecialDamage + " Schaden ")  
+          }
           if (localDamageMultiplicator > 1) {
             this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + gegnerAttackenInformationen.name + " ein " +  calculatedSpecialDamage + " Schaden " +  " sehr Effektiv")  
           }
         }
       }
     },
-
-
 //setzt berechneten schaden zur spieler  Healthbar
     setDamageToMyHealthbar(Leben, x){
       const myPokeData = document.getElementById("MyHealth");       
@@ -391,16 +414,12 @@ export default {
         this.pokemonPlayerStillAlive = false;
       }
     },
-
-
 //spieler Healthbar wieder auf 100% Leben bringen 
     ReviveMyHealthbar(){
       this.MyPokemonHealth = 100;
       const myPokeData = document.getElementById("MyHealth");
       myPokeData.style.width = this.MyPokemonHealth+"%";
     },
-
-
 //setzt berechneten schaden zur gegner Healthbar  
     setDamageToEnemyHealthbar(health, Dmg, Kp){
       const enemyData = document.getElementById("EnemyHealth");        //Holt sich die CSS Klasse
@@ -418,8 +437,6 @@ export default {
         this.pokemonEnemyStillAlive = false;                                      //wenn Leben unter 0 ist
       }    
     },
-
-
 //gegner Healthbar wieder auf 100% Leben bringen 
     ReviveEnemyHealthbar(){
       this.EnemyHealth = 100;
@@ -429,8 +446,6 @@ export default {
       this.visible = true;
       },
     },
-
-
 //setzt Spiel auf 'gestartet'
     mounted(){
       this.pokemonHelper.setGameStarted();
@@ -621,5 +636,4 @@ width: 520px;
   color:aliceblue;
   font-size: 20px;
 }
-
 </style>

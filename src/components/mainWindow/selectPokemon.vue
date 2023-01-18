@@ -54,6 +54,7 @@ export default {
         return !this.gameStarted && this.pokeLoaded;
       }
   },
+
   data(){  
     return {
       pokeLoaded: false,  //  Pokemondaten bereits geladen ?
