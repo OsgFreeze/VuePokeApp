@@ -61,6 +61,8 @@ export default {
       PokeNumber: 1,      //  startwert für Eingabefeld
       pokemonStats: [],   //  speichert die basis Werte von einem Pokemon
       pokemonObject: {},  //  speichert die Pokemon Daten von dem API Call,
+      pokemonTypes: [],
+      PokeType: [],
       gameStarted: false,
     }
   },
@@ -72,6 +74,13 @@ export default {
         this.pokemonObject = response.data; 
         this.pokemonStats =  this.pokemonObject.stats;
         this.pokeLoaded = true;
+
+          // speichert die Types des Pokemon 
+        let PokeType = this.pokemonObject.types
+        for (let i=0; i <= PokeType.length; i++) { 
+          this.pokemonTypes[i] = this.pokemonObject.types[i].type.name;
+        }
+      console.log( this.pokemonTypes)
       })
     },
     
