@@ -166,7 +166,7 @@ export default {
           if(this.pokemonEnemyStillAlive == true) {
             this.choseRandomAttackFromEnemy();
           }
-          },4000);
+          },3000);
         
       }else{
           if(myPokemonIniative < EnemyPokemonIniative){ 
@@ -181,7 +181,7 @@ export default {
             if(this.pokemonPlayerStillAlive == true) {
               this.calculateDamageToEnemyPokemon(attackData); 
             }
-          },4000);
+          },3000);
    
         } else {
             //mein Pokemon greift zu erst an.
@@ -195,7 +195,7 @@ export default {
             if(this.pokemonEnemyStillAlive == true) {
             this.choseRandomAttackFromEnemy();
             }
-          },4000);
+          },3000);
         }
       }
     },
@@ -454,6 +454,8 @@ export default {
 
 //spieler Healthbar wieder auf 100% Leben bringen 
     ReviveMyHealthbar(){
+       //x = rechne wie viel 50% sind
+       //this.MyPokemonHealth = this.MyPokemonHealth + (maximalleben/2)
       this.MyPokemonHealth = 100;
       const myPokeData = document.getElementById("MyHealth");
       myPokeData.style.width = this.MyPokemonHealth+"%";
@@ -477,6 +479,9 @@ export default {
         this.pokemonEnemyStillAlive = false;        //wenn Leben unter 0 ist
         this.anzahlBesiegteGegner++                 //erhöht die Anzahl besiegte Gegner
         this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + " wurde Besiegt.")  
+          //methodenaufruf von Generate Random pokemon
+            //x = rechne wie viel 50% sind
+          //this.ReviveMyHealthbar(aktuelles Leben)
       }    
     },
 
