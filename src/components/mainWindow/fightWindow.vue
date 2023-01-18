@@ -135,9 +135,10 @@ export default {
         damageMultiplicator: 1,    //standart Damage multiplicator [wird beeinflusst durch: Genauigkeit, pokemon_Typen, effektivität_Attacken]
         attackerTypes: [], 
         attackerTypesArray: [], 
-        enemyTypes: [], 
-        enemyTypesArray: [],           
-      //Hardcoded für Button Hintergrundfarbe abhängig vom Type
+        defenderTypes: [], 
+        defenderTypesArray: [],   
+
+      //Hardcoded für Button Hintergrundfarbe abhängig vom Type        -> Muss noch implementiert werden @Noah
         backgroundColor: { 
           normal: "weiß",
           feuer: "rot",
@@ -145,6 +146,7 @@ export default {
         }
       }
     },
+
   methods: {
 //Attackendurchlauf starten
     buttonPressedMethod(attackData){
@@ -153,22 +155,25 @@ export default {
       let EnemyPokemonIniative = this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[5].base_stat
    
   //System das Bestimmt wer zu erst Angreifen darf.   
-  //eingesetzt Attacke hat Prio ? [erste IF abfrage bestimmt, ob eine Attacke erstschlag Garantie hat.] -> wenn gleich ist setzt die zweite Else bedingung.
+  //eingesetzt Attacke hat Prio ? [erste IF abfrage bestimmt, ob meine Ausgewählte eine Attacke erstschlag Garantie hat.] 
       if(attackData.priority > 0){
         //mein Pokemon greift zu erst an. <- hat Prio Attacke eingesetzt
           setTimeout(()=>{
           if(this.pokemonEnemyStillAlive == true) {
+              //rufe Mein attacken Protokoll auf.
             this.calculateDamageToEnemyPokemon(attackData); 
           }
           },1000);
         
           setTimeout(()=>{
           if(this.pokemonEnemyStillAlive == true) {
+              //rufe Gegner attacken Protokoll auf.
             this.choseRandomAttackFromEnemy();
           }
           },3000);
-        
+
       }else{
+        // -> wenn gleich ist setzt die erste Else bedingung.
           if(myPokemonIniative < EnemyPokemonIniative){ 
               //Gegner greift zu erst an.
             setTimeout(()=>{
@@ -182,7 +187,7 @@ export default {
               this.calculateDamageToEnemyPokemon(attackData); 
             }
           },3000);
-   
+
         } else {
             //mein Pokemon greift zu erst an.
           setTimeout(()=>{
@@ -196,6 +201,7 @@ export default {
             this.choseRandomAttackFromEnemy();
             }
           },3000);
+
         }
       }
     },
@@ -221,20 +227,20 @@ export default {
 //Überprüft ob eine Attacke ein Pokemon sehr effektiv / Neutral oder nicht sehr effektiv trifft.
     async calculateTypeDamageMultiplicator(eingesetzteAttacke, verteidigendesPokemon, angreifendesPokemon){
       let attackType = eingesetzteAttacke.type.name 
-      this.enemyType = verteidigendesPokemon.types; 
+      this.defenderType = verteidigendesPokemon.types; 
       this.attackerType = angreifendesPokemon.types; //Array
 
         //alle Arrays und Werte nach einem Durchlauf wieder zurücksetzen.
       this.attackerTypes = [], 
       this.attackerTypesArray =  [], 
-      this.enemyTypes = [], 
-      this.enemyTypesArray = [], 
+      this.defenderTypes = [], 
+      this.defenderTypesArray = [], 
       this.damageMultiplicator = 1; //Wert wieder auf 1 
 
         // speichert alle Types des verteidigendes Pokemon 
-      this.enemyType = verteidigendesPokemon.types; 
-      for (let i=0; i < this.enemyType.length; i++) { 
-        this.enemyTypesArray[i] = verteidigendesPokemon.types[i].type.name;
+      this.defenderType = verteidigendesPokemon.types; 
+      for (let i=0; i < this.defenderType.length; i++) { 
+        this.defenderTypesArray[i] = verteidigendesPokemon.types[i].type.name;
       }
         // speichert alle Types des angreifendes Pokemon 
       this.attackerType = angreifendesPokemon.types; 
@@ -243,8 +249,8 @@ export default {
       }
 
         //durchläuft so oft wie viele Types der Gegner hat
-      for (let i=0; i < this.enemyTypesArray.length; i++) {  
-        await axios.get(`https://pokeapi.co/api/v2/type/${this.enemyTypesArray[i]}`).then((response) => { 
+      for (let i=0; i < this.defenderTypesArray.length; i++) {  
+        await axios.get(`https://pokeapi.co/api/v2/type/${this.defenderTypesArray[i]}`).then((response) => { 
 
             // hier werden alle damage Relationen für die angreifende Attacke gespeichert.
           let AttackenInformationen = response.data.damage_relations 
@@ -436,7 +442,7 @@ export default {
     },
 
 //setzt berechneten schaden zur spieler  Healthbar
-    setDamageToMyHealthbar(Leben, x, kp){
+   async setDamageToMyHealthbar(Leben, x, kp){
       const myPokeData = document.getElementById("MyHealth"); 
       const dmg = x;                                                 //Dmg kommt wird als Member übergeben und zugewiesen
       const finalDmg = dmg / (kp / 100);       
@@ -444,34 +450,36 @@ export default {
         Leben = Leben - finalDmg;
         myPokeData.style.width = Leben+"%"
         this.MyPokemonHealth = Leben;
-        this.visible = true //Attacken Auswahlfenster auf *wieder* sichtbar
+        this.visible = true;
       }else{
         this.MyPokemonHealth = 0;
         myPokeData.style.width = "0%";
         this.pokemonPlayerStillAlive = false;
       }
+      return
     },
 
 //spieler Healthbar wieder auf 100% Leben bringen 
-    ReviveMyHealthbar(){
+    async ReviveMyHealthbar(){
        //x = rechne wie viel 50% sind
        //this.MyPokemonHealth = this.MyPokemonHealth + (maximalleben/2)
       this.MyPokemonHealth = 100;
       const myPokeData = document.getElementById("MyHealth");
       myPokeData.style.width = this.MyPokemonHealth+"%";
       this.pokemonPlayerStillAlive = true;
+      this.visible = true;
     },
 
 //setzt berechneten schaden zur gegner Healthbar  
-    setDamageToEnemyHealthbar(health, Dmg, Kp){
+   async setDamageToEnemyHealthbar(health, Dmg, Kp){
       const enemyData = document.getElementById("EnemyHealth");        //Holt sich die CSS Klasse
       const dmg = Dmg;                                                 //Dmg kommt wird als Member übergeben und zugewiesen
       const finalDmg = dmg / (Kp / 100);                               //berechnen Schaden in Prozenz abhängig von den Gegner KP um -> relativ Kompliziert
       if(health > 0 && finalDmg < health){                             //gibt Gegner Leben in % in Konsole an                                            
         health = health - finalDmg;                                    //aktuelles Leben - dmg
         enemyData.style.width = health+"%";                            //passt die Healthbar der entsprechenden Prozentualen Veränderung an
-        this.EnemyHealth = health;                                     //Neuer Lebensstand wird global gespeichert
-        this.visible = true;                                           //Attack Buttons werden wieder visible
+        this.EnemyHealth = health;                                     //Neuer Lebensstand wird global gespeichert   
+        this.visible = true;                             
       }else{
         this.EnemyHealth = 0;
         enemyData.style.width = "0%";
@@ -482,16 +490,17 @@ export default {
           //methodenaufruf von Generate Random pokemon
             //x = rechne wie viel 50% sind
           //this.ReviveMyHealthbar(aktuelles Leben)
-      }    
+      }   
+      return 
     },
 
 
 
 
 //gegner Healthbar wieder auf 100% Leben bringen 
-    ReviveEnemyHealthbar(){
+     ReviveEnemyHealthbar(){
       this.EnemyHealth = 100;
-      const enemyData = document.getElementById("EnemyHealth");
+       const enemyData = document.getElementById("EnemyHealth");
         //refactorn zu -> this.$refs.enemyHealth (console.log)
       enemyData.style.width = this.EnemyHealth+"%";
       this.visible = true;
