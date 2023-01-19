@@ -1,15 +1,16 @@
-<template class>
-  <div> 
-      
-    sidebar: [Empty] 
-    <h1>Suche</h1>
-    <p>ergebnis</p>{{ result }}
+<template>
+  <h1>Pokedex  {{result}}</h1>
+  <div class="Top">
+    <form class="testing">
+      <input class="Searchbar" type="number" v-model="suche" min="1" max="1010" >
+      <button class="SuchButton" @click="getApi" type="button">Suche</button>
+    </form>
+  </div>
 
-    <input type="number" v-model="suche" min="1" max="1010" >
-    <button @click="getApi" type="button">Suche</button>
+  <div class="test"> 
      
     <div v-if="trueFalse === true">
-      <img class="PokemonPicture" :src="pokemonSprite.other.home.front_shiny" /> <br>
+      <img class="pokemonPicture" :src="pokemonSprite.other.home.front_shiny" /> <br>
       Name: {{ pokemonName }} <br>
       Stats:
       <p v-for="(stats, zähler) in baseStats" :key="zähler">{{ stats.stat.name }} : {{ stats.base_stat }}</p>  
@@ -17,7 +18,7 @@
     </div>
 
   </div>
-   <comparePokemonSideBar @parentAufruf="emitTest($event)" :übergebenesBoolean="this.trueFalse" :übergabePokeObjekt="this.pokemonObjekt"/>
+   <comparePokemon @parentAufruf="emitTest($event)" :übergebenesBoolean="this.trueFalse" :übergabePokeObjekt="this.pokemonObjekt"/>
 
 
   
@@ -25,10 +26,10 @@
   
 <script>
 import axios from 'axios'
-import comparePokemon from './comparePokemonSideBar.vue'
+import comparePokemon from './comparePokemon.vue'
   export default {
     components: {
-      comparePokemonSideBar,
+      comparePokemon,
     }, 
     data(){ 
       return {
@@ -63,8 +64,43 @@ import comparePokemon from './comparePokemonSideBar.vue'
 </script>
   
 <style>
-  .PokemonPicture {
-    height: 250px;
-    width: 250px;
+  .pokemonPicture {
+    height: 200px;
+    width: 200px;
   }
+  
+  .test{
+    background-color: #78ad75;
+    margin-left: 5%;
+    width: 45%;
+    height: 80%;
+    overflow: scroll;
+    float: left;
+  }
+
+  .test::-webkit-scrollbar{
+    display: none;
+  }
+
+  .Searchbar{
+    height: 2%;
+    width: 70%;
+    float: left;
+  }
+  
+  .SuchButton{
+    height: 2%;
+    width: 20%;
+    float: right;
+  }
+
+  .Top{
+    margin-left: 5%;
+    margin-right: 5%;
+    background-color: blue;
+  }
+  .testing{
+    background-color: black;
+  }
+
 </style>
