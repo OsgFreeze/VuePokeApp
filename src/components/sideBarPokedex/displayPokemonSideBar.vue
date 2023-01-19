@@ -17,7 +17,7 @@
     </div>
 
   </div>
-   <comparePokemonSideBar @parentAufruf="emitTest($event)" :übergebenesBoolean="this.trueFalse" :übergabePokeObjekt="this.pokemonObjekt"/>
+   <comparePokemon @parentAufruf="emitTest($event)" :übergebenesBoolean="this.trueFalse" :übergabePokeObjekt="this.pokemonObjekt"/>
 
 
   
@@ -25,10 +25,10 @@
   
 <script>
 import axios from 'axios'
-import comparePokemon from './comparePokemonSideBar.vue'
+import comparePokemon from './comparePokemon.vue'
   export default {
     components: {
-      comparePokemonSideBar,
+      comparePokemon,
     }, 
     data(){ 
       return {
