@@ -1,80 +1,70 @@
-<template>
- 
-  <div>   
-      sidebar: [Empty]
-  </div>
-  <h1>Suche</h1>
-  <form>
-      <input type="number" v-model="suche" min="1" max="1010" >
-      <button @click="getApi" type="button">Suche</button>
-      <button @click="getApi2" type="button" :disabled="trueFalse == false">Compare</button>
-  </form>
-
+<template class>
   <div> 
-    <!-- Fehlermeldung, kann Pokemon Sprite ja erst Rendern sobald man den Api call macht, muss durch Button oder sowas die API Call methode aufrufen -->
+      
+    sidebar: [Empty] 
+    <h1>Suche</h1>
+    <p>ergebnis</p>{{ result }}
 
+    <input type="number" v-model="suche" min="1" max="1010" >
+    <button @click="getApi" type="button">Suche</button>
+     
+    <div v-if="trueFalse === true">
+      <img class="PokemonPicture" :src="pokemonSprite.other.home.front_shiny" /> <br>
       Name: {{ pokemonName }} <br>
-       <!-- Kommt in diesen Spielen vor: <p v-for="(version, index) in genName" :key="index">{{ index + 1 }}  {{version.version.name}}</p> -->
-       <!-- <img class="PokemonPicture" :src="pokemonSprite.other.home.front_default" /> -->
-  </div>
+      Stats:
+      <p v-for="(stats, zähler) in baseStats" :key="zähler">{{ stats.stat.name }} : {{ stats.base_stat }}</p>  
+      Kommt in diesen Spielen vor: <p v-for="(version, zähler) in genName" :key="zähler">{{ zähler + 1 }} : {{version.version.name}}</p>
+    </div>
 
-  <div>
-      <br>
-        Name:{{ pokemonNameCompare }} 
-      <br>
-      Kommt in diesen Spielen vor: <p v-for="(version, index) in genNameCompare" :key="index">{{ index + 1 }}  {{version.version.name}}</p>
   </div>
+   <comparePokemonSideBar @parentAufruf="emitTest($event)" :übergebenesBoolean="this.trueFalse" :übergabePokeObjekt="this.pokemonObjekt"/>
+
+
+  
 </template>
-
+  
 <script>
 import axios from 'axios'
+import comparePokemon from './comparePokemonSideBar.vue'
+  export default {
+    components: {
+      comparePokemonSideBar,
+    }, 
+    data(){ 
+      return {
+        suche: 1,
+        test: [],
+        pokemonObjekt:{},
+        pokemonName: "",
+        genName: [],
+        pokemonSprite: {},
+        trueFalse: false,
+        baseStats: [],
 
-export default {
-  name: 'displayPokemonSideBar',
-  components: {  
-  }, 
-  data(){ 
-    return {
-      suche: 1,
-      pokemonName: "",
-      genName: [],
-      pokemonSprite: {},
-      
-      pokemonNameCompare: "",
-      genNameCompare: [],
-      trueFalse: false,
-    }
-  },
-  methods: {
+        result:"",
+      }
+    },
+    methods: {
+      emitTest(data){
+          this.result = data;
+      },
       async getApi(){ //API Call für Pokemon Daten
-          await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.suche}`).then((response) => {
-              console.log(response);
-              this.genName = []
-              const data = response.data;
-              this.pokemonName = data.name;
-              this.genName = data.game_indices
-              this.trueFalse = true;
-              this.pokemonNameCompare= "";
-              this.pokemonSprite = data.sprites;
-          })
+        await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.suche}`).then((response) => {
+          this.pokemonObjekt = response.data;
+          this.pokemonName = this.pokemonObjekt.name;
+          this.genName = this.pokemonObjekt.game_indices;
+          this.pokemonSprite = this.pokemonObjekt.sprites;
+          this.baseStats = this.pokemonObjekt.stats;
+          this.trueFalse = true;
+        })
       },
-
-      async getApi2(){ //API Call für Pokemon Daten
-          await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.suche}`).then((response) => {
-              console.log(response);
-              const data = response.data;
-              this.genNameCompare = [];
-              this.pokemonNameCompare = data.name;
-              this.genNameCompare = data.game_indices;
-          })
-      },
-  }
+    }
 }
 </script>
-
+  
 <style>
-.PokemonPicture {
-  height: 250px;
-  width: 250px;
-}
+  .PokemonPicture {
+    height: 250px;
+    width: 250px;
+  }
 </style>
