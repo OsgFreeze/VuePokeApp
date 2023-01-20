@@ -10,6 +10,7 @@
      Stats:
      <p v-for="(stats, zähler) in baseStatsCompare" :key="zähler">{{ stats.stat.name }} : {{ stats.base_stat }}</p>
      Kommt in diesen Spielen vor: <p v-for="(version, index) in pokeGenCompare" :key="index">{{ index + 1 }} : {{version.version.name}}</p>
+     <p v-for="(typ, zähler) in pokemonTypCompare" :key="zähler">Typ {{zähler + 1}} : {{typ.type.name}}</p>
    </div>
   </div>
 
@@ -26,6 +27,7 @@ export default {
      pokeSpriteCompare: {},
      compare: false,
      baseStatsCompare: [],
+     pokemonTypCompare: [],
    }
  },
 
@@ -39,6 +41,7 @@ export default {
      this.pokeGenCompare = this.übergabePokeObjekt.game_indices;
      this.pokeSpriteCompare = this.übergabePokeObjekt.sprites;
      this.baseStatsCompare = this.übergabePokeObjekt.stats;
+     this.pokemonTypCompare = this.übergabePokeObjekt.types;
      this.compare = true;
    },
 
