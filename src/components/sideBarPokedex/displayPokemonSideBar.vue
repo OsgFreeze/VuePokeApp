@@ -1,23 +1,25 @@
 <template>
   <h1>Pokedex  {{result}}</h1>
-  <div class="Top">
-    <form class="testing">
+  <div class="SearchDesign">
       <input class="Searchbar" type="number" v-model="suche" min="1" max="1010" >
       <button class="SuchButton" @click="getApi" type="button">Suche</button>
-    </form>
   </div>
 
-  <div class="test"> 
+  <div class="displayLeftSide"> 
      
     <div v-if="trueFalse === true">
-      <img class="pokemonPicture" :src="pokemonSprite.other.home.front_shiny" /> <br>
+      <div class="Border">
+        <img class="pokemonPicture" :src="pokemonSprite.other.home.front_shiny" /> <br>
+      </div>
       Name: {{ pokemonName }} <br>
       Stats:
       <p v-for="(stats, zähler) in baseStats" :key="zähler">{{ stats.stat.name }} : {{ stats.base_stat }}</p>  
       Kommt in diesen Spielen vor: <p v-for="(version, zähler) in genName" :key="zähler">{{ zähler + 1 }} : {{version.version.name}}</p>
+      <p v-for="(typ, zähler) in pokemonTyp" :key="zähler">Typ {{zähler + 1}} : {{typ.type.name}}</p>
     </div>
 
   </div>
+
    <comparePokemon @parentAufruf="emitTest($event)" :übergebenesBoolean="this.trueFalse" :übergabePokeObjekt="this.pokemonObjekt"/>
 
 
@@ -41,6 +43,7 @@ import comparePokemon from './comparePokemon.vue'
         pokemonSprite: {},
         trueFalse: false,
         baseStats: [],
+        pokemonTyp: [],
 
         result:"",
       }
@@ -51,11 +54,13 @@ import comparePokemon from './comparePokemon.vue'
       },
       async getApi(){ //API Call für Pokemon Daten
         await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.suche}`).then((response) => {
+          console.log(response)
           this.pokemonObjekt = response.data;
           this.pokemonName = this.pokemonObjekt.name;
           this.genName = this.pokemonObjekt.game_indices;
           this.pokemonSprite = this.pokemonObjekt.sprites;
           this.baseStats = this.pokemonObjekt.stats;
+          this.pokemonTyp = this.pokemonObjekt.types;
           this.trueFalse = true;
         })
       },
@@ -69,7 +74,7 @@ import comparePokemon from './comparePokemon.vue'
     width: 200px;
   }
   
-  .test{
+  .displayLeftSide{
     background-color: #78ad75;
     margin-left: 5%;
     width: 45%;
@@ -78,7 +83,7 @@ import comparePokemon from './comparePokemon.vue'
     float: left;
   }
 
-  .test::-webkit-scrollbar{
+  .displayLeftSide::-webkit-scrollbar{
     display: none;
   }
 
@@ -94,13 +99,17 @@ import comparePokemon from './comparePokemon.vue'
     float: right;
   }
 
-  .Top{
+  .SearchDesign{
     margin-left: 5%;
     margin-right: 5%;
     background-color: blue;
-  }
-  .testing{
     background-color: black;
   }
+
+  .border{
+    border: 1px solid black;
+    background-color: aliceblue;
+  }
+  
 
 </style>
