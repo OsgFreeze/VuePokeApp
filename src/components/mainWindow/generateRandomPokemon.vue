@@ -29,6 +29,7 @@
         newAttackArrayLength: 0,
         anzahlLernbareAttacken: 0,
         anzahlSchadensAttacken: 0,
+        
 
       //speichert das random Pokemon 
         randomPokemonEnemy: {  
@@ -39,7 +40,7 @@
       //fasst beide Pokemon zusammen   
         twoCompletePokemon: {   
           myPokemon: {},     
-          enemyPokemon: {},                             
+          enemyPokemon: {},                                      
         }, 
       }
     },
@@ -52,7 +53,6 @@
           this.getAttackDataFromRandomPokemon;
           this.filterAttacksFromByDamage;
           this.SelectFourRandomAttacks;
-          this.hideSelectPokemonWhenFightWindowAppears;
       },
 
 
@@ -67,7 +67,7 @@
             this.randomPokemonObject = response.data; 
             console.log("random pokemon Name: " + this.randomPokemonObject.name);
             this.getAttackDataFromRandomPokemon(); 
-          })
+          })        
         }, 
 
 
@@ -145,6 +145,7 @@
             return false // nicht Shiny
           }
         },
+
       }
     }
   </script>
