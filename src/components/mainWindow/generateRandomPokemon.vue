@@ -1,6 +1,6 @@
 <template class="generateRandomPokemon">
     <div>   
-      <button @click="generateRandomPokemon(898)"> generate new random Pokemon </button> <!-- 898, da bis dahin alle Pokemon verfügbar sind -->
+      <button @click="main(898)"> generate new random Pokemon </button> <!-- 898, da bis dahin alle Pokemon verfügbar sind -->
       <div v-if="randomPokemonLoaded" > <!-- Zeigt Information über das zufällig ausgewählte Pokemon -->
           <fightWindow  :übergebenePokemon="this.twoCompletePokemon"/>
       </div>
@@ -44,7 +44,18 @@
       }
     },
 
-    methods: {    
+    methods: {   
+      
+    //ruft alle Methoden nacheinander auf --> Programm Ablauf wird etwas übersichtlicher Thema sauberer Code (bei Bedarf einf wieder löschen und im Button anpassen)  
+      async main(obergrenze){
+          this.generateRandomPokemon(obergrenze);
+          this.getAttackDataFromRandomPokemon;
+          this.filterAttacksFromByDamage;
+          this.SelectFourRandomAttacks;
+          this.hideSelectPokemonWhenFightWindowAppears;
+      },
+
+
     //erzeugt ein random Pokemon Object & speichert ergebniss in [this.randomPokemonObject]   
         async generateRandomPokemon(obergrenze){  
           this.anzahlLernbareAttacken= 0,
@@ -133,7 +144,7 @@
           } else {
             return false // nicht Shiny
           }
-        }
+        },
       }
     }
   </script>

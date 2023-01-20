@@ -17,7 +17,7 @@
           </p> 
         </div> 
       </span>
-      <generateRandomPokemon  v-if="this.fourAttacksChosen" :übergebenesPokemonObject="this.pokemonObject" />
+      <generateRandomPokemon v-if="this.fourAttacksChosen" :übergebenesPokemonObject="this.pokemonObject" />
     </div>
   </template>
   
