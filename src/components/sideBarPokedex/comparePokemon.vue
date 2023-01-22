@@ -69,5 +69,5 @@ export default {
  .test2::-webkit-scrollbar{
    display: none;
  }
- 
+
 </style>
