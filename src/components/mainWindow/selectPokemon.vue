@@ -1,6 +1,6 @@
 <template class="selectPokemonTemplate">
 
-  <span @messageFromChild="childMessageReceived">
+  <span v-if="SearchBarVisible" @messageFromChild="childMessageReceived">
     <div class="eingabeFeld"> Pokemon Nummer eingeben:  <!-- Pokemon Nummer von Pokedex eingeben & API-Methodenaufruf -->
       <input type="number" v-model="PokeNumber"> 
       <button @click="setNrPlus" > Hoch ↑ </button>
@@ -67,6 +67,7 @@ export default {
       pokemonTypes: [],
       PokeType: [],
       gameStarted: false,
+      SearchBarVisible: true,
     }
   },
 
@@ -98,6 +99,10 @@ export default {
     async setNrMinus(){ 
       this.PokeNumber = (this.PokeNumber - 1);
       this.loadApiNumber();
+    },
+
+    setSearchBarVisible2(){
+      this.SearchBarVisible = false;
     },
   },
 }

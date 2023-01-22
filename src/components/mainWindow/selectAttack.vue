@@ -105,7 +105,12 @@
       },
       getSelectedStatus(index){
         return this.chosenAttacks.findIndex((attack) => attack.name === this.newDamageAttackArray[index].name) > -1;
+      },
+
+      SearchBarVisible(){
+        this.$parent.setSearchBarVisible2();
       }
+
     }
   }
   </script>

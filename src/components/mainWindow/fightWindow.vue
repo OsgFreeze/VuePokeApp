@@ -1,14 +1,8 @@
 <template>
-
-  <button @click="Start"> Press me..</button>
-
   <audio controls=true volume="0.01">
     <source src="./fightMusic.mp3" autoplay type="audio/mpeg">
     Sorry - Ihr Browser hat keine Unterstützung für dieses Audio-Format.
   </audio>
-
-  <button style="margin-left: 10px" @click="ReviveMyHealthbar">Revive my Pokemon</button>
-  <button style="margin-left: 10px" @click="ReviveEnemyHealthbar">Revive enemy Pokemon</button>
 
       <!-- gibt die Anzahl besiegter Gegner an--> 
   <button style="margin-left: 450px" > {{"Anzahl besiegter Gegner: " + this.anzahlBesiegteGegner}} </button>  
@@ -17,6 +11,9 @@
   <div class="komplettesKampffenster">
     <div class="BackroundWhenDead" v-if="!this.pokemonPlayerStillAlive">
       <button class="RestartButton" @click="RestartFight"> Restart </button>
+    </div>
+    <div class="StartFight" v-if="!this.started">
+      <button class="StartButton" @click="Start"> Start </button>
     </div>
         <div class="KampffensterOben"> 
           <img class="backgroundPicture" src="https://cutewallpaper.org/21/pokemon-battle-backgrounds/Index-of-spritesgen6bgs.jpg" />
@@ -53,7 +50,7 @@
 
                   <div class="healthbarGegner">  <!-- Healthbar Gegner -->
                     <div ref="enemyHealth" id="EnemyHealth" class="StatusBarGegner">
-                      {{ Math.round(EnemyPokemonCurrentHP.toFixed(2)) }}
+                      {{ Math.round(this.EnemyPokemonCurrentHP) }}
                       
                     </div>
                   </div>
@@ -67,7 +64,7 @@
                 </div>
               </div>
 
-              <div class="attackenauswahlFenster" v-if="visible">  <!-- Hier werden die 4 Attacken angezeigt-->
+              <div class="attackenauswahlFenster" v-show="visible">  <!-- Hier werden die 4 Attacken angezeigt-->
                 <div class="ButtonZweiAuswahlfensterOben"> 
                   <div class="divButtonAttackeLinksOben"> 
                     <button class="button buttonStyle button1" id="AtkButton1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[0])">                     
@@ -135,6 +132,7 @@ export default {
         enemyPokemon: {},   
         konsolenAusgabe: "[Suchen sie sich eine Attacke aus um zu]",
         visible: true,
+        started: false,
         anzahlBesiegteGegner: 0, //man beginnt mit 0 Besiegten gegnern 
 
       //HP bzw Pixel von der Pokemon Healthbar 
@@ -235,6 +233,9 @@ export default {
       TypeColorB2.style.backgroundColor = this.attackBackroundColors[1];
       TypeColorB3.style.backgroundColor = this.attackBackroundColors[2];
       TypeColorB4.style.backgroundColor = this.attackBackroundColors[3];
+
+      //this.$parent.setButtonVisible();
+      this.started = true;
     },
 
 //Attackendurchlauf starten
@@ -258,6 +259,10 @@ export default {
             this.choseRandomAttackFromEnemy();
           }
           },3000);
+
+          setTimeout(()=>{
+            this.visible = true;
+          },4500);
         
       }else{
           if(myPokemonIniative < EnemyPokemonIniative){ 
@@ -273,6 +278,10 @@ export default {
               this.calculateDamageToEnemyPokemon(attackData); 
             }
           },3000);
+
+          setTimeout(()=>{
+            this.visible = true;
+          },4500);
    
         } else {
             //mein Pokemon greift zu erst an.
@@ -287,6 +296,11 @@ export default {
             this.choseRandomAttackFromEnemy();
             }
           },3000);
+
+          setTimeout(()=>{
+            this.visible = true;
+          },4500);
+
         }
       }
     },
@@ -541,7 +555,6 @@ export default {
         myPokeData.style.width = Leben+"%"
         this.MyPokemonHealth = Leben;
         this.MyPokemonCurrentHP = this.MyPokemonCurrentHP - this.DmgToMyPokemon;                                                         
-        this.visible = true //Attacken Auswahlfenster auf *wieder* sichtbar
       }else{
         this.MyPokemonHealth = 0;
         this.MyPokemonCurrentHP = 0;
@@ -565,9 +578,7 @@ export default {
         this.MyPokemonCurrentHP = this.MyPokemonHP;
         this.MyPokemonHealth = 100;
         myPokeData.style.width = this.MyPokemonHealth+"%";
-      }
-      this.visible = true;
-      
+      }     
     },
 
 //setzt berechneten schaden zur gegner Healthbar  
@@ -579,8 +590,7 @@ export default {
         health = health - finalDmg;                                    //aktuelles Leben - dmg
         enemyData.style.width = health+"%";                            //passt die Healthbar der entsprechenden Prozentualen Veränderung an
         this.EnemyHealth = health;                                     //Neuer Lebensstand wird global gespeichert
-        this.EnemyPokemonCurrentHP = this.EnemyPokemonCurrentHP - this.DmgToEnemyPokemon; //Neue HP werden global gespeichert
-        this.visible = true;                                           //Attack Buttons werden wieder visible
+        this.EnemyPokemonCurrentHP = this.EnemyPokemonCurrentHP - this.DmgToEnemyPokemon; //Neue HP werden global gespeichert                                         
       }else{
         this.EnemyHealth = 0;
         this.EnemyPokemonCurrentHP = 0;
@@ -591,8 +601,14 @@ export default {
 
         let newHealth = this.MyPokemonCurrentHP +  (this.MyPokemonHP / 2);  // x = Mein Leben + 50% gesamt KP
         this.ReviveMyHealthbar(newHealth);      // ruft ReviveMyHealthbar mit dem neu berechneten Leben auf
-        this.$parent.main(898);
-        this.ReviveEnemyHealthbar();
+        setTimeout(() => {
+          this.$parent.main(898);
+        },4000)
+        
+        setTimeout(() => {
+          this.ReviveEnemyHealthbar();
+        },5500)
+        
       }    
     },
 
@@ -602,19 +618,17 @@ export default {
 //gegner Healthbar wieder auf 100% Leben bringen 
     ReviveEnemyHealthbar(){
       this.EnemyHealth = 100;
-      this.EnemyPokemonCurrentHP = this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 100;
+      this.EnemyPokemonCurrentHP = this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 107;
       const enemyData = document.getElementById("EnemyHealth");   //refactorn zu -> this.$refs.enemyHealth (console.log)
-      enemyData.style.width = this.EnemyHealth+"%";
-      this.visible = true;
+      enemyData.style.width = this.EnemyHealth+"%";     
       this.pokemonEnemyStillAlive = true;
 
       },
-    },
 
     RestartFight(){
-      this.MyPokemonHealth = 100;
-      this.MyPokemonCurrentHP = this.MyPokemonHP;
-      this.pokemonPlayerStillAlive = true;
+      location.reload();
+    },
+
     },
 
 //setzt Spiel auf 'gestartet'
@@ -796,7 +810,7 @@ width: 520px;
   border: 2px solid #555555;
 }
 .buttonStyle:hover {
-  background-color: #555555;
+  /*schöner effekt*/
   color: white;
 }
 .pokemonInfoStyleL{
@@ -854,6 +868,53 @@ width: 520px;
 
 @media (min-width: 768px) {
   .RestartButton {
+    min-width: 120px;
+    padding: 0 25px;
+  }
+}
+
+.StartFight{
+  width: 1320px;
+  height: 100%;
+  background-color: #ffffff59;
+  position: absolute;
+  z-index: 1;
+}
+
+.StartButton{
+  width: 300px;
+  height: 100px;
+  margin-top: 300px;
+  margin-left: 550px;
+  background-color: #59d86a;
+  border: 2px solid #252525;
+  border-radius: 30px;
+  box-shadow: #252525 4px 4px 0 0;
+  color: #252525;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0 18px;
+  line-height: 50px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.StartButton:hover {
+  background-color: #fff;
+}
+
+.StartButton:active {
+  box-shadow: #252525 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .StartButton {
     min-width: 120px;
     padding: 0 25px;
   }
