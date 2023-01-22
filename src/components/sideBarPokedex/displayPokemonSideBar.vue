@@ -111,5 +111,5 @@ import comparePokemon from './comparePokemon.vue'
     background-color: aliceblue;
   }
   
-  
+
 </style>
