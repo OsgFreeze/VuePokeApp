@@ -16,7 +16,7 @@
 
   <div class="komplettesKampffenster">
     <div class="BackroundWhenDead" v-if="!this.pokemonPlayerStillAlive">
-      <button class="RestartButton"> Restart </button>
+      <button class="RestartButton" @click="RestartFight"> Restart </button>
     </div>
         <div class="KampffensterOben"> 
           <img class="backgroundPicture" src="https://cutewallpaper.org/21/pokemon-battle-backgrounds/Index-of-spritesgen6bgs.jpg" />
@@ -47,7 +47,7 @@
                   <div class="gegnerInformationen">
                     <p class="pokemonInfoStyleR" style="padding-top: 30px;">
                       {{ this.übergebenePokemon.enemyPokemon.enemyPokemon.name  + " Lv. 50"}}
-                      {{"HP. " + Math.round((this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 100).toFixed(2))}}
+                      {{"HP. " + Math.round((this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 107).toFixed(2))}}
                     </p>
                   </div>
 
@@ -142,10 +142,10 @@ export default {
         EnemyHealth: 100, 
         pokemonPlayerStillAlive: true,         
         pokemonEnemyStillAlive: true,
-        MyPokemonHP: this.übergebenePokemon.myPokemon.pokemonData.stats[0].base_stat + 100,
-        EnemyPokemonHP: this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 100,
-        MyPokemonCurrentHP: this.übergebenePokemon.myPokemon.pokemonData.stats[0].base_stat + 100,
-        EnemyPokemonCurrentHP: this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 100,
+        MyPokemonHP: this.übergebenePokemon.myPokemon.pokemonData.stats[0].base_stat + 107,
+        EnemyPokemonHP: this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 107,
+        MyPokemonCurrentHP: this.übergebenePokemon.myPokemon.pokemonData.stats[0].base_stat + 107,
+        EnemyPokemonCurrentHP: this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 107,
 
         DmgToMyPokemon: 0,         //speichert den aktuellen Dmg der am eigenen Pokemon ausgeführt werden soll
         DmgToEnemyPokemon: 0,      //speichert den aktuellen Dmg der am Gegner Pokemon ausgeführt werden soll
@@ -591,6 +591,8 @@ export default {
 
         let newHealth = this.MyPokemonCurrentHP +  (this.MyPokemonHP / 2);  // x = Mein Leben + 50% gesamt KP
         this.ReviveMyHealthbar(newHealth);      // ruft ReviveMyHealthbar mit dem neu berechneten Leben auf
+        this.$parent.main(898);
+        this.ReviveEnemyHealthbar();
       }    
     },
 
@@ -607,6 +609,12 @@ export default {
       this.pokemonEnemyStillAlive = true;
 
       },
+    },
+
+    RestartFight(){
+      this.MyPokemonHealth = 100;
+      this.MyPokemonCurrentHP = this.MyPokemonHP;
+      this.pokemonPlayerStillAlive = true;
     },
 
 //setzt Spiel auf 'gestartet'
