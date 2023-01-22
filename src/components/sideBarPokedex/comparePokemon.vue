@@ -16,6 +16,7 @@
 
 </template>
 
+
 <script>
 export default {
  props: ["übergebenesBoolean", "übergabePokeObjekt"],
@@ -29,10 +30,12 @@ export default {
      pokemonTypCompare: [],
    }
  },
+
  methods: {
    emitTest(){
      this.$emit("parentAufruf", 1000)
    },
+
    async getData(){ //API Call für Pokemon Daten
      this.pokeNameCompare = this.übergabePokeObjekt.name;
      this.pokeGenCompare = this.übergabePokeObjekt.game_indices;
@@ -41,15 +44,19 @@ export default {
      this.pokemonTypCompare = this.übergabePokeObjekt.types;
      this.compare = true;
    },
+
  }
 }
+
 </script>
 
 <style>
+
  .PokemonPicture{
    height: 200px;
    width: 200px;
  }
+
  .test2{
    background-color: #78ad75;
    margin-right: 5%;
@@ -58,7 +65,9 @@ export default {
    float: right;
    overflow: scroll;
  }
+
  .test2::-webkit-scrollbar{
    display: none;
  }
+ 
 </style>

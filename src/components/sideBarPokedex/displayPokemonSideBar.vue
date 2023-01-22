@@ -44,6 +44,7 @@ import comparePokemon from './comparePokemon.vue'
         trueFalse: false,
         baseStats: [],
         pokemonTyp: [],
+
         result:"",
       }
     },
@@ -81,9 +82,11 @@ import comparePokemon from './comparePokemon.vue'
     overflow: scroll;
     float: left;
   }
+
   .displayLeftSide::-webkit-scrollbar{
     display: none;
   }
+
   .Searchbar{
     height: 2%;
     width: 70%;
@@ -95,15 +98,18 @@ import comparePokemon from './comparePokemon.vue'
     width: 20%;
     float: right;
   }
+
   .SearchDesign{
     margin-left: 5%;
     margin-right: 5%;
     background-color: blue;
     background-color: black;
   }
+
   .border{
     border: 1px solid black;
     background-color: aliceblue;
   }
+  
   
 </style>
