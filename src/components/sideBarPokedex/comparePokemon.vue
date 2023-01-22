@@ -16,8 +16,8 @@
 
 </template>
 
-<script>
 
+<script>
 export default {
  props: ["übergebenesBoolean", "übergabePokeObjekt"],
  data(){ 

@@ -1,15 +1,18 @@
 <template class="selectPokemonTemplate">
 
-  <div class="eingabeFeld"> Pokemon Nummer eingeben:  <!-- Pokemon Nummer von Pokedex eingeben & API-Methodenaufruf -->
-    <input type="number" v-model="PokeNumber"> 
-    <button @click="setNrPlus" > Hoch ↑ </button>
-    <button @click="setNrMinus"> Runter ↓ </button>  &nbsp;
-    <button @click="loadApiNumber"> Zahl Übermitteln </button>
-  </div>
+  <span @messageFromChild="childMessageReceived">
+    <div class="eingabeFeld"> Pokemon Nummer eingeben:  <!-- Pokemon Nummer von Pokedex eingeben & API-Methodenaufruf -->
+      <input type="number" v-model="PokeNumber"> 
+      <button @click="setNrPlus" > Hoch ↑ </button>
+      <button @click="setNrMinus"> Runter ↓ </button>  &nbsp;
+      <button @click="loadApiNumber"> Zahl Übermitteln </button>
+    </div>
+  </span>
 
   <div class="dataAusgabeFeld"> <!-- gibt alle Informationen über das Pokemon aus -->
     <div v-if="hidePokemonInfos"> 
       <p class="baseStats" v-for="(pokemonStat, index) in pokemonStats" :key="index"> {{pokemonObject.stats[index].stat.name}} = {{pokemonStat.base_stat}}</p>
+      <p class="Types" v-for="(pokemonType, index) in pokemonTypes" :key="index"> Type {{ index+1 }} = {{ pokemonType}} </p>
       <img class="PokemonPictureHD" :src="pokemonObject.sprites.other.home.front_default"/> 
       <img class="PokemonPictureHD" :src="pokemonObject.sprites.other.home.front_shiny"/>
     </div>
@@ -76,11 +79,10 @@ export default {
         this.pokeLoaded = true;
 
           // speichert die Types des Pokemon 
-        let PokeType = this.pokemonObject.types
-        for (let i=0; i <= PokeType.length; i++) { 
-          this.pokemonTypes[i] = this.pokemonObject.types[i].type.name;
+        let PokeType = this.pokemonObject.types;
+        for(let i = 0; i < PokeType.length; i++){
+          this.pokemonTypes[i] = PokeType[i].type.name;
         }
-      console.log( this.pokemonTypes)
       })
     },
     
@@ -97,7 +99,7 @@ export default {
       this.PokeNumber = (this.PokeNumber - 1);
       this.loadApiNumber();
     },
-  }
+  },
 }
 </script>
 
