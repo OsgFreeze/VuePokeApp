@@ -1,7 +1,7 @@
 <template>
   <h1>Pokedex  {{result}}</h1>
   <div class="SearchDesign">
-      <input class="Searchbar" type="number" v-model="suche" min="1" max="1010" >
+      <input class="Searchbar" type="text" v-model="suche" min="1" max="1010" >
       <button class="SuchButton" @click="getApi" type="button">Suche</button>
   </div>
 
@@ -9,7 +9,7 @@
      
     <div v-if="trueFalse === true">
       <div class="Border">
-        <img class="pokemonPicture" :src="pokemonSprite.other.home.front_shiny" /> <br>
+        <img class="pokemonPicture" :src="pokemonSprite.other.home.front_default" /> <br>
       </div>
       Name: {{ pokemonName }} <br>
       Stats:
