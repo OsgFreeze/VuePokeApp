@@ -1,12 +1,13 @@
 <template>
-  <audio controls=true volume="0.01">
-    <source src="./fightMusic.mp3" autoplay type="audio/mpeg">
-    Sorry - Ihr Browser hat keine Unterstützung für dieses Audio-Format.
-  </audio>
-
-      <!-- gibt die Anzahl besiegter Gegner an--> 
-  <button style="margin-left: 450px" > {{"Anzahl besiegter Gegner: " + this.anzahlBesiegteGegner}} </button>  
+  <div class="TopLayer">
+    <audio controls=true volume="0.01">
+      <source src="./fightMusic.mp3" autoplay type="audio/mpeg">
+      Sorry - Ihr Browser hat keine Unterstützung für dieses Audio-Format.
+    </audio>
   
+        <!-- gibt die Anzahl besiegter Gegner an-->  
+    <p class="Score">{{"Kill Streak: " + this.anzahlBesiegteGegner}}</p>
+  </div>
 
   <div class="komplettesKampffenster">
     <div class="BackroundWhenDead" v-if="!this.pokemonPlayerStillAlive">
@@ -107,7 +108,7 @@
         </div>
 
         <div class="konsoleUnten"> 
-            <p style="text-align: center; margin-top: 32px;" > 
+            <p style="text-align: center; margin-top: 32px; font-size: 25px" > 
                 {{this.konsolenAusgabe}} <!-- gibt den Text unten in der Konsole an-->
             </p>
         </div>
@@ -130,7 +131,7 @@ export default {
       //Speichert beide Pokemon Objekte local
         myPokemon:{},       
         enemyPokemon: {},   
-        konsolenAusgabe: "[Suchen sie sich eine Attacke aus um zu]",
+        konsolenAusgabe: "[Suchen sie sich eine Attacke aus um anzugreifen]",
         visible: true,
         started: false,
         anzahlBesiegteGegner: 0, //man beginnt mit 0 Besiegten gegnern 
@@ -261,6 +262,12 @@ export default {
           },3000);
 
           setTimeout(()=>{
+            if(this.pokemonEnemyStillAlive == false){
+              this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + "wurde besiegt");
+            }
+          },3500);
+
+          setTimeout(()=>{
             this.visible = true;
           },4500);
         
@@ -280,6 +287,12 @@ export default {
           },3000);
 
           setTimeout(()=>{
+            if(this.pokemonPlayerStillAlive == false){
+              this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + " wurde besiegt");
+            }
+          },3500);
+
+          setTimeout(()=>{
             this.visible = true;
           },4500);
    
@@ -296,6 +309,12 @@ export default {
             this.choseRandomAttackFromEnemy();
             }
           },3000);
+
+          setTimeout(()=>{
+            if(this.pokemonEnemyStillAlive == false){
+              this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + "wurde besiegt");
+            }
+          },3500);
 
           setTimeout(()=>{
             this.visible = true;
@@ -596,19 +615,22 @@ export default {
         this.EnemyPokemonCurrentHP = 0;
         enemyData.style.width = "0%";               //ToDO: var umbenennen ?
         this.pokemonEnemyStillAlive = false;        //wenn Leben unter 0 ist
-        this.anzahlBesiegteGegner++                 //erhöht die Anzahl besiegte Gegner
-        this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + " wurde Besiegt.")  
+        this.anzahlBesiegteGegner++;                 //erhöht die Anzahl besiegte Gegner
+        this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + " wurde Besiegt."); 
 
         let newHealth = this.MyPokemonCurrentHP +  (this.MyPokemonHP / 2);  // x = Mein Leben + 50% gesamt KP
         this.ReviveMyHealthbar(newHealth);      // ruft ReviveMyHealthbar mit dem neu berechneten Leben auf
         setTimeout(() => {
           this.$parent.main(898);
-        },4000)
-        
+        },4000)                
+
         setTimeout(() => {
           this.ReviveEnemyHealthbar();
         },5500)
         
+        setTimeout(() => {
+          this.konsolenAusgabe = ("Ein neuer Gegner ist erschienen");
+        },6000)
       }    
     },
 
@@ -829,7 +851,7 @@ width: 520px;
 .BackroundWhenDead{
   width: 1320px;
   height: 100%;
-  background-color: #ffffff59;
+  background-color: #ffffff60;
   position: absolute;
   z-index: 1;
 }
@@ -876,7 +898,7 @@ width: 520px;
 .StartFight{
   width: 1320px;
   height: 100%;
-  background-color: #ffffff59;
+  background-color: #ffffff60;
   position: absolute;
   z-index: 1;
 }
@@ -918,6 +940,20 @@ width: 520px;
     min-width: 120px;
     padding: 0 25px;
   }
+}
+
+.Score{
+  text-align: right;
+  font-size: large;
+  margin-left: 850px;
+  font-size: 21px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+
+.TopLayer{
+  display: flex;
+  flex-direction: row;
 }
 
 </style>
