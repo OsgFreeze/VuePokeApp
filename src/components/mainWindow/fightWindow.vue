@@ -1,4 +1,7 @@
 <template>
+
+  <button @click="Start"> Press me..</button>
+
   <audio controls=true volume="0.01">
     <source src="./fightMusic.mp3" autoplay type="audio/mpeg">
     Sorry - Ihr Browser hat keine Unterstützung für dieses Audio-Format.
@@ -11,7 +14,10 @@
   <button style="margin-left: 450px" > {{"Anzahl besiegter Gegner: " + this.anzahlBesiegteGegner}} </button>  
   
 
-  <div class="komplettesKampffenster"> 
+  <div class="komplettesKampffenster">
+    <div class="BackroundWhenDead" v-if="!this.pokemonPlayerStillAlive">
+      <button class="RestartButton" @click="RestartFight"> Restart </button>
+    </div>
         <div class="KampffensterOben"> 
           <img class="backgroundPicture" src="https://cutewallpaper.org/21/pokemon-battle-backgrounds/Index-of-spritesgen6bgs.jpg" />
             <div class="left"> 
@@ -23,8 +29,8 @@
                   </p>  
                 </div>               
                 <div class="healthBarMyPokemon">    <!-- Unsere HealthBar-->                
-                  <div id="MyHealth" class="StatusBarMyPokemon">
-                    {{Math.round(MyPokemonCurrentHP.toFixed(2))}}
+                  <div id="MyHealth" class="StatusBarMyPokemon">                    
+                    {{Math.round(MyPokemonCurrentHP.toFixed(2))}}                  
                   </div>                
                 </div>
 
@@ -41,7 +47,7 @@
                   <div class="gegnerInformationen">
                     <p class="pokemonInfoStyleR" style="padding-top: 30px;">
                       {{ this.übergebenePokemon.enemyPokemon.enemyPokemon.name  + " Lv. 50"}}
-                      {{"HP. " + Math.round((this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 100).toFixed(2))}}
+                      {{"HP. " + Math.round((this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 107).toFixed(2))}}
                     </p>
                   </div>
 
@@ -64,7 +70,7 @@
               <div class="attackenauswahlFenster" v-if="visible">  <!-- Hier werden die 4 Attacken angezeigt-->
                 <div class="ButtonZweiAuswahlfensterOben"> 
                   <div class="divButtonAttackeLinksOben"> 
-                    <button class="button buttonStyle button1"  @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[0])">                     
+                    <button class="button buttonStyle button1" id="AtkButton1" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[0])">                     
                       {{übergebenePokemon.myPokemon.attackData[0].name}}
                       {{übergebenePokemon.myPokemon.attackData[0].power}}
                       {{übergebenePokemon.myPokemon.attackData[0].type.name}} 
@@ -73,7 +79,7 @@
                   </div>
 
                   <div class="divButtonAttackeRechtsOben"> 
-                    <button class="button buttonStyle button2" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[1])">  
+                    <button class="button buttonStyle button2" id="AtkButton2" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[1])">  
                       {{übergebenePokemon.myPokemon.attackData[1].name}} 
                       {{übergebenePokemon.myPokemon.attackData[1].power}}
                       {{übergebenePokemon.myPokemon.attackData[1].type.name}}
@@ -83,7 +89,7 @@
                 </div>
                 <div class="ButtonZweiAuswahlfensterUnten">
                   <div class="divButtonAttackeLinksUnten"> 
-                    <button class="button buttonStyle button3" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[2])">
+                    <button class="button buttonStyle button3" id="AtkButton3" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[2])">
                       {{übergebenePokemon.myPokemon.attackData[2].name}} 
                       {{übergebenePokemon.myPokemon.attackData[2].power}}
                       {{übergebenePokemon.myPokemon.attackData[2].type.name}}
@@ -91,7 +97,7 @@
                     </button> 
                   </div>
                   <div class="divButtonAttackeRechtsUnten"> 
-                     <button class="button buttonStyle button4" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[3])">
+                     <button class="button buttonStyle button4" id="AtkButton4" @click="buttonPressedMethod(this.übergebenePokemon.myPokemon.attackData[3])">
                       {{übergebenePokemon.myPokemon.attackData[3].name}} 
                       {{übergebenePokemon.myPokemon.attackData[3].power}}
                       {{übergebenePokemon.myPokemon.attackData[3].type.name}}
@@ -109,10 +115,12 @@
             </p>
         </div>
   </div>
+
+  
 </template>
   
 <script>
-import axios from 'axios'
+import axios from 'axios';
 export default {
   name: 'fightWindow',
   components: {  
@@ -134,10 +142,10 @@ export default {
         EnemyHealth: 100, 
         pokemonPlayerStillAlive: true,         
         pokemonEnemyStillAlive: true,
-        MyPokemonHP: this.übergebenePokemon.myPokemon.pokemonData.stats[0].base_stat + 100,
-        EnemyPokemonHP: this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 100,
-        MyPokemonCurrentHP: this.übergebenePokemon.myPokemon.pokemonData.stats[0].base_stat + 100,
-        EnemyPokemonCurrentHP: this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 100,
+        MyPokemonHP: this.übergebenePokemon.myPokemon.pokemonData.stats[0].base_stat + 107,
+        EnemyPokemonHP: this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 107,
+        MyPokemonCurrentHP: this.übergebenePokemon.myPokemon.pokemonData.stats[0].base_stat + 107,
+        EnemyPokemonCurrentHP: this.übergebenePokemon.enemyPokemon.enemyPokemon.stats[0].base_stat + 107,
 
         DmgToMyPokemon: 0,         //speichert den aktuellen Dmg der am eigenen Pokemon ausgeführt werden soll
         DmgToEnemyPokemon: 0,      //speichert den aktuellen Dmg der am Gegner Pokemon ausgeführt werden soll
@@ -151,10 +159,84 @@ export default {
           normal: "weiß",
           feuer: "rot",
           wasser: "blau",
-        }
+        },
+
+        attackBackroundColors: [],
+
       }
     },
   methods: {
+
+    Start(){
+      const TypeColorB1 = document.getElementById("AtkButton1");
+      const TypeColorB2 = document.getElementById("AtkButton2");
+      const TypeColorB3 = document.getElementById("AtkButton3");
+      const TypeColorB4 = document.getElementById("AtkButton4");
+
+      for(let i = 0; i < 4; i++){
+        let AttackName = this.übergebenePokemon.myPokemon.attackData[i].type.name;
+        if(AttackName == "normal"){
+          this.attackBackroundColors[i] = "#b5b5a6";
+        }
+        if(AttackName == "fire"){
+          this.attackBackroundColors[i] = "#ff4422"
+        }
+        if(AttackName == "water"){
+          this.attackBackroundColors[i] = "#3399ff"
+        }
+        if(AttackName == "electric"){
+          this.attackBackroundColors[i] = "#ffcc33"
+        }
+        if(AttackName == "grass"){
+          this.attackBackroundColors[i] = "#77cc55"
+        }
+        if(AttackName == "ice"){
+          this.attackBackroundColors[i] = "#66ccff"
+        }
+        if(AttackName == "fighting"){
+          this.attackBackroundColors[i] = "#bb5544"
+        }
+        if(AttackName == "poison"){
+          this.attackBackroundColors[i] = "#aa5599"
+        }
+        if(AttackName == "ground"){
+          this.attackBackroundColors[i] = "#ddbb55"
+        }
+        if(AttackName == "flying"){
+          this.attackBackroundColors[i] = "#8899ff"
+        }
+        if(AttackName == "psychic"){
+          this.attackBackroundColors[i] = "#ff5599"
+        }
+        if(AttackName == "bug"){
+          this.attackBackroundColors[i] = "#aabb22"
+        }
+        if(AttackName == "rock"){
+          this.attackBackroundColors[i] = "#bbaa66"
+        }
+        if(AttackName == "ghost"){
+          this.attackBackroundColors[i] = "#6666bb"
+        }
+        if(AttackName == "dragon"){
+          this.attackBackroundColors[i] = "#7766ee"
+        }
+        if(AttackName == "dark"){
+          this.attackBackroundColors[i] = "#775544"
+        }
+        if(AttackName == "steel"){
+          this.attackBackroundColors[i] = "#aaaabb"
+        }
+        if(AttackName == "fairy"){
+          this.attackBackroundColors[i] = "#ee99ee"
+        }
+      }
+
+      TypeColorB1.style.backgroundColor = this.attackBackroundColors[0];
+      TypeColorB2.style.backgroundColor = this.attackBackroundColors[1];
+      TypeColorB3.style.backgroundColor = this.attackBackroundColors[2];
+      TypeColorB4.style.backgroundColor = this.attackBackroundColors[3];
+    },
+
 //Attackendurchlauf starten
     buttonPressedMethod(attackData){
       this.visible=false;  
@@ -484,7 +566,6 @@ export default {
         this.MyPokemonHealth = 100;
         myPokeData.style.width = this.MyPokemonHealth+"%";
       }
-      this.pokemonPlayerStillAlive = true;
       this.visible = true;
       
     },
@@ -510,6 +591,8 @@ export default {
 
         let newHealth = this.MyPokemonCurrentHP +  (this.MyPokemonHP / 2);  // x = Mein Leben + 50% gesamt KP
         this.ReviveMyHealthbar(newHealth);      // ruft ReviveMyHealthbar mit dem neu berechneten Leben auf
+        this.$parent.main(898);
+        this.ReviveEnemyHealthbar();
       }    
     },
 
@@ -526,6 +609,12 @@ export default {
       this.pokemonEnemyStillAlive = true;
 
       },
+    },
+
+    RestartFight(){
+      this.MyPokemonHealth = 100;
+      this.MyPokemonCurrentHP = this.MyPokemonHP;
+      this.pokemonPlayerStillAlive = true;
     },
 
 //setzt Spiel auf 'gestartet'
@@ -722,4 +811,52 @@ width: 520px;
   font-size: 20px;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.BackroundWhenDead{
+  width: 1320px;
+  height: 100%;
+  background-color: #ffffff59;
+  position: absolute;
+  z-index: 1;
+}
+
+.RestartButton {
+  width: 300px;
+  height: 100px;
+  margin-top: 300px;
+  margin-left: 550px;
+  background-color: #59d86a;
+  border: 2px solid #252525;
+  border-radius: 30px;
+  box-shadow: #252525 4px 4px 0 0;
+  color: #252525;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0 18px;
+  line-height: 50px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.RestartButton:hover {
+  background-color: #fff;
+}
+
+.RestartButton:active {
+  box-shadow: #252525 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .RestartButton {
+    min-width: 120px;
+    padding: 0 25px;
+  }
+}
+
 </style>
