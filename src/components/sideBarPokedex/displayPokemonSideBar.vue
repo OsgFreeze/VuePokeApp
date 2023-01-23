@@ -1,29 +1,26 @@
 <template>
   <h1>Pokedex  {{result}}</h1>
   <div class="SearchDesign">
-      <input class="Searchbar" type="text" v-model="suche" min="1" max="1010" >
-      <button class="SuchButton" @click="getApi" type="button">Suche</button>
+      <input class="Searchbar" type="number" v-model="suche" min="1" max="1010" > <!-- Suchleiste die von 1 bis 1010 geht da es nur 1010 Pokemon gibt-->
+      <button class="SuchButton" @click="getApi" type="button">Suche</button> <!-- Button ruft die getApi Methode auf -->
   </div>
 
-  <div class="displayLeftSide"> 
+  <div class="DisplayLeftSide"> 
      
-    <div v-if="trueFalse === true">
-      <div class="Border">
-        <img class="pokemonPicture" :src="pokemonSprite.other.home.front_default" /> <br>
+    <div v-if="pokeDatenAnzeigen === true"> <!-- if Abfrage weil Api Call noch nicht gemacht worden ist -->
+      <div class>
+        <img class="PokemonPicture" :src="pokemonSprite.other.home.front_shiny" /> <br> <!-- Bild wird eingeblendet -->
       </div>
       Name: {{ pokemonName }} <br>
       Stats:
       <p v-for="(stats, zähler) in baseStats" :key="zähler">{{ stats.stat.name }} : {{ stats.base_stat }}</p>  
-      Kommt in diesen Spielen vor: <p v-for="(version, zähler) in genName" :key="zähler">{{ zähler + 1 }} : {{version.version.name}}</p>
+      Kommt in diesen Spielen vor: <p v-for="(version, zähler) in genName" :key="zähler">{{ zähler + 1 }} : {{version.version.name}}</p> <!-- Mit For Schleife läuft man durch das Objekt oder durch die Liste um alle Daten anzuzeigen -->
       <p v-for="(typ, zähler) in pokemonTyp" :key="zähler">Typ {{zähler + 1}} : {{typ.type.name}}</p>
     </div>
 
   </div>
 
-   <comparePokemon @parentAufruf="emitTest($event)" :übergebenesBoolean="this.trueFalse" :übergabePokeObjekt="this.pokemonObjekt"/>
-
-
-  
+   <comparePokemon :pokeDatenAnzeigen="this.pokeDatenAnzeigen" :übergabePokeObjekt="this.pokemonObjekt"/> <!-- übergabe vom PokemonObjekt und Boolean damit comparePokemon die daten speichern und anzeigen kann -->  
 </template>
   
 <script>
@@ -41,7 +38,7 @@ import comparePokemon from './comparePokemon.vue'
         pokemonName: "",
         genName: [],
         pokemonSprite: {},
-        trueFalse: false,
+        pokeDatenAnzeigen: false,
         baseStats: [],
         pokemonTyp: [],
 
@@ -52,7 +49,7 @@ import comparePokemon from './comparePokemon.vue'
       emitTest(data){
           this.result = data;
       },
-      async getApi(){ //API Call für Pokemon Daten
+      async getApi(){ //API Call um Pokemon Daten zu bekommen
         await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.suche}`).then((response) => {
           console.log(response)
           this.pokemonObjekt = response.data;
@@ -61,7 +58,7 @@ import comparePokemon from './comparePokemon.vue'
           this.pokemonSprite = this.pokemonObjekt.sprites;
           this.baseStats = this.pokemonObjekt.stats;
           this.pokemonTyp = this.pokemonObjekt.types;
-          this.trueFalse = true;
+          this.pokeDatenAnzeigen = true;
         })
       },
     }
@@ -69,12 +66,12 @@ import comparePokemon from './comparePokemon.vue'
 </script>
   
 <style>
-  .pokemonPicture {
+  .PokemonPicture {
     height: 200px;
     width: 200px;
   }
   
-  .displayLeftSide{
+  .DisplayLeftSide{
     background-color: #78ad75;
     margin-left: 5%;
     width: 45%;
@@ -83,7 +80,7 @@ import comparePokemon from './comparePokemon.vue'
     float: left;
   }
 
-  .displayLeftSide::-webkit-scrollbar{
+  .DisplayLeftSide::-webkit-scrollbar{
     display: none;
   }
 
@@ -105,11 +102,4 @@ import comparePokemon from './comparePokemon.vue'
     background-color: blue;
     background-color: black;
   }
-
-  .border{
-    border: 1px solid black;
-    background-color: aliceblue;
-  }
-  
-
 </style>
