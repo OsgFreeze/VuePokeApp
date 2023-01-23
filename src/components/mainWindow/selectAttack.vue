@@ -1,25 +1,25 @@
 <template>
-    <div >   
-      <span v-if="pokemonHelper.hidePokemonInfos">
-        <button @click="getAttackData"> Pokemon Attacken anzeigen </button> 
-        <p v-if="this.fourAttacksChosen">  <!-- zeigt ausgewählte Attacken an --> 
-          Ausgewählte Attacken:
-          {{"[" + this.chosenAttacks[0].name + "]   "}}
-          {{"[" + this.chosenAttacks[1].name + "]   "}}
-          {{"[" + this.chosenAttacks[2].name + "]   "}} 
-          {{"[" + this.chosenAttacks[3].name + "]   "}}
-        </p>   
-        <div v-if="this.visible">  <!-- attacken Auswahlfenster [nur Schadensattacken]--> 
-          <p v-for="(Attackobjekt, index) in newDamageAttackArray" :key="index"> 
-            {{index}} 
+  <div class="attackWindow">   
+    <span v-if="pokemonHelper.hidePokemonInfos">
+      <button class="AtkAnzeigen" id="AtkAnzID" @click="disableSelectPokemon"> Pokemon Attacken anzeigen </button> 
+      <p class="chosenAttacks" v-if="this.fourAttacksChosen">  <!-- zeigt ausgewählte Attacken an --> 
+        Chosen Attacks:
+        {{"[" + this.chosenAttacks[0].name + "] ,  "}}
+        {{"[" + this.chosenAttacks[1].name + "] ,  "}}
+        {{"[" + this.chosenAttacks[2].name + "] ,  "}} 
+        {{"[" + this.chosenAttacks[3].name + "]   "}}
+      </p>   
+      <div v-if="this.visible">  <!-- attacken Auswahlfenster [nur Schadensattacken]--> 
+        <p v-for="(Attackobjekt, index) in newDamageAttackArray" :key="index"> 
+          {{index+1}} 
             
-            <button :class="{'mark-button': getSelectedStatus(index)}"  @click="selectAttack(index)"> Name: {{Attackobjekt.name}} Power: {{Attackobjekt.power}} Genauigkeit: {{Attackobjekt.accuracy}} Type: {{Attackobjekt.type.name}} Damage Class: {{Attackobjekt.damage_class.name}}</button> 
-          </p> 
-        </div> 
-      </span>
-      <generateRandomPokemon v-if="this.fourAttacksChosen" :übergebenesPokemonObject="this.pokemonObject" />
-    </div>
-  </template>
+          <button :class="{'mark-button': getSelectedStatus(index)}"  @click="selectAttack(index)"> Name: {{Attackobjekt.name}} Power: {{Attackobjekt.power}} Genauigkeit: {{Attackobjekt.accuracy}} Type: {{Attackobjekt.type.name}} Damage Class: {{Attackobjekt.damage_class.name}}</button> 
+        </p> 
+      </div> 
+    </span>
+    <generateRandomPokemon v-if="this.fourAttacksChosen" :übergebenesPokemonObject="this.pokemonObject" />
+  </div>
+</template>
   
   <script>
   import axios from 'axios'
@@ -42,6 +42,7 @@
         chosenAttacksIndex: 0,        //     wird 'ausgelagert' benötigt für die selectAttack() Methode, das diese nicht bei jedem aufruf auf 0 zurückgesetzt wird     
         visible: false,
         fourAttacksChosen: false,
+        AttackListShown: false,
 
         pokemonObject: {              //     ->   hier wird das fertige Pokemon[] gespeichert
           pokemonData: {},            //     speichert alle Informationen über ein Pokemon 
@@ -55,6 +56,12 @@
     },
 
     methods: {
+      
+      disableSelectPokemon(){
+        
+        this.getAttackData();
+      },
+      
       async getAttackData(){  //   ->   gibt Informationen zu den übergebenen lernbaren Attacken aus  [funktioniert ✓]
         const Pokedata = this.übergebenesPokemonObjekt;                                            
         this.anzahlLernbareAttacken = Pokedata.moves.length;   
@@ -72,19 +79,29 @@
     // speichert alle Attackeninformationen die Schaden machen in newAttackArray[]
       async filterAttacksByDamage(){  
           let b = 0;
-          for (let i=0; i < this.anzahlLernbareAttacken; i++) {  //funktioniert ✓
-            if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){  //funktioniert ✓
-              this.newDamageAttackArray[b] = this.AttackobjektArray[i];  //funktioniert ✓
+          for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
+            if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){  
+              this.newDamageAttackArray[b] = this.AttackobjektArray[i]; 
               b++;
             }    
           } 
-          this.visible=true; 
+          if(this.AttackListShown == false){
+            this.visible = true;
+            this.AttackListShown = true;
+            this.$parent.lockSelectPokemon(true);
+          }else{
+            this.visible = false;
+            this.AttackListShown = false;
+            this.$parent.lockSelectPokemon(false);
+          }
+                     
         },
 
 
    //überprüfe ob Attacke bereits gewählt ist.  
       selectAttack(attackNumber){  
         const alreadySelected = this.chosenAttacks.findIndex((attack) => attack.name === this.newDamageAttackArray[attackNumber].name)
+        const AtkAnzeigenCss = document.getElementById("AtkAnzID")
 
           if(alreadySelected > -1){
               //Attack bereits gewählt, entferne wieder
@@ -100,6 +117,7 @@
               this.pokemonObject.attackData = this.chosenAttacks;                //   speichert (alle 4 Attacken) in pokemon[] 
               this.visible = false;                                              //   setzt sichtbarkeit von dem attacken Auswahlfenster auf false
               this.fourAttacksChosen = true;                                     //   sichtbar sobald 4 Attacken ausgewählt wurden
+              AtkAnzeigenCss.style.visibility = "hidden";
             }
           }
       },
@@ -116,11 +134,23 @@
   </script>
 
   <style>
+
   .fightwindow{
     background-color: rgba(13, 184, 236, 0.479);
   }
   .mark-button {
-    background-color: #165f32;
+    background-color: #1f944c;
   }
+
+  .AtkAnzeigen{
+    visibility: visible;
+  }
+
+  .chosenAttacks{
+    font-size: large;
+    text-transform: capitalize;
+    text-align: center;
+  }
+
   </style>
   

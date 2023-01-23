@@ -1,7 +1,7 @@
 <template>
   <h1>Pokedex  {{result}}</h1>
   <div class="SearchDesign">
-      <input class="Searchbar" type="number" v-model="suche" min="1" max="1010" > <!-- Suchleiste die von 1 bis 1010 geht da es nur 1010 Pokemon gibt-->
+      <input class="Searchbar" type="text" v-model="suche" min="1" max="898" > <!-- Suchleiste die von 1 bis 1010 geht da es nur 1010 Pokemon gibt-->
       <button class="SuchButton" @click="getApi" type="button">Suche</button> <!-- Button ruft die getApi Methode auf -->
   </div>
 
