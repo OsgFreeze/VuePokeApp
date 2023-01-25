@@ -1,63 +1,84 @@
 <template>
-  <div class="DisplayRightSide">  
-   <button @click="getData" type="button" :disabled="pokeDatenAnzeigenCompare == false">Pokemon Vergleichen</button> <!-- Button um getData Methode aufzurufen-->
-
-   <div v-if="this.pokeDatenAnzeigen === true"> <!-- if Abfrage weil Api Call noch nicht gemacht worden ist -->
-     <img class="PokemonPicture" :src="pokeSpriteCompare.other.home.front_shiny" /> <br> <!-- Bild wird angezeigt -->
-     Name:{{ pokeNameCompare  }} <br>
-     Stats:
-     <p v-for="(stats, zähler) in baseStatsCompare" :key="zähler">{{ stats.stat.name }} : {{ stats.base_stat }}</p>
-     Kommt in diesen Spielen vor: <p v-for="(version, index) in pokeGenCompare" :key="index">{{ index + 1 }} : {{version.version.name}}</p> <!-- Mit For Schleife läuft man durch das Objekt oder durch die Liste um alle Daten anzuzeigen -->
-     <p v-for="(typ, zähler) in pokemonTypCompare" :key="zähler">Typ {{zähler + 1}} : {{typ.type.name}}</p>
-   </div>
+  <div class="TypeRelations">
+    <button @click="setTypes"> Click..</button>
+    <p> {{ this.myTypes }} is effective against {{  }} </p>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
- props: ["pokeDatenAnzeigenCompare", "übergabePokeObjekt"],
+  
+ props: ["übergebeneTypen"],
  data(){ 
    return {
-     pokeNameCompare: "",
-     pokeGenCompare: [],
-     pokeSpriteCompare: {},
-     pokeDatenAnzeigen: false,
-     baseStatsCompare: [],
-     pokemonTypCompare: [],
+
+    myTypes: [],
+    enemyTypes: [], 
+    allTypes: [],
+    
+    doubleDamageTypes: [],
+    halfDamageTypes: [],
+    noDamageTypes: [],
+
    }
  },
 
  methods: {
  
-   async getData(){ //API Call für Pokemon Daten
-     this.pokeNameCompare = this.übergabePokeObjekt.name;
-     this.pokeGenCompare = this.übergabePokeObjekt.game_indices;
-     this.pokeSpriteCompare = this.übergabePokeObjekt.sprites;
-     this.baseStatsCompare = this.übergabePokeObjekt.stats;
-     this.pokemonTypCompare = this.übergabePokeObjekt.types;
-     this.pokeDatenAnzeigen = true;
-   },
+    setTypes(){
+
+      for(let i = 0; i < this.übergebeneTypen.pokemonTypL.length; i++){
+        this.myTypes[i] = this.übergebeneTypen.pokemonTypL[i].type.name;
+        this.allTypes[i] = this.übergebeneTypen.pokemonTypL[i].type.name;
+      }
+      
+      for(let i = 0; i < this.übergebeneTypen.pokemonTypR.length; i++){
+        this.enemyTypes[i] = this.übergebeneTypen.pokemonTypR[i].type.name;
+        this.allTypes[i+this.übergebeneTypen.pokemonTypL.length] = this.übergebeneTypen.pokemonTypR[i].type.name; 
+      }
+      console.log(this.allTypes);
+      this.getTypeInfos();
+    },
+
+    async getTypeInfos(){
+      
+      for(let i = 0; i < this.allTypes.length; i++){
+        await axios.get(`https://pokeapi.co/api/v2/type/${this.allTypes[i]}`).then((response) => {
+          let AttackenInformationen = response.data.damage_relations 
+          let doubleDamageTo = AttackenInformationen.double_damage_to; 
+          let halfDamageTo = AttackenInformationen.half_damage_to; 
+          let noDamageTo = AttackenInformationen.no_damage_to;
+          let Name = response.data.name;
+          console.log(Name);
+
+          for(let i = 0; i < doubleDamageTo.length; i++){
+            this.doubleDamageTypes[i] = doubleDamageTo[i].name;
+          }
+          console.log(this.doubleDamageTypes);
+
+          for(let i = 0; i < halfDamageTo.length; i++){
+            this.halfDamageTypes[i] = halfDamageTo[i].name;
+          }
+          console.log(this.halfDamageTypes);
+
+          for(let i = 0; i < noDamageTo.length; i++){
+            this.noDamageTypes[i] = noDamageTo[i].name;
+          }
+          console.log(this.noDamageTypes);
+        })
+      }
+    },
+
+    displayTypeRelations(){
+
+    },
 
  }
 }
 </script>
 
 <style>
- .PokemonPicture{
-   height: 200px;
-   width: 200px;
- }
+ 
 
- .DisplayRightSide{
-   background-color: #78ad75;
-   margin-right: 5%;
-   width: 45%;
-   height: 80%;
-   float: right;
-   overflow: scroll;
- }
-
- .DisplayRightSide::-webkit-scrollbar{
-   display: none;
- }
 </style>
