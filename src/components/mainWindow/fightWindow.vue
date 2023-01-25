@@ -437,7 +437,7 @@ export default {
         this.setDamageToEnemyHealthbar( this.EnemyHealth, calculatedPhsicalDamage, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
 
           //gibt in Konsole die eingesetzt Attacke aus
-        if(localDamageMultiplicator == 0){
+        if(localDamageMultiplicator == 0 && AttackMissedOrHitted == 1){
           this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + ausgewählteAttacke.name + " ein: " + " \n Attacke zeigt keine Wirkung" ) 
         }
         else if (AttackMissedOrHitted == 0 ){ 
@@ -465,7 +465,7 @@ export default {
         this.setDamageToEnemyHealthbar( this.EnemyHealth, calculatedSpecialDamage, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
 
           //gibt in Konsole die eingesetzt Attacke aus
-        if(localDamageMultiplicator == 0){
+        if(localDamageMultiplicator == 0 && AttackMissedOrHitted == 1){
           this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + ausgewählteAttacke.name + " ein: " + " \n Attacke zeigt keine Wirkung" ) 
         } 
         else if (AttackMissedOrHitted == 0 ){
@@ -519,7 +519,7 @@ export default {
         
 
          //gibt in Konsole die eingesetzt Attacke aus
-        if(localDamageMultiplicator == 0){
+        if(localDamageMultiplicator == 0 && AttackMissedOrHitted == 1){
           this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + gegnerAttackenInformationen.name + " ein: " + " \n Attacke zeigt keine Wirkung" ) 
         }
         else if (AttackMissedOrHitted == 0 ){
@@ -545,7 +545,7 @@ export default {
         this.setDamageToMyHealthbar( this.MyPokemonHealth, calculatedSpecialDamage, kpWert); //rufe neue Methode auf um den Schaden an die Healthbar zu schicken
 
           //gibt in Konsole die eingesetzt Attacke aus
-        if(localDamageMultiplicator == 0){
+        if(localDamageMultiplicator == 0 && AttackMissedOrHitted == 1){
           this.konsolenAusgabe = (angreifendesPokemon.name + " setzt " + gegnerAttackenInformationen.name + " ein: " + " \n Attacke zeigt keine Wirkung" ) 
         }
         else if (AttackMissedOrHitted == 0 ){
