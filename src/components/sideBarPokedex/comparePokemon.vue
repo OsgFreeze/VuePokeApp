@@ -1,7 +1,6 @@
 <template>
   <div class="DisplayRightSide">  
    <button @click="getData" type="button" :disabled="pokeDatenAnzeigenCompare == false">Pokemon Vergleichen</button> <!-- Button um getData Methode aufzurufen-->
-
    <div v-if="this.pokeDatenAnzeigen === true"> <!-- if Abfrage weil Api Call noch nicht gemacht worden ist -->
      <img class="PokemonPicture" :src="pokeSpriteCompare.other.home.front_shiny" /> <br> <!-- Bild wird angezeigt -->
      Name:{{ pokeNameCompare  }} <br>
@@ -26,7 +25,6 @@ export default {
      pokemonTypCompare: [],
    }
  },
-
  methods: {
  
    async getData(){ //API Call für Pokemon Daten
@@ -37,7 +35,6 @@ export default {
      this.pokemonTypCompare = this.übergabePokeObjekt.types;
      this.pokeDatenAnzeigen = true;
    },
-
  }
 }
 </script>
@@ -47,7 +44,6 @@ export default {
    height: 200px;
    width: 200px;
  }
-
  .DisplayRightSide{
    background-color: #78ad75;
    margin-right: 5%;
@@ -56,7 +52,6 @@ export default {
    float: right;
    overflow: scroll;
  }
-
  .DisplayRightSide::-webkit-scrollbar{
    display: none;
  }
