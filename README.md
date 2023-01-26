@@ -23,4 +23,4 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-[README.txt](https://github.com/OsgFreeze/VuePokeApp/files/10497573/README.txt)
+[README.txt](https://github.com/OsgFreeze/VuePokeApp/files/10512468/README.txt)
