@@ -14,7 +14,7 @@
     </div>
   </div>
 
-   <comparePokemon :pokeDatenAnzeigenCompare="this.pokeDatenAnzeigen" :übergabePokeObjekt="this.pokemonObjekt"/> <!-- übergabe vom PokemonObjekt und Boolean damit comparePokemon die daten speichern und anzeigen kann -->  
+   <showTypeRelations :pokeDatenAnzeigenCompare="this.pokeDatenAnzeigen" :übergabePokeObjekt="this.pokemonObjekt"/> <!-- übergabe vom PokemonObjekt und Boolean damit comparePokemon die daten speichern und anzeigen kann -->  
 </template>
   
   
