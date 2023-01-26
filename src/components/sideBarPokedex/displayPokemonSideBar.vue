@@ -133,7 +133,7 @@ import showTypeRelations from './showTypeRelations.vue'
   }
 
     .DisplayLeftSide{
-      background-color: #78ad75;
+      background-color: rgba(35, 212, 138, 0.397);
       margin-left: 5%;
       margin-right: 5px;
       width: 45%;
@@ -148,7 +148,7 @@ import showTypeRelations from './showTypeRelations.vue'
       }
 
     .DisplayRightSide{
-      background-color: #78ad75;
+      background-color: rgba(255, 146, 4, 0.397);
       margin-right: 5%;
       margin-left: 5px;
       width: 45%;

@@ -32,7 +32,7 @@ export default {
   }
 
   .sideBar{ 
-    background-color:rgba(241, 94, 84, 0.26);
+    background-color:rgba(118, 215, 218, 0.24);
     position: fixed;
     overflow-x: hidden;
     height: 100%;

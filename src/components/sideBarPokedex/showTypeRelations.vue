@@ -13,7 +13,7 @@
           </div>
           <div class="color1"></div>
           <div class="SETypes">
-            <p v-for="(veryeffectiveType, index) in veryeffectiveTypes" :key="index"> {{ veryeffectiveType }} </p>
+            <p v-for="(veryeffectiveType, index) in veryeffectiveTypes" :key="index"> {{ veryeffectiveType }} &nbsp;</p>
           </div>   
         </div>
         <div class="Effektiv">
@@ -92,18 +92,20 @@ methods: {
   setTypes(){
 
     for(let i = 0; i < this.übergebeneTypen.pokemonTypL.length; i++){
-      this.myTypes[i] = this.übergebeneTypen.pokemonTypL[i].type.name;
-      this.getTypeInfos(this.myTypes[i], i);
+      this.enemyTypes[i] = this.übergebeneTypen.pokemonTypL[i].type.name;
+      this.getTypeInfos(this.enemyTypes[i], i);
     }
 
     // Wenn ich nur 1 Typ habe (noDamage direkt aus API Call Relation)
     if(this.übergebeneTypen.pokemonTypL.length == 1){
+        this.finalEffectiveTypes = [];
+        this.finalWeakTypes = [];
         this.finalEffectiveTypes = this.doubleDamageTypes1;
         this.finalWeakTypes = this.halfDamageTypes1;
     }
     
     for(let i = 0; i < this.übergebeneTypen.pokemonTypR.length; i++){
-      this.enemyTypes[i] = this.übergebeneTypen.pokemonTypR[i].type.name;
+      this.myTypes[i] = this.übergebeneTypen.pokemonTypR[i].type.name;
     }
 
     setTimeout(() => {
@@ -117,9 +119,9 @@ methods: {
     
     await axios.get(`https://pokeapi.co/api/v2/type/${Type}`).then((response) => {
       let AttackenInformationen = response.data.damage_relations 
-      let doubleDamageTo = AttackenInformationen.double_damage_to; 
-      let halfDamageTo = AttackenInformationen.half_damage_to; 
-      let noDamageTo = AttackenInformationen.no_damage_to;
+      let doubleDamageTo = AttackenInformationen.double_damage_from; 
+      let halfDamageTo = AttackenInformationen.half_damage_from; 
+      let noDamageTo = AttackenInformationen.no_damage_from;
        
       if(doubleDamageTo != 0){
         for(let i = 0; i < doubleDamageTo.length; i++){
