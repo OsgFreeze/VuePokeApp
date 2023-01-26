@@ -1,6 +1,8 @@
 <template>
   <div class="TypeRelationsWindow">
-    <button @click="setTypes"> Click..</button>
+    <div class="ViewSkillset">
+      <button class="ViewSkillsetButton" @click="setTypes"> View Skillset</button>
+    </div>
     <p style="font-size: 20px; text-decoration: underline"> Your Attack Skillset: </p>
      
     <div class="TypeRelations">
@@ -323,6 +325,18 @@ methods: {
 .TypeRelationsWindow{
   height: 200px;
   width: 100%;
+}
+
+.ViewSkillset{
+  height: 20px;
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.ViewSkillsetButton{
+  height: 22px;
+  width: 200px;
 }
 
 .TypeRelations{

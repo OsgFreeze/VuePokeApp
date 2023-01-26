@@ -37,17 +37,17 @@
     </div>
   </div>
    
-    <comparePokemon :übergebeneTypen="this.pokemonTypes"/> 
+    <showTypeRelations :übergebeneTypen="this.pokemonTypes"/> 
     
 </template>
   
   
 <script>
 import axios from 'axios'
-import comparePokemon from './comparePokemon.vue'
+import showTypeRelations from './showTypeRelations.vue'
   export default {
     components: {
-      comparePokemon,
+      showTypeRelations,
     }, 
     data(){ 
       return {
