@@ -1,20 +1,44 @@
 <template>
-  <h1>Pokedex</h1>
-
+  <h1>Pokedex  {{result}}</h1>
   <div class="SearchDesign">
       <input class="Searchbar" type="text" v-model="suche" min="1" max="898" > <!-- Suchleiste die von 1 bis 1010 geht da es nur 1010 Pokemon gibt-->
       <button class="SuchButton" @click="getApi(0)" type="button">Suche</button> <!-- Button ruft die getApi Methode auf -->
   </div>
 
-  <div class="DisplayLeftSide"> 
-    <div v-if="pokeDatenAnzeigen === true"> <!-- if Abfrage weil Api Call noch nicht gemacht worden ist -->
-      <div class>
-        <img class="PokemonPicture" :src="pokemonSprite.other.home.front_shiny" /> <br> <!-- Bild wird eingeblendet -->
-      </div>
-    </div>
+  <div class="compareButtonDiv">
+    <button style="width: 200px" @click="getApi(2)" type="button">Pokemon Vergleichen</button> <!-- Button um getData Methode aufzurufen-->
   </div>
 
-   <showTypeRelations :pokeDatenAnzeigenCompare="this.pokeDatenAnzeigen" :übergabePokeObjekt="this.pokemonObjekt"/> <!-- übergabe vom PokemonObjekt und Boolean damit comparePokemon die daten speichern und anzeigen kann -->  
+  <div class="DisplayPokemon">
+    <div class="DisplayLeftSide">  
+      <div class="PokemonDataLeft" v-if="this.pokeDatenAnzeigenLeft == true"> <!-- if Abfrage weil Api Call noch nicht gemacht worden ist -->
+        <div class>
+          <img class="PokemonPicture" :src="pokemonSpriteL.other.home.front_default" /> <br> <!-- Bild wird eingeblendet -->
+        </div>
+        Name: {{ pokemonNameL }} <br>
+        Stats:
+        <p v-for="(stats, zähler) in baseStatsL" :key="zähler">{{ stats.stat.name }} : {{ stats.base_stat }}</p>
+        <p> Height: {{ this.heightL }} </p>
+        <p> Weight: {{ this.weightL }} </p>  
+        <p v-for="(typ, zähler) in pokemonTypL" :key="zähler">Typ {{zähler + 1}} : {{typ.type.name}}</p>
+      </div>
+    </div>
+  
+    <div class="DisplayRightSide">  
+     <div class="PokemonDataRight" v-if="this.pokeDatenAnzeigenRight == true"> <!-- if Abfrage weil Api Call noch nicht gemacht worden ist -->
+       <img class="PokemonPicture" :src="pokemonSpriteR.other.home.front_default" /> <br> <!-- Bild wird angezeigt -->
+       Name:{{ pokemonNameR }} <br>
+       Stats:
+       <p v-for="(stats, zähler) in baseStatsR" :key="zähler">{{ stats.stat.name }} : {{ stats.base_stat }}</p>
+       <p> Height: {{ this.heightR }} </p>
+       <p> Weight: {{ this.weightR }} </p>  
+       <p v-for="(typ, zähler) in pokemonTypR" :key="zähler">Typ {{zähler + 1}} : {{typ.type.name}}</p>
+     </div>
+    </div>
+  </div>
+   
+    <showTypeRelations :übergebeneTypen="this.pokemonTypes"/> 
+    
 </template>
   
   
@@ -36,24 +60,19 @@ import showTypeRelations from './showTypeRelations.vue'
         pokemonTypL: [],
         heightL: 0,
         weightL: 0,
-
         pokemonNameR: "",
         pokemonSpriteR: {},
         baseStatsR: [],
         pokemonTypR: [],
         heightR: 0,
         weightR: 0,
-
         pokeDatenAnzeigenLeft: false,
         pokeDatenAnzeigenRight: false,
-
         result:"",
-
         pokemonTypes: {
           pokemonTypL: [],
           pokemonTypR: [],
         }
-
       }
     },
     methods: {
@@ -82,7 +101,6 @@ import showTypeRelations from './showTypeRelations.vue'
             this.weightR = this.pokemonObjekt.weight;
             this.pokeDatenAnzeigenRight = true;
           }
-
         })
       },
     }
@@ -100,14 +118,12 @@ import showTypeRelations from './showTypeRelations.vue'
     margin-bottom: 10px;
     text-align: center;
    }
-
   .DisplayPokemon{
     display: flex;
     flex-direction: row;
     height: 600px;
     width: 100%;
   }
-
     .DisplayLeftSide{
       background-color: rgba(35, 212, 138, 0.397);
       margin-left: 5%;
@@ -116,13 +132,11 @@ import showTypeRelations from './showTypeRelations.vue'
       height: 100%;
       border: solid;
     }
-
       .PokemonDataLeft{
         text-align: left;
         margin-left: 5px;
         text-transform: capitalize;
       }
-
     .DisplayRightSide{
       background-color: rgba(255, 146, 4, 0.397);
       margin-right: 5%;
@@ -131,13 +145,11 @@ import showTypeRelations from './showTypeRelations.vue'
       height: 100%;
       border: solid;
     }
-
     .PokemonDataRight{
       text-align: left;
       margin-left: 5px;
       text-transform: capitalize;
     }
-
   .Searchbar{
     height: 15px;
     width: 70%;
@@ -149,17 +161,17 @@ import showTypeRelations from './showTypeRelations.vue'
     width: 20%;
     float: right;
   }
-
   .SearchDesign{
     margin-left: 5%;
     margin-right: 5%;
+    background-color: blue;
+    background-color: rgba(0, 0, 0, 0);
+    height: 22px;
   }
-
   .PokemonPicture{
     height: 200px;
     width: 200px;
   }
  
   
-
 </style>
