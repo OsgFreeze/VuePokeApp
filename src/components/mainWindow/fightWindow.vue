@@ -263,7 +263,7 @@ export default {
 
           setTimeout(()=>{
             if(this.pokemonEnemyStillAlive == false){
-              this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + "wurde besiegt");
+              this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + " wurde besiegt");
             }
           },3500);
 
@@ -312,7 +312,7 @@ export default {
 
           setTimeout(()=>{
             if(this.pokemonEnemyStillAlive == false){
-              this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + "wurde besiegt");
+              this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + " wurde besiegt");
             }
           },3500);
 
@@ -615,8 +615,7 @@ export default {
         this.EnemyPokemonCurrentHP = 0;
         enemyData.style.width = "0%";               //ToDO: var umbenennen ?
         this.pokemonEnemyStillAlive = false;        //wenn Leben unter 0 ist
-        this.anzahlBesiegteGegner++;                 //erhöht die Anzahl besiegte Gegner
-        this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + " wurde Besiegt."); 
+        this.anzahlBesiegteGegner++;                 //erhöht die Anzahl besiegte Gegner 
 
         let newHealth = this.MyPokemonCurrentHP +  (this.MyPokemonHP / 2);  // x = Mein Leben + 50% gesamt KP
         this.ReviveMyHealthbar(newHealth);      // ruft ReviveMyHealthbar mit dem neu berechneten Leben auf
