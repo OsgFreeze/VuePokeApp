@@ -1,7 +1,7 @@
 <template>
   <div class="TopLayer">
-    <audio controls=true volume="0.01">
-      <source src="./fightMusic.mp3" autoplay type="audio/mpeg">
+    <audio controls=true volume="0.01" autoplay="true">
+      <source src="./fightMusic.mp3" type="audio/mpeg">
       Sorry - Ihr Browser hat keine Unterstützung für dieses Audio-Format.
     </audio>
   
