@@ -1,25 +1,45 @@
 <template>
   <div class="TypeRelationsWindow">
     <button @click="setTypes"> Click..</button>
+    <p style="font-size: 20px; text-decoration: underline"> Your Attack Skillset: </p>
      
     <div class="TypeRelations">
       <div class="LeftType">   
-        <div class="TypeNameLeft">
-          <p> Your Attack Skillset: </p>
+        <div class="SehrEffektiv">
+          <div class="SETitle">
+            <p style="font-size: large">Sehr Effektiv: </p>
+          </div>
+          <div class="color1"></div>
+          <div class="SETypes">
+            <p v-for="(veryeffectiveType, index) in veryeffectiveTypes" :key="index"> {{ veryeffectiveType }} </p>
+          </div>   
         </div>
-        <div class="DoubleDmgLeft">
-          <p>Sehr Effektiv: </p>
-          <p v-for="(doubleDamageType, index) in doubleDamageTypes1" :key="index"> {{ doubleDamageType }} &nbsp; </p>
-          <p v-for="(doubleDamageType, index) in doubleDamageTypes2" :key="index"> {{ doubleDamageType }} &nbsp; </p>
+        <div class="Effektiv">
+          <div class="ETitle">
+            <p style="font-size: large"> Effektiv: </p>
+          </div>
+          <div class="color2"></div> 
+          <div class="ETypes">
+            <p v-for="(finalEffectiveType, index) in finalEffectiveTypes" :key="index"> {{ finalEffectiveType }}  &nbsp; </p>
+          </div>
         </div>
-        <div class="HalfDmgLeft">
-          <p> Sehr Ineffektiv: </p>
-          <p v-for="(weakType, index) in weakTypes" :key="index"> {{ weakType }} &nbsp; </p>
+        <div class="Ineffektiv">
+          <div class="ITitle">
+            <p style="font-size: large"> Ineffektiv: </p>
+          </div>
+          <div class="color3"></div> 
+          <div class="ITypes">
+            <p v-for="(finalWeakType, index) in finalWeakTypes" :key="index"> {{ finalWeakType }} &nbsp; </p>
+          </div>               
         </div>
-        <div class="NoDmgLeft">
-          <p> Harmlos: </p>
-          <p v-for="(noDamageType, index) in noDamageTypes1" :key="index"> {{ noDamageType }} &nbsp; </p>
-          <p v-for="(noDamageType, index) in noDamageTypes2" :key="index"> {{ noDamageType }} &nbsp; </p>
+        <div class="SehrIneffektiv">
+          <div class="IETitle">
+            <p style="font-size: large"> Sehr Ineffektiv: </p>
+          </div>
+          <div class="color4"></div>  
+          <div class="SITypes">
+            <p v-for="(veryweakType, index) in veryweakTypes" :key="index"> {{ veryweakType }} &nbsp; </p>
+          </div>     
         </div>
       </div>
 
@@ -35,27 +55,32 @@ export default {
  data(){ 
    return {
 
-    myTypes: [],
-    enemyTypes: [], 
-    allTypes: [],
+    myTypes: [],          // Meine Typen
+    enemyTypes: [],       // Gegner Typen
     
-    doubleDamageTypes1: [],
+    doubleDamageTypes1: [],     // Meine Dmg-Relations von Typ1
     halfDamageTypes1: [],
     noDamageTypes1: [],
 
-    doubleDamageTypes2: [],
+    doubleDamageTypes2: [],     // Meine Dmg-Relations von Typ2
     halfDamageTypes2: [],
     noDamageTypes2: [],
 
-    weakTypes: [],
-    veryweakTypes: [],
-    effectiveTypes: [],
-
-    DDTmsg: "",
+    DDTmsg: "",     // Msg falls es keine Dmg-Relations gibt
     HDTmsg: "",
     NDTmsg: "",
 
-    effectiveString: "",
+
+    weakTypes: [],          // Array zum zwischenspeichern
+    effectiveTypes: [],     // Array zum zwischenspeichern
+    
+    noRealHalfDmg: [],    // Array zum zwischenspeichern
+    almostFinalEffectiveArray: [],  // Array zum zwischenspeichern
+
+    veryeffectiveTypes: [],   // Final Arrays mit richtigen Relations
+    finalEffectiveTypes: [],
+    finalWeakTypes: [],
+    veryweakTypes: [],
 
    }
  },
@@ -68,13 +93,22 @@ methods: {
       this.myTypes[i] = this.übergebeneTypen.pokemonTypL[i].type.name;
       this.getTypeInfos(this.myTypes[i], i);
     }
-    
-    this.trimTypeRelations();
-    this.displayTypeRelations();
 
+    // Wenn ich nur 1 Typ habe (noDamage direkt aus API Call Relation)
+    if(this.übergebeneTypen.pokemonTypL.length == 1){
+        this.finalEffectiveTypes = this.doubleDamageTypes1;
+        this.finalWeakTypes = this.halfDamageTypes1;
+    }
+    
     for(let i = 0; i < this.übergebeneTypen.pokemonTypR.length; i++){
       this.enemyTypes[i] = this.übergebeneTypen.pokemonTypR[i].type.name;
     }
+
+    setTimeout(() => {
+      this.trimTypeRelations();
+      this.filterTypesWithNoDmg();
+    },500)
+
   },
 
   async getTypeInfos(Type, number){
@@ -84,8 +118,6 @@ methods: {
       let doubleDamageTo = AttackenInformationen.double_damage_to; 
       let halfDamageTo = AttackenInformationen.half_damage_to; 
       let noDamageTo = AttackenInformationen.no_damage_to;
-      let Name = response.data.name;
-      console.log(Name);
        
       if(doubleDamageTo != 0){
         for(let i = 0; i < doubleDamageTo.length; i++){
@@ -130,79 +162,156 @@ methods: {
     })
   },
 
-    displayTypeRelations(){
-      console.log(this.effectiveTypes);
-      console.log(this.weakTypes);
-      console.log(this.veryweakTypes);
-    },
-
     trimTypeRelations(){
-      
-      // Wenn Beide Types half dmg gegen ein Typ haben
+       
+      let h = 0;
       let k = 0;
-      
+      let x = 0;
+      let y = 0;
+        
+      // Wenn Beide Types half dmg gegen ein Typ haben --> veryWeakTypes[]
       for(let i = 0; i < this.halfDamageTypes1.length; i++){
         for(let j = 0; j < this.halfDamageTypes2.length; j++){
           if(this.halfDamageTypes1[i] == this.halfDamageTypes2[j]){
             this.veryweakTypes[k] = this.halfDamageTypes1[i];
+            this.noRealHalfDmg[y] = this.halfDamageTypes1[i];
             k++;
-          }
-        }
-      }
-
-      if(this.veryweakTypes.length == 0){
-        this.veryweakTypes[0] = "None";
-      }
-
-      // Filter true double dmg Types für Typ1; wenn einer double einer half --> aussortieren
-
-      let x = 0;
-
-      for(let i = 0; i < this.doubleDamageTypes1.length; i++){
-        for(let j = 0; j < this.halfDamageTypes2.length; j++){
-          if(this.doubleDamageTypes1[i] != this.halfDamageTypes2[i]){
-            this.effectiveTypes[x] = this.doubleDamageTypes1[i];   // Typ1 nur double Dmg & kein half Dmg --> effectiveTypes[]
-            this.weakTypes[x] = this.halfDamageTypes1[i];    // Typ1 nur half Dmg & kein Double Dmg --> weakTypes[]
-            x++;
-          }
-        }
-      }
-
-      // Filter true double dmg Types für Typ2 ; evtl diese Methode auslagern und 2 mal aufrufen mit Array als übergabewert
-
-      let y = 1;
-
-      for(let i = 0; i < this.doubleDamageTypes2.length; i++){
-        for(let j = 0; j < this.halfDamageTypes1.length; j++){
-          if(this.doubleDamageTypes2[i] != this.halfDamageTypes1[i]){
-            this.effectiveTypes[x+y] = this.doubleDamageTypes2[i];  // Typ2 nur double Dmg & kein half Dmg --> effectiveTypes[]
-            this.weakTypes[x+y] = this.halfDamageTypes2[i];   // Typ2 nur half Dmg & kein Double Dmg --> weakTypes[]
             y++;
           }
         }
       }
 
-      // Filter: wenn irgendwo No Dmg Type existiert --> Relation aus allen anderen Arrays Löschen
+      // Wenn es keine veryWeakTypes gibt --> "None"
+      if(this.veryweakTypes.length == 0){
+        this.veryweakTypes[0] = "None";
+      }
 
-      // Schleife nur is 1 da ein Typ maximal ein no Dmg Type haben kann
-      for(let i = 0; i <= 1; i++){
-        for(let j = 0; j < this.effectiveTypes.length; j++){
-          if(this.noDamageTypes1[i] == this.effectiveTypes[j] || this.noDamageTypes2[i] == this.effectiveTypes[j]){
-            this.effectiveTypes[j] = null;
-          }
-        }
-        for(let k = 0; k <= 1; k++){
-          if(this.noDamageTypes1[i] == this.weakTypes[k] || this.noDamageTypes2 == this.weakTypes[k]){
-            this.weakTypes[k] = null;
-          }
-        }
-        for(let n = 0; n <= 1; n++){
-          if(this.noDamageTypes1[i] == this.veryweakTypes[n] || this.noDamageTypes2 == this.veryweakTypes[n]){
-            this.veryweakTypes[n] = null;
+
+      // Wenn Beide Types double dmg gegen ein Typ haben --> veryeffectiveTypes[]
+      for(let i = 0; i < this.doubleDamageTypes1.length; i++){
+        for(let j = 0; j < this.doubleDamageTypes2.length; j++){
+          if(this.doubleDamageTypes1[i] == this.doubleDamageTypes2[j]){
+            this.veryeffectiveTypes[h] = this.doubleDamageTypes1[i];              
+            h++;
           }
         }
       }
 
+      // Wenn es keine veryeffectiveTypes gibt --> "None"
+      if(this.veryeffectiveTypes.length == 0){
+        this.veryeffectiveTypes[0] = "None";
+      }
+
+
+      // Filter: Nur echte double-dmg-Types von Typ1; wenn einer double einer half --> aussortieren    
+      let sameType = false;
+
+      for(let i = 0; i < this.doubleDamageTypes1.length; i++){
+        sameType = false;
+        for(let j = 0; j < this.halfDamageTypes2.length; j++){
+          if(this.doubleDamageTypes1[i] == this.halfDamageTypes2[j]){ //gleiche Typen -> nicht in effective Types aufnehmen
+            sameType = true;
+            this.noRealHalfDmg[y] = this.halfDamageTypes2[j];    // Typ1 half Dmg & Double Dmg --> noRealHalfDmg
+            y++;
+          }          
+        }
+        if(sameType == false){
+          this.effectiveTypes[x] = this.doubleDamageTypes1[i];   // Typ1 nur double Dmg & kein half Dmg --> effectiveTypes[]
+          x++;
+        }
+      }
+
+
+      // Filter: Nur echte double-dmg-Types von Typ2; wenn einer double einer half --> aussortieren
+      for(let i = 0; i < this.doubleDamageTypes2.length; i++){
+        sameType = false;
+        for(let j = 0; j < this.halfDamageTypes1.length; j++){
+          if(this.doubleDamageTypes2[i] == this.halfDamageTypes1[j]){
+            sameType = true;
+            this.noRealHalfDmg[y] = this.halfDamageTypes1[j];   // Typ2 half Dmg & Double Dmg --> noRealHalfDmg
+            y++;
+          }
+        }
+        if(sameType == false){
+          this.effectiveTypes[x] = this.doubleDamageTypes2[i];  // Typ2 nur double Dmg & kein half Dmg --> effectiveTypes[]         
+          x++;
+        }
+      }
+
+
+      //Alle Typen die in noRealHalfDmg stehen, sollen nicht mehr in weakTypes[] sein (Durchlauf für Typ1 half Dmg Liste)
+      let TypMussRaus = false;
+      let q = 0;
+
+      for(let i = 0; i < this.halfDamageTypes1.length; i++){
+        TypMussRaus = false;
+        for(let j = 0; j < this.noRealHalfDmg.length; j++){
+          if(this.halfDamageTypes1[i] == this.noRealHalfDmg[j]){
+            TypMussRaus = true;
+          }
+        }
+        if(TypMussRaus == false){
+          this.weakTypes[q] = this.halfDamageTypes1[i];
+          q++;
+        }
+      }
+
+
+      //Alle Typen die in noRealHalfDmg stehen, sollen nicht mehr in weakTypes[] sein (Durchlauf für Typ2 half Dmg Liste)
+      for(let i = 0; i < this.halfDamageTypes2.length; i++){
+        TypMussRaus = false;
+        for(let j = 0; j < this.noRealHalfDmg.length; j++){
+          if(this.halfDamageTypes2[i] == this.noRealHalfDmg[j]){
+            TypMussRaus = true;
+          }
+        }
+        if(TypMussRaus == false){
+          this.weakTypes[q] = this.halfDamageTypes2[i];
+          q++;
+        }
+      }
+
+
+      //Alle Typen die in veryeffectiveTypes[] stehen, sollen nicht mehr in effectiveTypes[] stehen --> Zwischen Speichern in almostFinalEffectiveArray
+      let e = 0;
+
+      for(let i = 0; i < this.effectiveTypes.length; i++){
+        TypMussRaus = false;
+        for(let j = 0; j < this.veryeffectiveTypes.length; j++){
+          if(this.effectiveTypes[i] == this.veryeffectiveTypes[j]){
+            TypMussRaus = true;
+          }
+        }
+        if(TypMussRaus == false){
+          this.almostFinalEffectiveArray[e] = this.effectiveTypes[i];
+          e++;
+        }
+      }
+
+    },
+
+    
+    filterTypesWithNoDmg(){
+      // Filter: wenn irgendwo No-Dmg-Type existiert --> Relation aus effective/weak Type Arrays Löschen      
+      let arrcount1 = 0;
+      let arrcount2 = 0;
+      
+      for(let j = 0; j < this.almostFinalEffectiveArray.length; j++){
+        if(this.noDamageTypes1[0] != this.almostFinalEffectiveArray[j]){
+          if(this.noDamageTypes2[0] != this.almostFinalEffectiveArray[j]){
+            this.finalEffectiveTypes[arrcount1] = this.almostFinalEffectiveArray[j];
+            arrcount1++;
+          }
+        }
+      }
+      for(let i = 0; i < this.weakTypes.length; i++){
+        if(this.noDamageTypes1[0] != this.weakTypes[i]){
+          if(this.noDamageTypes2[0] != this.weakTypes[i]){
+            this.finalWeakTypes[arrcount2] = this.weakTypes[i];
+            arrcount2++;
+          }
+        }
+      }
     },
 
  }
@@ -230,64 +339,132 @@ methods: {
     height: 200px;
   }
 
-    .TypeNameLeft{
+    .SehrEffektiv{
       width: 100%;
       height: 25%;
+      display: flex;
+      flex-direction: row;
     }
 
-    .DoubleDmgLeft{
+      .SETitle{
+        width: 110px;
+        height: 100%;
+      }
+
+      .color1{
+        height: 15px;
+        width: 15px;
+        background-color: green;
+        border: solid;
+        border-width: 2px;
+        border-color: green;
+        border-radius: 15px;
+        margin-top: 20px;
+        margin-left: 5px;
+      }
+
+      .SETypes{
+        display: flex;
+        flex-direction: row;
+        margin-left: 35px;
+        text-transform: capitalize;
+        font-size: large;
+      }
+
+    .Effektiv{
       display: flex;
       flex-direction: row;
       width: 100%;
       height: 25%;
     }
 
-    .HalfDmgLeft{
+      .ETitle{
+        width: 110px;
+        height: 100%;
+      }
+
+      .color2{
+        height: 15px;
+        width: 15px;
+        background-color: yellow;
+        border: solid;
+        border-width: 2px;
+        border-color: yellow;
+        border-radius: 15px;
+        margin-top: 20px;
+        margin-left: 5px;
+      }
+
+      .ETypes{
+        display: flex;
+        flex-direction: row;
+        margin-left: 35px;
+        text-transform: capitalize;
+        font-size: large;
+      }
+
+    .Ineffektiv{
       display: flex;
       flex-direction: row;
       width: 100%;
       height: 25%;
     }
 
-    .NoDmgLeft{
+      .ITitle{
+        width: 110px;
+        height: 100%;
+      }
+
+      .color3{
+        height: 15px;
+        width: 15px;
+        background-color: orange;
+        border: solid;
+        border-width: 2px;
+        border-color: orange;
+        border-radius: 15px;
+        margin-top: 20px;
+        margin-left: 5px;
+      }
+
+      .ITypes{
+        display: flex;
+        flex-direction: row;
+        margin-left: 35px;
+        text-transform: capitalize;
+        font-size: large;
+      }
+
+    .SehrIneffektiv{
       display: flex;
       flex-direction: row;
       width: 100%;
       height: 25%;
     }
 
+      .SITitle{
+        width: 110px;
+        height: 100%;
+      }
 
-  .RightType{
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    height: 200px;
-  }
+      .color4{
+        height: 15px;
+        width: 15px;
+        background-color: red;
+        border: solid;
+        border-width: 2px;
+        border-color: red;
+        border-radius: 15px;
+        margin-top: 20px;
+        margin-left: 5px;
+      }
 
-    .TypeNameRight{
-      width: 100%;
-      height: 25%;
-    }
-
-    .DoubleDmgRight{
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      height: 25%;
-    }
-
-    .HalfDmgRight{
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      height: 25%;
-    }
-
-    .NoDmgRight{
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      height: 25%;
-    }
+      .SITypes{
+        display: flex;
+        flex-direction: row;
+        margin-left: 35px;
+        text-transform: capitalize;
+        font-size: large;
+      }
 
 </style>
