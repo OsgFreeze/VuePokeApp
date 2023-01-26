@@ -1,7 +1,7 @@
 <template>
   <div class="TopLayer">
-    <audio controls=true volume="0.01">
-      <source src="./fightMusic.mp3" autoplay type="audio/mpeg">
+    <audio controls=true volume="0.01" autoplay="true">
+      <source src="./fightMusic.mp3" type="audio/mpeg">
       Sorry - Ihr Browser hat keine Unterstützung für dieses Audio-Format.
     </audio>
   
@@ -263,7 +263,7 @@ export default {
 
           setTimeout(()=>{
             if(this.pokemonEnemyStillAlive == false){
-              this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + "wurde besiegt");
+              this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + " wurde besiegt");
             }
           },3500);
 
@@ -312,7 +312,7 @@ export default {
 
           setTimeout(()=>{
             if(this.pokemonEnemyStillAlive == false){
-              this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + "wurde besiegt");
+              this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + " wurde besiegt");
             }
           },3500);
 
@@ -616,7 +616,6 @@ export default {
         enemyData.style.width = "0%";               //ToDO: var umbenennen ?
         this.pokemonEnemyStillAlive = false;        //wenn Leben unter 0 ist
         this.anzahlBesiegteGegner++;                 //erhöht die Anzahl besiegte Gegner
-        this.konsolenAusgabe = (this.übergebenePokemon.enemyPokemon.enemyPokemon.name + " wurde Besiegt."); 
 
         let newHealth = this.MyPokemonCurrentHP +  (this.MyPokemonHP / 2);  // x = Mein Leben + 50% gesamt KP
         this.ReviveMyHealthbar(newHealth);      // ruft ReviveMyHealthbar mit dem neu berechneten Leben auf
