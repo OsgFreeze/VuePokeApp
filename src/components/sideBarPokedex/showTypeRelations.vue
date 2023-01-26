@@ -117,9 +117,9 @@ methods: {
     
     await axios.get(`https://pokeapi.co/api/v2/type/${Type}`).then((response) => {
       let AttackenInformationen = response.data.damage_relations 
-      let doubleDamageTo = AttackenInformationen.double_damage_to; 
-      let halfDamageTo = AttackenInformationen.half_damage_to; 
-      let noDamageTo = AttackenInformationen.no_damage_to;
+      let doubleDamageTo = AttackenInformationen.double_damage_from; 
+      let halfDamageTo = AttackenInformationen.half_damage_from; 
+      let noDamageTo = AttackenInformationen.no_damage_from;
        
       if(doubleDamageTo != 0){
         for(let i = 0; i < doubleDamageTo.length; i++){
