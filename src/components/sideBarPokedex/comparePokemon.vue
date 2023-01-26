@@ -48,6 +48,8 @@ export default {
     noDamageTypes2: [],
 
     weakTypes: [],
+    veryweakTypes: [],
+    effectiveTypes: [],
 
     DDTmsg: "",
     HDTmsg: "",
@@ -129,27 +131,76 @@ methods: {
   },
 
     displayTypeRelations(){
-      console.log(this.doubleDamageTypes1);
-      console.log(this.doubleDamageTypes2);
+      console.log(this.effectiveTypes);
       console.log(this.weakTypes);
-      console.log(this.noDamageTypes1);
-      console.log(this.noDamageTypes2);
+      console.log(this.veryweakTypes);
     },
 
     trimTypeRelations(){
+      
+      // Wenn Beide Types half dmg gegen ein Typ haben
       let k = 0;
       
-      for(let i = 0; i < this.halfDamageTypes1; i++){
-        for(let j = 0; j < this.halfDamageTypes2; j++){
+      for(let i = 0; i < this.halfDamageTypes1.length; i++){
+        for(let j = 0; j < this.halfDamageTypes2.length; j++){
           if(this.halfDamageTypes1[i] == this.halfDamageTypes2[j]){
-            this.weakTypes[k] = this.halfDamageTypes1[i];
+            this.veryweakTypes[k] = this.halfDamageTypes1[i];
             k++;
           }
         }
       }
 
-      if(this.weakTypes.length == 0){
-        this.weakTypes[0] = "None";
+      if(this.veryweakTypes.length == 0){
+        this.veryweakTypes[0] = "None";
+      }
+
+      // Filter true double dmg Types für Typ1; wenn einer double einer half --> aussortieren
+
+      let x = 0;
+
+      for(let i = 0; i < this.doubleDamageTypes1.length; i++){
+        for(let j = 0; j < this.halfDamageTypes2.length; j++){
+          if(this.doubleDamageTypes1[i] != this.halfDamageTypes2[i]){
+            this.effectiveTypes[x] = this.doubleDamageTypes1[i];   // Typ1 nur double Dmg & kein half Dmg --> effectiveTypes[]
+            this.weakTypes[x] = this.halfDamageTypes1[i];    // Typ1 nur half Dmg & kein Double Dmg --> weakTypes[]
+            x++;
+          }
+        }
+      }
+
+      // Filter true double dmg Types für Typ2 ; evtl diese Methode auslagern und 2 mal aufrufen mit Array als übergabewert
+
+      let y = 1;
+
+      for(let i = 0; i < this.doubleDamageTypes2.length; i++){
+        for(let j = 0; j < this.halfDamageTypes1.length; j++){
+          if(this.doubleDamageTypes2[i] != this.halfDamageTypes1[i]){
+            this.effectiveTypes[x+y] = this.doubleDamageTypes2[i];  // Typ2 nur double Dmg & kein half Dmg --> effectiveTypes[]
+            this.weakTypes[x+y] = this.halfDamageTypes2[i];   // Typ2 nur half Dmg & kein Double Dmg --> weakTypes[]
+            y++;
+          }
+        }
+      }
+
+      // Filter: wenn irgendwo No Dmg Type existiert --> Relation aus allen anderen Arrays Löschen
+
+      // Schleife nur is 1 da ein Typ maximal ein no Dmg Type haben kann
+      for(let i = 0; i <= 1; i++){
+        for(let j = 0; j < this.effectiveTypes.length; j++){
+          if(this.noDamageTypes1[i] == this.effectiveTypes[j] || this.noDamageTypes2[i] == this.effectiveTypes[j]){
+            this.effectiveTypes[j] = null;
+          }
+        }
+        for(let k = 0; k <= 1; k++){
+          if(this.noDamageTypes1[i] == this.weakTypes[k] || this.noDamageTypes2 == this.weakTypes[k]){
+            this.weakTypes[k] = null;
+          }
+        }
+        for(let n = 0; n <= 1; n++){
+          if(this.noDamageTypes1[i] == this.veryweakTypes[n] || this.noDamageTypes2 == this.veryweakTypes[n]){
+            this.veryweakTypes[n] = null;
+          }
+        }
       }
 
     },
