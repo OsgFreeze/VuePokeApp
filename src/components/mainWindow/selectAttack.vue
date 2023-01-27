@@ -33,7 +33,7 @@
       generateRandomPokemon
     }, 
     inject: ["pokemonHelper"],
-    props: ['übergebenesPokemonObjekt'],   // übergebenes pokemonObjekt{} von parent
+    props: ['übergebenesPokemonObjekt'],   // übergebenes pokemonObjekt{} von parent 
     data(){ 
       return {
     // notwendige start Zuweisungen
@@ -50,7 +50,11 @@
         chosenAttacks: [],            //   speichert alle ausgewählten Attacken. 
 
     // hier wird das fertige Pokemon{} gespeichert
-        pokemonObject: {             
+        pokemonObject: {    
+          pokemonShiny: {
+            shiny: false,
+            notShiny: true,
+          },      
           pokemonData: {},           
           attackData: {}             
         },
@@ -63,7 +67,7 @@
 
     // gibt Informationen zu den übergebenen lernbaren Attacken aus 
       async getAttackData(){  
-        const Pokedata = this.übergebenesPokemonObjekt;                                            
+        const Pokedata = this.übergebenesPokemonObjekt.pokemonData;                                            
         this.anzahlLernbareAttacken = Pokedata.moves.length;   
         for (let i=0; i < this.anzahlLernbareAttacken; i++) { 
           let attackURL = Pokedata.moves[i].move.url     
@@ -107,13 +111,23 @@
           } else {
             // Neue Attacke gewählt speichere diese.
               this.chosenAttacks.push(this.newDamageAttackArray[attackNumber])
-              this.chosenAttacksIndex++;                                           
+              this.chosenAttacksIndex++;    
+
+              // Maximale Anzahl der Attacken gewählt, warte nun auf generate random Pokemon                                       
             if(this.chosenAttacksIndex == MAX_ATTACKS){ 
-            // Maximale Anzahl der Attacken gewählt, warte nun auf generate random Pokemon
-              this.pokemonObject.pokemonData = this.übergebenesPokemonObjekt;    //   Speichert das übergebene Pokemon in lokales "pokemonObjekt"
-              this.pokemonObject.attackData = this.chosenAttacks;                //   speichert (alle 4 Attacken) in chosenAttacks[] 
-              this.visible = false;                                              //   setzt Sichtbarkeit von dem attacken Auswahlfenster auf false
-              this.fourAttacksChosen = true;                                     //   sichtbar sobald 4 Attacken ausgewählt wurden
+              this.pokemonObject.pokemonData = this.übergebenesPokemonObjekt.pokemonData;    //   Speichert das übergebene Pokemon in lokales pokemonObjekt{}
+
+                //überprüft ob man ausgewählt hat ob sein Pokemon "Shiny" sein soll
+              if(this.übergebenesPokemonObjekt.pokemonShiny.shiny == true) {
+                this.pokemonObject.pokemonShiny.shiny  = true
+                this.pokemonObject.pokemonShiny.notShiny = false
+              } else {
+                this.pokemonObject.pokemonShiny.shiny  = false
+                this.pokemonObject.pokemonShiny.notShiny = true
+              }
+              this.pokemonObject.attackData = this.chosenAttacks;        //   speichert (alle 4 Attacken) in chosenAttacks[] 
+              this.visible = false;                                      //   setzt Sichtbarkeit von dem attacken Auswahlfenster auf false
+              this.fourAttacksChosen = true;                             //   sichtbar sobald 4 Attacken ausgewählt wurden
               AtkAnzeigenCss.style.visibility = "hidden";
             }
           }
