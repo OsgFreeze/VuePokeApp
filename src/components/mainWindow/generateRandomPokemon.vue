@@ -55,8 +55,8 @@
       },
     //erzeugt ein random Pokemon Object & speichert ergebniss in randomPokemonObject{}  
         async generateRandomPokemon(obergrenze){  
-          this.anzahlLernbareAttacken= 0,
-          this.anzahlSchadensAttacken= 0,
+          this.anzahlLernbareAttacken= 0;
+          this.anzahlSchadensAttacken= 0;
           this.newAttackArray=[];
           let untergrenze=1;
           let randomNumber  = Math.floor(Math.random() * (obergrenze - untergrenze - 1)) + 1;   
@@ -125,9 +125,9 @@
           this.randomPokemonLoaded=true;
         },
 
-      //bestimmt ob das pokemon Shiny ist
+      //bestimmt ob das gegner Pokemon shiny ist
         checkIfPokemonShiny(){
-          let shinyChance = 25; //bestimmt Shiny Chance [1/25]
+          let shinyChance = 25; //bestimmt Gegner shiny Chance [1/25]
           let untergrenze = 1;
           let randomNumber  = Math.floor(Math.random() * (shinyChance - untergrenze - 1)) + 1; 
             console.log("Shiny Number: " + randomNumber);

@@ -30,8 +30,9 @@
                   </div>                
                 </div>
               </div>
-              <div class="pokemonSpriteL"> 
-                <img class="myPokemonPicture" :src="übergebenePokemon.myPokemon.pokemonData.sprites.back_default"/> <!-- Spieler Pokemon von hinten (Bild)-->
+              <div class="pokemonSpriteL"> <!-- Spieler Pokemon von hinten (Bild)-->
+                <img class="myPokemonPicture" v-if="übergebenePokemon.myPokemon.pokemonShiny.notShiny" :src="übergebenePokemon.myPokemon.pokemonData.sprites.back_default"/> 
+                <img class="myPokemonPicture" v-if="übergebenePokemon.myPokemon.pokemonShiny.shiny" :src="übergebenePokemon.myPokemon.pokemonData.sprites.back_shiny"/> 
               </div>
             </div>
             <div class="right"> 

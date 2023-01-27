@@ -16,7 +16,7 @@
         <button class="shinyButton" id="shinyButtonId" @click="turnPokemonShiny"> Shiny </button>
        </div> 
       <div class="PokeInfoRightSide">
-        <p class="baseStats" v-for="(pokemonStat, index) in pokemonStats" :key="index"> {{pokemonObject.stats[index].stat.name}}:  {{pokemonStat.base_stat}}</p>
+        <p class="baseStats" v-for="(pokemonStat, index) in pokemonStats" :key="index"> {{pokemonObject.pokemonData.stats[index].stat.name}}:  {{pokemonStat.base_stat}}</p>
         <p class="TypeNames" v-for="(pokemonType, index) in pokemonTypes" :key="index"> Type {{ index+1 }}: {{ pokemonType}} </p>          
       </div>
       <div class="PokeInfoTypeBars">           
@@ -75,24 +75,28 @@ export default {
       pokeLoaded: false,  
 
     // Pokemon Informationen 
-      pokemonStats: [],   //  speichert die basis Werte von einem Pokemon
-      pokemonObject: {},  //  speichert die Pokemon Daten von dem API Call,
-      pokemonTypes: [],   //  speichert alle Types des Pokemon
-      PokeTypeColors: [], //  speichert die Farben des Types
+      pokemonStats: [],     //  speichert die basis Werte von einem Pokemon
+      pokemonTypes: [],     //  speichert alle Types des Pokemon
+      PokeTypeColors: [],   //  speichert die Farben des Types
+
+        //  speichert die Pokemon Daten von dem API Call  
+      pokemonObject: {
+        pokemonShiny: {shiny: false},
+        pokemonData: {},
+      },  
     }
   },
   methods: { 
   //API Call für Pokemon Daten 
     async loadApiNumber(){ 
       await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.PokeNumber}`).then((response) => {
-        this.pokemonObject = response.data; 
-        this.pokemonStats =  this.pokemonObject.stats;
+        this.pokemonObject.pokemonData = response.data; 
+        this.pokemonStats =  this.pokemonObject.pokemonData.stats;
         this.pokeLoaded = true;
-        this.PokemonPicture = this.pokemonObject.sprites.other.home.front_default;
+        this.PokemonPicture = this.pokemonObject.pokemonData.sprites.other.home.front_default;
         this.pokemonTypes = [];
-
           // speichert die Types des Pokemon 
-        let PokeType = this.pokemonObject.types;
+        let PokeType = this.pokemonObject.pokemonData.types;
         for(let i = 0; i < PokeType.length; i++){
           this.pokemonTypes[i] = PokeType[i].type.name;
         }
@@ -201,13 +205,17 @@ export default {
     turnPokemonShiny(){
       const shinyButtonCSS = document.getElementById("shinyButtonId");
       if(this.toggleState == true){
-        this.PokemonPicture = this.pokemonObject.sprites.other.home.front_shiny;
+        this.PokemonPicture = this.pokemonObject.pokemonData.sprites.other.home.front_shiny;
         this.toggleState = false;
         shinyButtonCSS.textContent = "Normal";
+          //Pokemon als "Shiny" setzen.
+        this.pokemonObject.pokemonShiny.shiny = true;
       }else{
-        this.PokemonPicture = this.pokemonObject.sprites.other.home.front_default;
+        this.PokemonPicture = this.pokemonObject.pokemonData.sprites.other.home.front_default;
         this.toggleState = true;
         shinyButtonCSS.textContent = "Shiny";
+          //Pokemon als nicht "Shiny" setzen.
+        this.pokemonObject.pokemonShiny.shiny = false; 
       }
     },
 
