@@ -1,6 +1,6 @@
 <template class="generateRandomPokemon">
     <div>   
-      <button v-if="ButtonVisible" @click="main(898)"> generate new random Pokemon </button> <!-- 898, da bis dahin alle Pokemon verfügbar sind -->
+      <button v-if="ButtonVisible" @click="main(898)"> generate new random Pokemon </button> <!-- 898, da bis dahin alle Pokemon Sprites verfügbar sind -->
       <div v-if="randomPokemonLoaded" > <!-- Zeigt Information über das zufällig ausgewählte Pokemon -->
           <fightWindow :übergebenePokemon="this.twoCompletePokemon"/>
       </div>
@@ -17,10 +17,9 @@
       fightWindow,
     }, 
     props: ['übergebenesPokemonObject'], 
-    
     data(){ 
       return {
-      //alle notwendigen deklarierungen
+    //alle notwendigen deklarierungen
         randomPokemonObject: {},
         AttackobjektArray: [],
         newAttackArray: [],
@@ -31,35 +30,30 @@
         anzahlLernbareAttacken: 0,
         anzahlSchadensAttacken: 0,
         
-
-      //speichert das random Pokemon 
+    //speichert das random Pokemon 
         randomPokemonEnemy: {  
         enemyPokemon: {},
         enemyPokemonShiny: [],
         },
 
-      //fasst beide Pokemon zusammen   
+    //fasst beide Pokemon zusammen   
         twoCompletePokemon: {   
           myPokemon: {},     
           enemyPokemon: {},                                      
         }, 
       }
     },
-
     methods: {   
-      
-    //ruft alle Methoden nacheinander auf --> Programm Ablauf wird etwas übersichtlicher Thema sauberer Code (bei Bedarf einf wieder löschen und im Button anpassen)  
+    //ruft alle Methoden nacheinander auf 
       async main(obergrenze){
           this.$parent.SearchBarVisible();
           this.generateRandomPokemon(obergrenze);
           this.ButtonVisible = false;                       
       },
-
       setButtonVisible(){
         this.ButtonVisible = false;
       },
-
-    //erzeugt ein random Pokemon Object & speichert ergebniss in [this.randomPokemonObject]   
+    //erzeugt ein random Pokemon Object & speichert ergebniss in randomPokemonObject{}  
         async generateRandomPokemon(obergrenze){  
           this.anzahlLernbareAttacken= 0,
           this.anzahlSchadensAttacken= 0,
@@ -73,34 +67,31 @@
           })        
         }, 
 
-
     //erstellt ein neuen Attacken Array von dem random Pokemon       
-        async getAttackDataFromRandomPokemon(){                 
-          const localPokedata = this.randomPokemonObject;                   // generiertes pokemon Objekt nochmal local speichern in Variable -> zur vereinfachung.                          
-          this.anzahlLernbareAttacken = localPokedata.moves.length;         // anzahl lernbare Attacken von generiertes pokemon Objekt
-          for (let i=0; i < this.anzahlLernbareAttacken; i++) {           
-            let attackUrlFromIndex = localPokedata.moves[i].move.url                  
-            await axios.get(attackUrlFromIndex).then((response) => {    
-              const attackData = response.data;  
-              this.AttackobjektArray[i] = attackData;  
+        async getAttackDataFromRandomPokemon(){
+          const localPokedata = this.randomPokemonObject;
+          this.anzahlLernbareAttacken = localPokedata.moves.length;
+          for (let i=0; i < this.anzahlLernbareAttacken; i++) {
+            let attackUrlFromIndex = localPokedata.moves[i].move.url
+            await axios.get(attackUrlFromIndex).then((response) => {
+              const attackData = response.data; 
+              this.AttackobjektArray[i] = attackData;
             })
           } 
           this.filterAttacksFromByDamage();
         },
      
-
     //speichert alle Attackeninformationen die Schaden machen in neuen Array     
         async filterAttacksFromByDamage(){  
-          let b = 0;
+          let indexNeuerArray = 0;
           for (let i=0; i < this.anzahlLernbareAttacken; i++) {  
             if((this.AttackobjektArray[i].power > 0) || (this.AttackobjektArray[i].power != null )){   
-              this.newAttackArray[b] = this.AttackobjektArray[i]; 
-              b++;
+              this.newAttackArray[indexNeuerArray] = this.AttackobjektArray[i]; 
+              indexNeuerArray++;
             }     
           } 
           this.SelectFourRandomAttacks(); 
         },
-
 
     // Methode um alle 4 ausgewählten Attacken zu speichern    
         async SelectFourRandomAttacks(){   
@@ -132,14 +123,11 @@
           this.twoCompletePokemon.myPokemon = this.übergebenesPokemonObject;
           this.twoCompletePokemon.enemyPokemon = this.randomPokemonEnemy;
           this.randomPokemonLoaded=true;
-
-          console.log(this.twoCompletePokemon);
-
         },
 
       //bestimmt ob das pokemon Shiny ist
         checkIfPokemonShiny(){
-          let shinyChance = 25; //bestimmt Shiny Chance [1/50]
+          let shinyChance = 25; //bestimmt Shiny Chance [1/25]
           let untergrenze = 1;
           let randomNumber  = Math.floor(Math.random() * (shinyChance - untergrenze - 1)) + 1; 
             console.log("Shiny Number: " + randomNumber);
@@ -149,7 +137,6 @@
             return false // nicht Shiny
           }
         },
-
       }
     }
   </script>

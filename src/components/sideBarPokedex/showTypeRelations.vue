@@ -1,10 +1,9 @@
 <template>
   <div class="TypeRelationsWindow">
     <div class="ViewSkillset">
-      <button class="ViewSkillsetButton" @click="setTypes"> View Skillset</button>
+      <button class="ViewSkillsetButton" @click="setTypes"> Typ-Schwächen anzeigen:</button>
     </div>
-    <p style="font-size: 20px; text-decoration: underline"> Your Attack Skillset: </p>
-     
+    <p style="font-size: 20px; text-decoration: underline"> Schadensmultiplikatoren: </p>
     <div class="TypeRelations">
       <div class="LeftType">   
         <div class="SehrEffektiv">
@@ -44,7 +43,6 @@
           </div>     
         </div>
       </div>
-
     </div> 
   </div>
 </template>
@@ -56,73 +54,63 @@ export default {
  props: ["übergebeneTypen"],
  data(){ 
    return {
+    myTypes: [],                   
+    enemyTypes: [],  
 
-    myTypes: [],          // Meine Typen
-    enemyTypes: [],       // Gegner Typen
-    
-    doubleDamageTypes1: [],     // Meine Dmg-Relations von Typ1
+  // Meine Dmg-Relations von Typ1
+    doubleDamageTypes1: [],        
     halfDamageTypes1: [],
     noDamageTypes1: [],
 
-    doubleDamageTypes2: [],     // Meine Dmg-Relations von Typ2
+  // Meine Dmg-Relations von Typ2
+    doubleDamageTypes2: [],        
     halfDamageTypes2: [],
     noDamageTypes2: [],
 
-    DDTmsg: "",     // Msg falls es keine Dmg-Relations gibt
-    HDTmsg: "",
-    NDTmsg: "",
+  // Arrays zum zwischenspeichern
+    weakTypes: [],                  
+    effectiveTypes: [],             
+    noRealHalfDmg: [],              
+    almostFinalEffectiveArray: [],  
 
-
-    weakTypes: [],          // Array zum zwischenspeichern
-    effectiveTypes: [],     // Array zum zwischenspeichern
-    
-    noRealHalfDmg: [],    // Array zum zwischenspeichern
-    almostFinalEffectiveArray: [],  // Array zum zwischenspeichern
-
-    veryeffectiveTypes: [],   // Final Arrays mit richtigen Relations
+  // Final Arrays mit richtigen Relations
+    veryeffectiveTypes: [],        
     finalEffectiveTypes: [],
     finalWeakTypes: [],
     veryweakTypes: [],
-
    }
  },
 
 methods: {
- 
   setTypes(){
-
     for(let i = 0; i < this.übergebeneTypen.pokemonTypL.length; i++){
       this.enemyTypes[i] = this.übergebeneTypen.pokemonTypL[i].type.name;
       this.getTypeInfos(this.enemyTypes[i], i);
     }
 
-    // Wenn ich nur 1 Typ habe (noDamage direkt aus API Call Relation)
+      // Wenn ich nur 1 Typ habe (noDamage direkt aus API Call Relation)
     if(this.übergebeneTypen.pokemonTypL.length == 1){
         this.finalEffectiveTypes = [];
         this.finalWeakTypes = [];
         this.finalEffectiveTypes = this.doubleDamageTypes1;
         this.finalWeakTypes = this.halfDamageTypes1;
     }
-    
     for(let i = 0; i < this.übergebeneTypen.pokemonTypR.length; i++){
       this.myTypes[i] = this.übergebeneTypen.pokemonTypR[i].type.name;
     }
-
     setTimeout(() => {
       this.trimTypeRelations();
       this.filterTypesWithNoDmg();
     },500)
-
   },
 
   async getTypeInfos(Type, number){
-    
     await axios.get(`https://pokeapi.co/api/v2/type/${Type}`).then((response) => {
       let AttackenInformationen = response.data.damage_relations 
       let doubleDamageTo = AttackenInformationen.double_damage_from; 
       let halfDamageTo = AttackenInformationen.half_damage_from; 
       let noDamageTo = AttackenInformationen.no_damage_from;
-       
+      
       if(doubleDamageTo != 0){
         for(let i = 0; i < doubleDamageTo.length; i++){
           if(number == 0){
@@ -131,10 +119,7 @@ methods: {
             this.doubleDamageTypes2[i] = doubleDamageTo[i].name;
           }
         }
-      }else{
-        this.DDTmsg = "Keine Relation gefunden";
-        console.log(this.DDTmsg);
-      }   
+      } 
       
       if(halfDamageTo != 0){
         for(let i = 0; i < halfDamageTo.length; i++){
@@ -143,13 +128,9 @@ methods: {
         }else{
           this.halfDamageTypes2[i] = halfDamageTo[i].name;
         }       
-      }
-      }else{
-        this.HDTmsg = "Keine Relation gefunden";
-        console.log(this.HDTmsg);
+        }
       }
       
-    
       if(noDamageTo != 0){
         for(let i = 0; i < noDamageTo.length; i++){
           if(number == 0){
@@ -158,22 +139,17 @@ methods: {
             this.noDamageTypes2[i] = noDamageTo[i].name;
           }         
         } 
-      }else{
-        this.NDTmsg = "Keine Relation gefunden";
-        console.log(this.NDTmsg);
-    }
-        
+      }
     })
   },
 
-    trimTypeRelations(){
-       
+  trimTypeRelations(){
       let h = 0;
       let k = 0;
       let x = 0;
       let y = 0;
         
-      // Wenn Beide Types half dmg gegen ein Typ haben --> veryWeakTypes[]
+        // Wenn Beide Types half dmg gegen ein Typ haben --> veryWeakTypes[]
       for(let i = 0; i < this.halfDamageTypes1.length; i++){
         for(let j = 0; j < this.halfDamageTypes2.length; j++){
           if(this.halfDamageTypes1[i] == this.halfDamageTypes2[j]){
@@ -184,14 +160,11 @@ methods: {
           }
         }
       }
-
-      // Wenn es keine veryWeakTypes gibt --> "None"
+        // Wenn es keine veryWeakTypes gibt --> "None"
       if(this.veryweakTypes.length == 0){
         this.veryweakTypes[0] = "None";
       }
-
-
-      // Wenn Beide Types double dmg gegen ein Typ haben --> veryeffectiveTypes[]
+        // Wenn Beide Types double dmg gegen ein Typ haben --> veryeffectiveTypes[]
       for(let i = 0; i < this.doubleDamageTypes1.length; i++){
         for(let j = 0; j < this.doubleDamageTypes2.length; j++){
           if(this.doubleDamageTypes1[i] == this.doubleDamageTypes2[j]){
@@ -200,14 +173,11 @@ methods: {
           }
         }
       }
-
-      // Wenn es keine veryeffectiveTypes gibt --> "None"
+        // Wenn es keine veryeffectiveTypes gibt --> "None"
       if(this.veryeffectiveTypes.length == 0){
         this.veryeffectiveTypes[0] = "None";
       }
-
-
-      // Filter: Nur echte double-dmg-Types von Typ1; wenn einer double einer half --> aussortieren    
+        // Filter: Nur echte double-dmg-Types von Typ1; wenn einer double einer half --> aussortieren    
       let sameType = false;
 
       for(let i = 0; i < this.doubleDamageTypes1.length; i++){
@@ -225,8 +195,7 @@ methods: {
         }
       }
 
-
-      // Filter: Nur echte double-dmg-Types von Typ2; wenn einer double einer half --> aussortieren
+        // Filter: Nur echte double-dmg-Types von Typ2; wenn einer double einer half --> aussortieren
       for(let i = 0; i < this.doubleDamageTypes2.length; i++){
         sameType = false;
         for(let j = 0; j < this.halfDamageTypes1.length; j++){
@@ -242,8 +211,7 @@ methods: {
         }
       }
 
-
-      //Alle Typen die in noRealHalfDmg stehen, sollen nicht mehr in weakTypes[] sein (Durchlauf für Typ1 half Dmg Liste)
+        //Alle Typen die in noRealHalfDmg stehen, sollen nicht mehr in weakTypes[] sein (Durchlauf für Typ1 half Dmg Liste)
       let TypMussRaus = false;
       let q = 0;
 
@@ -260,8 +228,7 @@ methods: {
         }
       }
 
-
-      //Alle Typen die in noRealHalfDmg stehen, sollen nicht mehr in weakTypes[] sein (Durchlauf für Typ2 half Dmg Liste)
+        //Alle Typen die in noRealHalfDmg stehen, sollen nicht mehr in weakTypes[] sein (Durchlauf für Typ2 half Dmg Liste)
       for(let i = 0; i < this.halfDamageTypes2.length; i++){
         TypMussRaus = false;
         for(let j = 0; j < this.noRealHalfDmg.length; j++){
@@ -275,10 +242,8 @@ methods: {
         }
       }
 
-
-      //Alle Typen die in veryeffectiveTypes[] stehen, sollen nicht mehr in effectiveTypes[] stehen --> Zwischen Speichern in almostFinalEffectiveArray
+        //Alle Typen die in veryeffectiveTypes[] stehen, sollen nicht mehr in effectiveTypes[] stehen --> Zwischen Speichern in almostFinalEffectiveArray
       let e = 0;
-
       for(let i = 0; i < this.effectiveTypes.length; i++){
         TypMussRaus = false;
         for(let j = 0; j < this.veryeffectiveTypes.length; j++){
@@ -291,12 +256,10 @@ methods: {
           e++;
         }
       }
+  },
 
-    },
-
-    
-    filterTypesWithNoDmg(){
-      // Filter: wenn irgendwo No-Dmg-Type existiert --> Relation aus effective/weak Type Arrays Löschen      
+  filterTypesWithNoDmg(){
+        // Filter: wenn irgendwo No-Dmg-Type existiert --> Relation aus effective/weak Type Arrays Löschen      
       let arrcount1 = 0;
       let arrcount2 = 0;
       
@@ -317,13 +280,11 @@ methods: {
         }
       }
     },
-
  }
 }
 </script>
 
 <style>
- 
 .TypeRelationsWindow{
   height: 200px;
   width: 100%;

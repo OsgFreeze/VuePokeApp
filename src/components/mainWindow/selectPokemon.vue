@@ -1,20 +1,17 @@
 <template class="selectPokemonTemplate">
-
   <span v-if="SearchBarVisible" @messageFromChild="childMessageReceived">
-    <div class="eingabeFeld"> Pokemon Nummer eingeben:  <!-- Pokemon Nummer von Pokedex eingeben & API-Methodenaufruf -->
+    <div class="eingabeFeld"> Pokemon (Pokedex) Nummer eingeben:  <!-- Pokemon Nummer von Pokedex eingeben & API-Methodenaufruf -->
       <input type="number" v-model="PokeNumber" min="1" max="898" :disabled="this.isDisabled"> 
       <button @click="setNrPlus" :disabled="this.isDisabled"> Hoch ↑ </button>
       <button @click="setNrMinus" :disabled="this.isDisabled"> Runter ↓ </button>  &nbsp;
       <button @click="loadApiNumber" :disabled="this.isDisabled"> Zahl Übermitteln </button>     
     </div>
   </span>
-
   <div class="dataAusgabeFeld" v-if="hidePokemonInfos"> <!-- gibt alle Informationen über das Pokemon aus -->
     <p class="PokeName"> {{ this.pokemonObject.name }} </p>
     <hr style="border-width: 2px; margin-top: 0px">
     <div class="PokeInfo">  
       <div class="PokeInfoleftSide">
-         
         <img class="PokemonPictureHD" id="PokePic" :src="this.PokemonPicture"/>
         <button class="shinyButton" id="shinyButtonId" @click="turnPokemonShiny"> Shiny </button>
        </div> 
@@ -31,9 +28,7 @@
     </div>
     <hr style="border-width: 2px">
   </div>
-
   <selectAttack :übergebenesPokemonObjekt="this.pokemonObject" /> <!-- übergebe Daten zur Attacken Auswahl -->
-
 </template>
 
 <script>
@@ -45,7 +40,6 @@ export default {
   components: {
     selectAttack, 
   }, 
-  
   provide(){
     const me = this;
     const pokemonHelper = {}
@@ -54,40 +48,39 @@ export default {
     pokemonHelper.setGameStarted = function(){
       me.gameStarted = true;
     }
-
-    //Macht den Status, ob die Game Information geladen ausgeblendet werden müssen,
-    //überall verfügbar.
-    //defineProperty verwenden, um einen getter zu verwenden.
-
+      //Macht den Status, ob die Game Information geladen ausgeblendet werden müssen, überall verfügbar.
+      //defineProperty verwenden, um einen getter zu verwenden.
     Object.defineProperty(pokemonHelper, "hidePokemonInfos", {
       get: function(){return me.hidePokemonInfos}  
     })
     return {pokemonHelper}
   },
-
   computed: {
       //Gibt Live Update über den Game Status
       hidePokemonInfos(){
         return !this.gameStarted && this.pokeLoaded;
       }
   },
-
   data(){  
     return {
-      pokeLoaded: false,  //  Pokemondaten bereits geladen ?
-      PokeNumber: 1,      //  startwert für Eingabefeld
+    // Startwerte
+      PokeNumber: 1,      
+      PokemonPicture: "",
+
+    // Boolean Zuweisungen
+      gameStarted: false,
+      SearchBarVisible: true,
+      toggleState: true,
+      isDisabled: false,
+      pokeLoaded: false,  
+
+    // Pokemon Informationen 
       pokemonStats: [],   //  speichert die basis Werte von einem Pokemon
       pokemonObject: {},  //  speichert die Pokemon Daten von dem API Call,
       pokemonTypes: [],   //  speichert alle Types des Pokemon
-      PokeTypeColors: [],
-      gameStarted: false,
-      SearchBarVisible: true,
-      PokemonPicture: "",
-      toggleState: true,
-      isDisabled: false,
+      PokeTypeColors: [], //  speichert die Farben des Types
     }
   },
-
   methods: { 
   //API Call für Pokemon Daten 
     async loadApiNumber(){ 
@@ -173,24 +166,17 @@ export default {
       if(this.PokeTypeColors.length == 1){
         TypeColor1.style.backgroundColor = this.PokeTypeColors[0];
         TypeColor1.style.borderColor = this.PokeTypeColors[0];
- 
         TypeColor2.style.visibility = "hidden";
       }
         
       if(this.PokeTypeColors.length == 2){
         TypeColor1.style.backgroundColor = this.PokeTypeColors[0];
         TypeColor1.style.borderColor = this.PokeTypeColors[0];
-        
         TypeColor2.style.visibility = "visible";
-
         TypeColor2.style.backgroundColor = this.PokeTypeColors[1];
         TypeColor2.style.borderColor = this.PokeTypeColors[1];
       }
-      
-      
-
     },
-
 
   //ausgewähltes Pokemon +1 -> danach API CALL  
     async setNrPlus(){ 
@@ -199,7 +185,6 @@ export default {
         this.loadApiNumber();
       }
     },
-
 
   //ausgewähltes Pokemon -1 -> danach API CALL  
     async setNrMinus(){ 
@@ -234,7 +219,6 @@ export default {
 </script>
 
 <style>
-
 .eingabeFeld{
   font-size: large;
 }
@@ -319,6 +303,4 @@ export default {
         border-radius: 15px;
         visibility: visible;     
       }
-
-
 </style>

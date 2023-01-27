@@ -4,11 +4,9 @@
       <input class="Searchbar" type="text" v-model="suche" min="1" max="898" > <!-- Suchleiste die von 1 bis 1010 geht da es nur 1010 Pokemon gibt-->
       <button class="SuchButton" @click="getApi(0)" type="button">Suche</button> <!-- Button ruft die getApi Methode auf -->
   </div>
-
   <div class="compareButtonDiv">
     <button style="width: 200px" @click="getApi(2)" type="button">Pokemon Vergleichen</button> <!-- Button um getData Methode aufzurufen-->
   </div>
-
   <div class="DisplayPokemon">
     <div class="DisplayLeftSide">  
       <div class="PokemonDataLeft" v-if="this.pokeDatenAnzeigenLeft == true"> <!-- if Abfrage weil Api Call noch nicht gemacht worden ist -->
@@ -23,7 +21,6 @@
         <p v-for="(typ, zähler) in pokemonTypL" :key="zähler">Typ {{zähler + 1}} : {{typ.type.name}}</p>
       </div>
     </div>
-  
     <div class="DisplayRightSide">  
      <div class="PokemonDataRight" v-if="this.pokeDatenAnzeigenRight == true"> <!-- if Abfrage weil Api Call noch nicht gemacht worden ist -->
        <img class="PokemonPicture" :src="pokemonSpriteR.other.home.front_default" /> <br> <!-- Bild wird angezeigt -->
@@ -36,12 +33,9 @@
      </div>
     </div>
   </div>
-   
-    <showTypeRelations :übergebeneTypen="this.pokemonTypes"/> 
-    
+  <showTypeRelations :übergebeneTypen="this.pokemonTypes"/> 
 </template>
-  
-  
+   
 <script>
 import axios from 'axios'
 import showTypeRelations from './showTypeRelations.vue'
@@ -51,37 +45,38 @@ import showTypeRelations from './showTypeRelations.vue'
     }, 
     data(){ 
       return {
-        suche: 1,
+        suche: 1, //Startwert
         pokemonObjekt:{},
-        
+        result:"",
+        pokemonTypes: {
+          pokemonTypL: [],
+          pokemonTypR: [],
+        },
+
+      // Pokemon Data Links
         pokemonNameL: "",
         pokemonSpriteL: {},
         baseStatsL: [],
         pokemonTypL: [],
         heightL: 0,
         weightL: 0,
+        pokeDatenAnzeigenLeft: false,
+
+      // Pokemon Data Rechts
         pokemonNameR: "",
         pokemonSpriteR: {},
         baseStatsR: [],
         pokemonTypR: [],
         heightR: 0,
         weightR: 0,
-        pokeDatenAnzeigenLeft: false,
         pokeDatenAnzeigenRight: false,
-        result:"",
-        pokemonTypes: {
-          pokemonTypL: [],
-          pokemonTypR: [],
-        }
       }
     },
     methods: {
-      
-      async getApi(indicator){ //API Call um Pokemon Daten zu bekommen
+        //API Call um Pokemon Daten zu bekommen
+      async getApi(indicator){ 
         await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.suche}`).then((response) => {
-          console.log(response)
           this.pokemonObjekt = response.data;
-          
           if(indicator < 1){
             this.pokemonNameL = this.pokemonObjekt.name;
             this.pokemonSpriteL = this.pokemonObjekt.sprites;
@@ -125,7 +120,7 @@ import showTypeRelations from './showTypeRelations.vue'
     width: 100%;
   }
     .DisplayLeftSide{
-      background-color: rgba(35, 212, 138, 0.397);
+      background-color: rgba(255, 146, 4, 0.397);
       margin-left: 5%;
       margin-right: 5px;
       width: 45%;
@@ -138,7 +133,7 @@ import showTypeRelations from './showTypeRelations.vue'
         text-transform: capitalize;
       }
     .DisplayRightSide{
-      background-color: rgba(255, 146, 4, 0.397);
+      background-color:  rgba(35, 212, 138, 0.397);
       margin-right: 5%;
       margin-left: 5px;
       width: 45%;
@@ -172,6 +167,4 @@ import showTypeRelations from './showTypeRelations.vue'
     height: 200px;
     width: 200px;
   }
- 
-  
 </style>
